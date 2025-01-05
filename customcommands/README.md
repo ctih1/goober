@@ -7,3 +7,6 @@ by PowerPCFan
 
 [Cog Manager](https://github.com/WhatDidYouExpect/goober/blob/main/customcommands/cogmanager.py)
 by expect
+
+[TensorFlow integration](https://github.com/WhatDidYouExpect/goober/blob/main/customcommands/tf.py)
+by SuperSilly2
