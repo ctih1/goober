@@ -3,5 +3,5 @@
 by expect
 
 
-[Hello World!](https://github.com/WhatDidYouExpect/goobercustomcommands/blob/main/whoami.py)
+[WhoAmI (lists username and nickname)](https://github.com/WhatDidYouExpect/goobercustomcommands/blob/main/whoami.py)
 by PowerPCFan
