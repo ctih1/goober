@@ -9,4 +9,4 @@ by PowerPCFan
 by expect
 
 [TensorFlow integration](https://github.com/WhatDidYouExpect/goober/blob/main/customcommands/tf.py)
-by SuperSilly2
+by SuperSilly2 (requires Python 3.10)
