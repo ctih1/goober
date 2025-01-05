@@ -7,27 +7,23 @@ import json
 from time import strftime, localtime
 import pickle
 import re
+from discord import app_commands
+import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Embedding, LSTM, Dense
+from tensorflow.keras.models import load_model
+from tensorflow.keras.backend import clear_session
 
 ready: bool = True
 MODEL_MATCH_STRING = "[0-9]{2}_[0-9]{2}_[0-9]{4}-[0-9]{2}_[0-9]{2}"
 
 try:
-    import tensorflow as tf    
-    from tensorflow import keras
-    from keras.preprocessing.text import Tokenizer
-    from keras_preprocessing.sequence import pad_sequences
-    from keras.models import Sequential
-    from keras.layers import Embedding, LSTM, Dense
-    from keras.models import load_model
-    from keras.backend import clear_session
-    tf.config.optimizer.set_jit(True)
+    tf.config.optimizer.set_jit(False)
 except ImportError:
-    print("ERROR: Failed to import Tensorflow. Here is a list of required dependencies:",(
-        "tensorflow==2.10.0"
-        "(for Nvidia users: tensorflow-gpu==2.10.0)"
-        "(for macOS: tensorflow-metal==0.6.0, tensorflow-macos==2.10.0)"
-        "numpy~=1.23"
-    ))
+    print("ERROR: Failed to import TensorFlow.")
     ready = False
 
 class Ai:
@@ -36,7 +32,7 @@ class Ai:
         if model_path:
             self.__load_model(model_path)
         self.is_loaded = model_path is not None
-        self.batch_size = 64 
+        self.batch_size = 32
         
     def get_model_name_from_path(self,path:str):
         print(path)
@@ -88,7 +84,7 @@ class Ai:
             self.tokenizer = Tokenizer()
             
             with open("memory.json","r") as f:
-                self.tokenizer.fit_on_sequences(json.load(f))
+                self.tokenizer.fit_on_texts(json.load(f))
         self.is_loaded = True
 
     def reload_model(self):
@@ -144,7 +140,7 @@ class Learning(Ai):
         x_pad = pad_sequences(X, maxlen=maxlen, padding="pre")
         y = np.array(y)
         
-        history = self.model.fit(x_pad,y, epochs=iters, validation_data=(x_pad,y), batch_size=64) # Idelaly, validation data would be seperate from the actual data
+        history = self.model.fit(x_pad,y, epochs=iters, validation_data=(x_pad,y), batch_size=64) # Ideally, validation data would be separate from the actual data
         self.save_model(self.model,tokenizer,history,self.get_model_name_from_path(settings.get("model_path")))
     
 class Generation(Ai):
@@ -247,53 +243,54 @@ class Tf(commands.Cog):
         return inner
         
     
-    def __init__(self,bot):
+    def __init__(self, bot):
         global learning, generation
         global ready
-        os.makedirs(os.path.join(".","models"),exist_ok=True)
+        os.makedirs(os.path.join(".","models"), exist_ok=True)
         Settings().load()
         self.bot = bot
         learning = Learning()
         generation = Generation()
     
 
-    @commands.command()
-    async def start(self,ctx):
-        await ctx.defer()
-        await ctx.send("hi")
+    @app_commands.command(name="start", description="Starts the bot")
+    async def start(self, interaction: discord.Interaction):
+        await interaction.response.send_message("hi")
         
-    @commands.command()
-    async def generate(self,ctx,seed:str,word_amount:int=5):
-        await ctx.defer()
-        await ctx.send(generation.generate_sentence(word_amount,seed))
+    @app_commands.command(name="generate", description="Generates a sentence")
+    async def generate(self, interaction: discord.Interaction, seed: str, word_amount: int = 5):
+        await interaction.response.defer()
+        sentence = generation.generate_sentence(word_amount, seed)
+        await interaction.followup.send(sentence)
     
-    @commands.command()
-    async def create(self,ctx):
-        await ctx.defer()
-        with open("memory.json","r") as f:
-            memory:List[str] = json.load(f)
-        learning.create_model(memory) # TODO: CHANGE
-        await ctx.send("Trained succesfully!")
+    @app_commands.command(name="create", description="Trains the model with memory")
+    async def create(self, interaction: discord.Interaction):
+        await interaction.response.defer()
+        with open("memory.json", "r") as f:
+            memory: List[str] = json.load(f)
+        learning.create_model(memory)  # TODO: CHANGE
+        await interaction.followup.send("Trained successfully!")
         
-    @commands.command()
-    async def train(self,ctx):
-        await ctx.defer()
-        with open("memory.json","r") as f:
-            memory:List[str] = json.load(f)
-        learning.add_training(memory,2)
-        await ctx.send("Finished!")
+    @app_commands.command(name="train", description="Trains the model further with memory")
+    async def train(self, interaction: discord.Interaction):
+        await interaction.response.defer()
+        with open("memory.json", "r") as f:
+            memory: List[str] = json.load(f)
+        learning.add_training(memory, 2)
+        await interaction.followup.send("Finished training!")
     
-    @commands.command() 
-    async def change(self,ctx,model:str=None):
-        embed = discord.Embed(title="Change model",description="Which model would you like to use?")
+    @app_commands.command(name="change", description="Change the model")
+    async def change(self, interaction: discord.Interaction, model: str = None):
+        embed = discord.Embed(title="Change model", description="Which model would you like to use?")
         if model is None:
-            models:List[str] = os.listdir(os.path.join(".","models"))
-            models = [folder for folder in models if re.match(MODEL_MATCH_STRING,folder)]
+            models: List[str] = os.listdir(os.path.join(".", "models"))
+            models = [folder for folder in models if re.match(MODEL_MATCH_STRING, folder)]
             if len(models) == 0:
                 models = ["No models available."]
-            await ctx.send(embed=embed,view=DropdownView(90,models))
-            learning.reload_model()
-            generation.reload_model()
+            await interaction.response.send_message(embed=embed, view=DropdownView(90, models))
+        learning.reload_model()
+        generation.reload_model()
+
 
 async def setup(bot):
     await bot.add_cog(Tf(bot))
