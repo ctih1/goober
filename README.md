@@ -6,4 +6,4 @@ by expect
 by PowerPCFan
 
 [Cog Manager](https://github.com/WhatDidYouExpect/goobercustomcommands/blob/main/cogmanager.py)
-by PowerPCFan
+by expect
