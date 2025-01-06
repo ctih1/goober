@@ -14,41 +14,10 @@ import requests
 import platform
 import subprocess
 import psutil
-from dotenv import load_dotenv
 import pickle
 from better_profanity import profanity
-
-
-
-# Load the .env file
-load_dotenv()
-
-VERSION_URL = "https://goober.whatdidyouexpect.eu"
-UPDATE_URL = VERSION_URL+"/latest_version.json"
-LOCAL_VERSION_FILE = "current_version.txt" 
-TOKEN = os.getenv("DISCORD_BOT_TOKEN")
-PREFIX = os.getenv("BOT_PREFIX")
-hourlyspeak = int(os.getenv("hourlyspeak"))
-PING_LINE = os.getenv("PING_LINE")
-random_talk_channel_id1 = int(os.getenv("rnd_talk_channel1"))
-random_talk_channel_id2 = int(os.getenv("rnd_talk_channel2"))
-cooldown_time = os.getenv("cooldown")
-splashtext = os.getenv("splashtext")
-ownerid = int(os.getenv("ownerid"))
-showmemenabled = os.getenv("showmemenabled")
-BLACKLISTED_USERS = os.getenv("BLACKLISTED_USERS", "").split(",")
-USERTRAIN_ENABLED = os.getenv("USERTRAIN_ENABLED", "true").lower() == "true"
-NAME = os.getenv("NAME")
-last_random_talk_time = 0
-MEMORY_FILE = "memory.json"
-DEFAULT_DATASET_FILE = "defaultdataset.json"
-MEMORY_LOADED_FILE = "MEMORY_LOADED"
-ALIVEPING = os.getenv("ALIVEPING")
-song = os.getenv("song")
-
+from config import *
 print(splashtext) # you can use https://patorjk.com/software/taag/ for 3d text or just remove this entirely
-
-
 def save_markov_model(model, filename='markov_model.pkl'):
     with open(filename, 'wb') as f:
         pickle.dump(model, f)
