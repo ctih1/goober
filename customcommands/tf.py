@@ -6,25 +6,60 @@ import numpy as np
 import json
 from time import strftime, localtime
 import pickle
+import functools
 import re
-from discord import app_commands
-import tensorflow as tf
-from tensorflow import keras
-from tensorflow.keras.preprocessing.text import Tokenizer
-from tensorflow.keras.preprocessing.sequence import pad_sequences
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Embedding, LSTM, Dense
-from tensorflow.keras.models import load_model
-from tensorflow.keras.backend import clear_session
+import time
+import asyncio
 
 ready: bool = True
 MODEL_MATCH_STRING = "[0-9]{2}_[0-9]{2}_[0-9]{4}-[0-9]{2}_[0-9]{2}"
 
 try:
-    tf.config.optimizer.set_jit(False)
+    import tensorflow as tf    
+    from tensorflow import keras
+    from keras.preprocessing.text import Tokenizer
+    from keras_preprocessing.sequence import pad_sequences
+    from keras.models import Sequential
+    from keras.layers import Embedding, LSTM, Dense
+    from keras.models import load_model
+    from keras.backend import clear_session
+    tf.config.optimizer.set_jit(True)
 except ImportError:
-    print("ERROR: Failed to import TensorFlow.")
+    print("ERROR: Failed to import Tensorflow. Here is a list of required dependencies:",(
+        "tensorflow==2.10.0"
+        "(for Nvidia users: tensorflow-gpu==2.10.0)"
+        "(for macOS: tensorflow-metal==0.6.0, tensorflow-macos==2.10.0)"
+        "numpy~=1.23"
+    ))
     ready = False
+
+class TFCallback(keras.callbacks.Callback):
+    def __init__(self,bot, progress_embed:discord.Embed, message):
+        self.embed:discord.Embed = progress_embed
+        self.bot:commands.Bot = bot
+        self.message = message
+        self.times:List[int] = [time.time()]
+        
+    def on_train_begin(self, logs=None):
+        pass
+        
+    async def send_message(self,message:str, description:str, **kwargs):
+        if "epoch" in kwargs:
+            self.times.append(time.time())
+            average_epoch_time:int = np.average(np.diff(np.array(self.times)))
+            description = f"ETA: {round(average_epoch_time)}s"
+        self.embed.add_field(name=f"<t:{round(time.time())}:t> - {message}",value=description,inline=False)
+        await self.message.edit(embed=self.embed)
+    
+    def on_train_end(self,logs=None):
+        self.bot.loop.create_task(self.send_message("Training stopped", "training has been stopped."))
+        
+    def on_epoch_begin(self, epoch, logs=None):
+        self.bot.loop.create_task(self.send_message(f"Starting epoch {epoch}","This might take a while", epoch=True))
+        
+    def on_epoch_end(self, epoch, logs=None):
+        self.bot.loop.create_task(self.send_message(f"Epoch {epoch} ended",f"Accuracy: {round(logs.get('accuracy',0.0),4)}"))
+        
 
 class Ai:
     def __init__(self):
@@ -32,13 +67,10 @@ class Ai:
         if model_path:
             self.__load_model(model_path)
         self.is_loaded = model_path is not None
-        self.batch_size = 32
+        self.batch_size = 64 
         
     def get_model_name_from_path(self,path:str):
-        print(path)
         match:re.Match = re.search(MODEL_MATCH_STRING, path)
-        
-        print(match.start)
         return path[match.start():][:match.end()]
 
     def generate_model_name(self) -> str:
@@ -84,7 +116,7 @@ class Ai:
             self.tokenizer = Tokenizer()
             
             with open("memory.json","r") as f:
-                self.tokenizer.fit_on_texts(json.load(f))
+                self.tokenizer.fit_on_sequences(json.load(f))
         self.is_loaded = True
 
     def reload_model(self):
@@ -92,7 +124,11 @@ class Ai:
         model_path:str = settings.get("model_path")
         if model_path:
             self.model = self.__load_model(model_path)
-
+            self.is_loaded = True
+    
+    async def run_async(self,func,bot,*args,**kwargs):
+        func = functools.partial(func,*args,**kwargs)
+        return await bot.loop.run_in_executor(None,func)
             
 class Learning(Ai):
     def __init__(self):
@@ -113,7 +149,8 @@ class Learning(Ai):
                 
         return x,y, tokenizer
     
-    def create_model(self,memory: List[str], iters:int=2):
+    def create_model(self,memory: list, iters:int=2):
+        memory = memory[:2000]
         X,y,tokenizer = self.__generate_labels_and_inputs(memory)
         maxlen:int = max([len(x) for x in X]) 
         x_pad = pad_sequences(X, maxlen=maxlen, padding="pre")
@@ -126,8 +163,10 @@ class Learning(Ai):
         model.add(Dense(VOCAB_SIZE, activation="softmax"))
         
         model.compile(optimizer="adam", loss="sparse_categorical_crossentropy", metrics=["accuracy"])
-        history = model.fit(x_pad, y, epochs=iters, batch_size=32)
+        history = model.fit(x_pad, y, epochs=iters, batch_size=64, callbacks=[tf_callback])
         self.save_model(model, tokenizer, history)
+        return
+
         
     def add_training(self,memory: List[str], iters:int=2):
         tokenizer_path = os.path.join(settings.get("model_path"),"tokenizer.pkl")
@@ -140,8 +179,9 @@ class Learning(Ai):
         x_pad = pad_sequences(X, maxlen=maxlen, padding="pre")
         y = np.array(y)
         
-        history = self.model.fit(x_pad,y, epochs=iters, validation_data=(x_pad,y), batch_size=64) # Ideally, validation data would be separate from the actual data
+        history = self.model.fit(x_pad,y, epochs=iters, validation_data=(x_pad,y), batch_size=64, callbacks=[tf_callback]) # Ideally, validation data would be seperate from the actual data
         self.save_model(self.model,tokenizer,history,self.get_model_name_from_path(settings.get("model_path")))
+        return
     
 class Generation(Ai):
     def __init__(self):
@@ -169,16 +209,16 @@ class Generation(Ai):
         
     
 VOCAB_SIZE = 100_000
-
 SETTINGS_TYPE = TypedDict("SETTINGS_TYPE", {
     "model_path":str, # path to the base folder of the model, aka .../models/05-01-2025-22_31/
     "tokenizer_path":str,
 })
 
-
+tf_callback:TFCallback
 model_dropdown_items = []
 settings: SETTINGS_TYPE = {}
 
+target_message:int
 learning:Learning
 generation: Generation
 
@@ -232,65 +272,69 @@ class DropdownView(discord.ui.View):
         self.add_item(Dropdown(models))
 
 
-class Tf(commands.Cog):
-    @staticmethod
-    def needs_ready(func):
-        def inner(args:tuple, kwargs:dict):
-            if not ready: 
-                raise AttributeError("Not ready!")
-            a = func(*args, **kwargs)
-            return a
-        return inner
-        
-    
-    def __init__(self, bot):
-        global learning, generation
-        global ready
-        os.makedirs(os.path.join(".","models"), exist_ok=True)
+class Tf(commands.Cog):    
+    def __init__(self,bot):
+        global learning, generation, ready
+        os.makedirs(os.path.join(".","models"),exist_ok=True)
         Settings().load()
         self.bot = bot
         learning = Learning()
         generation = Generation()
     
+    @commands.command()
+    async def start(self,ctx):
+        await ctx.defer()
+        await ctx.send("hi")
+        
+    @commands.command()
+    async def generate(self,ctx,seed:str,word_amount:int=5):
+        await ctx.defer()
+        await ctx.send(generation.generate_sentence(word_amount,seed))
+    
+    @commands.command()
+    async def create(self,ctx:commands.Context, epochs:int=3):
+        global tf_callback
+        await ctx.defer()
+        with open("memory.json","r") as f:
+            memory:List[str] = json.load(f)
+        await ctx.send("Initializing tensorflow")
+        embed = discord.Embed(title="Creating a model...", description="Progress of creating a model")
+        embed.set_footer(text="Note: Progress tracking might report delayed / wrong data, since the function is run asynchronously")
+        target_message:discord.Message = await ctx.send(embed=embed)
+        
+        tf_callback = TFCallback(self.bot,embed,target_message)
+        await learning.run_async(learning.create_model,self.bot,memory,epochs)
+        embed = target_message.embeds[0]
+        embed.add_field(name=f"<t:{round(time.time())}:t> Finished",value="Model saved.")
+        await target_message.edit(embed=embed)
+        
+        
+    @commands.command()
+    async def train(self,ctx, epochs:int=2):
+        global tf_callback
+        
+        await ctx.defer()
+        with open("memory.json","r") as f:
+            memory:List[str] = json.load(f)
+            
+        embed = discord.Embed(title="Training model...", description="Progress of training model")
+        target_message = await ctx.send(embed=embed)
+        tf_callback = TFCallback(self.bot,embed,target_message)
 
-    @app_commands.command(name="start", description="Starts the bot")
-    async def start(self, interaction: discord.Interaction):
-        await interaction.response.send_message("hi")
-        
-    @app_commands.command(name="generate", description="Generates a sentence")
-    async def generate(self, interaction: discord.Interaction, seed: str, word_amount: int = 5):
-        await interaction.response.defer()
-        sentence = generation.generate_sentence(word_amount, seed)
-        await interaction.followup.send(sentence)
+        await learning.run_async(learning.add_training,self.bot,memory,epochs)
+        await ctx.send("Finished!")
     
-    @app_commands.command(name="create", description="Trains the model with memory")
-    async def create(self, interaction: discord.Interaction):
-        await interaction.response.defer()
-        with open("memory.json", "r") as f:
-            memory: List[str] = json.load(f)
-        learning.create_model(memory)  # TODO: CHANGE
-        await interaction.followup.send("Trained successfully!")
-        
-    @app_commands.command(name="train", description="Trains the model further with memory")
-    async def train(self, interaction: discord.Interaction):
-        await interaction.response.defer()
-        with open("memory.json", "r") as f:
-            memory: List[str] = json.load(f)
-        learning.add_training(memory, 2)
-        await interaction.followup.send("Finished training!")
-    
-    @app_commands.command(name="change", description="Change the model")
-    async def change(self, interaction: discord.Interaction, model: str = None):
-        embed = discord.Embed(title="Change model", description="Which model would you like to use?")
+    @commands.command() 
+    async def change(self,ctx,model:str=None):
+        embed = discord.Embed(title="Change model",description="Which model would you like to use?")
         if model is None:
-            models: List[str] = os.listdir(os.path.join(".", "models"))
-            models = [folder for folder in models if re.match(MODEL_MATCH_STRING, folder)]
+            models:List[str] = os.listdir(os.path.join(".","models"))
+            models = [folder for folder in models if re.match(MODEL_MATCH_STRING,folder)]
             if len(models) == 0:
                 models = ["No models available."]
-            await interaction.response.send_message(embed=embed, view=DropdownView(90, models))
-        learning.reload_model()
-        generation.reload_model()
-
+            await ctx.send(embed=embed,view=DropdownView(90,models))
+            learning.reload_model()
+            generation.reload_model()
 
 async def setup(bot):
     await bot.add_cog(Tf(bot))
