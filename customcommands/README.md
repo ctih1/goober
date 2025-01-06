@@ -9,4 +9,4 @@ by PowerPCFan
 by expect
 
 [TensorFlow integration](https://github.com/WhatDidYouExpect/goober/blob/main/customcommands/tf.py)
-by SuperSilly2 (requires Python 3.11, tensorflow-metal/tensorflow-gpu and tensorflow/tensorflow-macos)
+by SuperSilly2 (requires Python 3.7 - 3.10, tensorflow-metal/tensorflow-gpu and tensorflow/tensorflow-macos)
