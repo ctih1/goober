@@ -64,10 +64,6 @@ class WebScraper(commands.Cog):
             return False
 
     async def scrape_links(self, session, url, depth=2):
-        """Recursively scrape links from a URL."""
-        if depth == 0 or url in self.visited_urls:
-            return
-
         print(f"Scraping: {url}")
         self.visited_urls.add(url)
 
@@ -81,10 +77,6 @@ class WebScraper(commands.Cog):
             sentences = self.extract_sentences(paragraph.get_text())
             self.save_to_json(sentences)
 
-        for link in soup.find_all('a', href=True):
-            full_url = urljoin(url, link['href'])
-            if full_url.startswith("http") and full_url not in self.visited_urls:
-                await self.scrape_links(session, full_url, depth - 1)
 
     @commands.command()
     async def start_scrape(self, ctx, start_url: str):
