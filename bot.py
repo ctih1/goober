@@ -260,6 +260,7 @@ async def on_ready():
     else:
         print(f"Folder '{folder_name}' already exists. skipping...")
     markov_model = train_markov_model(memory)
+    await load_cogs_from_folder(bot)
     global slash_commands_enabled
     print(f"Logged in as {bot.user}")
     try:
@@ -274,7 +275,6 @@ async def on_ready():
     if not song:
         return  
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=f"{song}"))
-    await load_cogs_from_folder(bot)
 
 def ping_server():
     if ALIVEPING == "false":
