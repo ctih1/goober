@@ -10,3 +10,6 @@ by expect
 
 [TensorFlow integration](https://github.com/WhatDidYouExpect/goober/blob/main/customcommands/tf.py)
 by SuperSilly2 (requires Python 3.7 - 3.10, tensorflow-metal/tensorflow-gpu and tensorflow/tensorflow-macos)
+
+[Web Scraper](https://raw.githubusercontent.com/WhatDidYouExpect/goober/refs/heads/main/customcommands/webscraper.py)
+by expect (requires goober version 0.11.7.2 or higher)
