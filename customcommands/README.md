@@ -13,3 +13,6 @@ by SuperSilly2 (requires Python 3.7 - 3.10, tensorflow-metal/tensorflow-gpu and 
 
 [Web Scraper](https://raw.githubusercontent.com/WhatDidYouExpect/goober/refs/heads/main/customcommands/webscraper.py)
 by expect (requires goober version 0.11.7.2 or higher)
+
+[Status Changer](https://raw.githubusercontent.com/WhatDidYouExpect/goober/refs/heads/main/customcommands/songchanger.py)
+by expect (requires goober version 0.11.8 or higher)
