@@ -25,6 +25,7 @@ MEMORY_LOADED_FILE = "MEMORY_LOADED"
 ALIVEPING = os.getenv("ALIVEPING")
 IGNOREWARNING = True
 song = os.getenv("song")
+arch = platform.machine()
 RED = "\033[31m"
 GREEN = "\033[32m"
 YELLOW = "\033[33m"
