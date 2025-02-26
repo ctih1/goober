@@ -15,13 +15,23 @@ import platform
 import subprocess
 import psutil
 import pickle
+import hashlib
 from better_profanity import profanity
 from config import *
+import traceback
+import shutil
 print(splashtext) # you can use https://patorjk.com/software/taag/ for 3d text or just remove this entirely
 def save_markov_model(model, filename='markov_model.pkl'):
     with open(filename, 'wb') as f:
         pickle.dump(model, f)
     print(f"Markov model saved to {filename}.")
+
+def backup_current_version():
+    if os.path.exists(LOCAL_VERSION_FILE):
+        shutil.copy(LOCAL_VERSION_FILE, LOCAL_VERSION_FILE + ".bak")
+        print(f"Backup created: {LOCAL_VERSION_FILE}.bak")
+    else:
+        print(f"Error: {LOCAL_VERSION_FILE} not found for backup.")
 
 def load_markov_model(filename='markov_model.pkl'):
 
@@ -47,6 +57,7 @@ def get_latest_version_info():
     except requests.RequestException as e:
         print(f"Error: Unable to connect to the update server. {e}")
         return None
+    
 async def load_cogs_from_folder(bot, folder_name="cogs"):
     for filename in os.listdir(folder_name):
         if filename.endswith(".py") and not filename.startswith("_"):
@@ -56,6 +67,17 @@ async def load_cogs_from_folder(bot, folder_name="cogs"):
                 print(f"Loaded cog: {cog_name}")
             except Exception as e:
                 print(f"Failed to load cog {cog_name}: {e}")
+                traceback.print_exc()
+
+currenthash = ""
+def generate_sha256_of_current_file():
+    global currenthash
+    sha256_hash = hashlib.sha256()
+    with open(__file__, "rb") as f:
+        for byte_block in iter(lambda: f.read(4096), b""):
+            sha256_hash.update(byte_block)
+    currenthash = sha256_hash.hexdigest()
+
 
 def get_local_version():
     """Read the current version from the local file."""
@@ -84,96 +106,35 @@ def check_for_update():
         print("Error: Invalid version information received from server.")
         return None, None 
 
-    local_version = get_local_version() 
-    if local_version != latest_version:
-        print(f"New version available: {latest_version} (Current: {local_version})")
-        print(f"Check {VERSION_URL}/goob/changes.txt to check out the changelog for version {latest_version}\n\n")
+    local_version = get_local_version()
+    generate_sha256_of_current_file()
+    gooberhash = latest_version_info.get("hash")
+    if gooberhash == currenthash:
+        if local_version < latest_version:
+            print(f"New version available: {latest_version} (Current: {local_version})")
+            print(f"Check {VERSION_URL}/goob/changes.txt to check out the changelog for version {latest_version}\n\n")
+        elif local_version > latest_version:
+            if IGNOREWARNING == False:
+                print(f"\n{RED}The version: {local_version} isnt valid!")
+                print(f"{RED}If this is intended then ignore this message, else press Y to pull a valid version from the server regardless of the version of goober currently running")
+                print(f"The current version will be backed up to current_version.bak..{RESET}\n\n")
+                userinp = input("(Y or any other key to ignore....)\n")
+                if userinp.lower() == "y":
+                    backup_current_version()
+                    with open(LOCAL_VERSION_FILE, "w") as f:
+                        f.write(latest_version)
+            else:
+                print(f"{RED}You've modified {LOCAL_VERSION_FILE}")
+                print(f"IGNOREWARNING is set to false..{RESET}")
+        else:
+            print(f"{GREEN}You're using the latest version: {local_version}{RESET}")
+            print(f"Check {VERSION_URL}/goob/changes.txt to check out the changelog\n\n")
     else:
-        print(f"You're using the latest version: {local_version}")
-        print(f"Check {VERSION_URL}/goob/changes.txt to check out the changelog for version {latest_version}\n\n")
+        print(f"{YELLOW}Goober has been modified! Skipping checks entirely...{RESET}")
+        print("Current Hash:", currenthash)
 
 
 check_for_update()
-
-def get_allocated_ram():
-    system = platform.system()
-    try:
-        if system == "Linux":
-            with open("/proc/meminfo", "r") as meminfo:
-                lines = meminfo.readlines()
-                total_memory = int(next(line for line in lines if "MemTotal" in line).split()[1])
-                free_memory = int(next(line for line in lines if "MemFree" in line).split()[1])
-                return {
-                    "total_memory_kb": total_memory,
-                    "free_memory_kb": free_memory,
-                    "used_memory_kb": total_memory - free_memory,
-                }
-
-        elif system == "FreeBSD" or "BSD" in system:
-            total_memory = int(subprocess.check_output(["sysctl", "-n", "hw.physmem"]).strip()) // 1024
-            free_memory = int(subprocess.check_output(["sysctl", "-n", "vm.stats.vm.v_free_count"]).strip()) * int(subprocess.check_output(["sysctl", "-n", "hw.pagesize"]).strip()) // 1024
-            return {
-                "total_memory_kb": total_memory,
-                "free_memory_kb": free_memory,
-                "used_memory_kb": total_memory - free_memory,
-            }
-
-        elif system == "Windows":
-            total_memory = psutil.virtual_memory().total // 1024
-            free_memory = psutil.virtual_memory().available // 1024
-            return {
-                "total_memory_kb": total_memory,
-                "free_memory_kb": free_memory,
-                "used_memory_kb": total_memory - free_memory,
-            }
-
-        else:
-            return {"error": f"Unsupported OS: {system}"}
-
-    except Exception as e:
-        return {"error": str(e)}
-
-def get_cpu_info():
-    system = platform.system()
-    try:
-        if system == "Linux":
-            with open("/proc/cpuinfo", "r") as cpuinfo:
-                lines = cpuinfo.readlines()
-                cpu_info = []
-                cpu_details = {}
-                for line in lines:
-                    if line.strip():
-                        key, value = map(str.strip, line.split(":", 1))
-                        cpu_details[key] = value
-                    else:
-                        if cpu_details:
-                            cpu_info.append(cpu_details)
-                            cpu_details = {}
-                if cpu_details:
-                    cpu_info.append(cpu_details)
-                return cpu_info
-
-        elif system == "FreeBSD" or "BSD" in system:
-            cpu_count = int(subprocess.check_output(["sysctl", "-n", "hw.ncpu"]).strip())
-            cpu_model = subprocess.check_output(["sysctl", "-n", "hw.model"]).strip().decode()
-            return {"cpu_count": cpu_count, "cpu_model": cpu_model}
-
-        elif system == "Windows":
-            cpu_info = []
-            for cpu in range(psutil.cpu_count(logical=False)):
-                cpu_info.append({
-                    "cpu_index": cpu,
-                    "cpu_model": platform.processor(),
-                    "logical_cores": psutil.cpu_count(logical=True),
-                })
-            return cpu_info
-
-        else:
-            return {"error": f"Unsupported OS: {system}"}
-
-    except Exception as e:
-        return {"error": str(e)}
-
 
 def get_file_info(file_path):
     try:
@@ -226,7 +187,7 @@ def train_markov_model(memory, additional_data=None):
 #this doesnt work and im extremely pissed and mad
 def append_mentions_to_18digit_integer(message):
     pattern = r'\b\d{18}\b'
-    return re.sub(pattern, lambda match: f"<@{match.group(0)}>", message)
+    return re.sub(pattern, lambda match: f"", message)
 
 def preprocess_message(message):
     message = append_mentions_to_18digit_integer(message)
@@ -280,13 +241,9 @@ def ping_server():
     if ALIVEPING == "false":
         print("Pinging is disabled! Not telling the server im on...")
         return
-    allocated_ram = get_allocated_ram()
-    cpuinfo = get_cpu_info()
     file_info = get_file_info(MEMORY_FILE)
     payload = {
         "name": NAME,
-        "allocated_ram": allocated_ram,
-        "cpuinfo": cpuinfo,
         "memory_file_info": file_info,
         "version": local_version,
         "slash_commands": slash_commands_enabled
@@ -396,39 +353,6 @@ async def talk(ctx):
         await send_message(ctx, combined_message)
     else:
         await send_message(ctx, "I have nothing to say right now!")
-
-@bot.hybrid_command(description="asks n like shit")
-async def ask(ctx, *, argument: str):
-    if markov_model:
-        response = None
-        for _ in range(20):
-            try:
-                response = markov_model.make_sentence_with_start(argument, tries=100)
-                if response and response not in generated_sentences:
-                    response = improve_sentence_coherence(response)
-                    generated_sentences.add(response)
-                    break
-            except KeyError as e:
-                continue  
-            except markovify.text.ParamError as e:
-                continue 
-        if response:
-                cleaned_response = re.sub(r'[^\w\s]', '', response)
-                cleaned_response = cleaned_response.lower()
-                coherent_response = rephrase_for_coherence(cleaned_response)
-                if random.random() < 0.9:
-                    if is_positive(coherent_response):
-                        gif_url = random.choice(positive_gifs)
-                        combined_message = f"{coherent_response}\n[jif]({gif_url})"
-                        await send_message(ctx, combined_message)
-                    else:
-                        await send_message(ctx, coherent_response)
-                else:
-                    await send_message(ctx, coherent_response)
-        else:
-            await send_message(ctx, "I couldn't come up with something relevant to that!")
-    else:
-        await send_message(ctx, "I need to learn more from messages before I can talk.")
 
 def improve_sentence_coherence(sentence):
 
