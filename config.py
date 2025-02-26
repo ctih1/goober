@@ -1,5 +1,10 @@
 import os 
 from dotenv import load_dotenv
+import platform
+import random
+
+def print_multicolored(text):
+    print(text)
 
 load_dotenv()
 VERSION_URL = "https://goober.whatdidyouexpect.eu"
@@ -23,10 +28,37 @@ MEMORY_FILE = "memory.json"
 DEFAULT_DATASET_FILE = "defaultdataset.json"
 MEMORY_LOADED_FILE = "MEMORY_LOADED"
 ALIVEPING = os.getenv("ALIVEPING")
-IGNOREWARNING = True
+IGNOREWARNING = False
 song = os.getenv("song")
 arch = platform.machine()
-RED = "\033[31m"
-GREEN = "\033[32m"
-YELLOW = "\033[33m"
+RED = "\033[31mError: "
+GREEN = "\033[32mSuccess: "
+YELLOW = "\033[33mWarning: "
+DEBUG = "\033[1;30mDebug: "
 RESET = "\033[0m"
+multicolorsplash = False
+
+
+def apply_multicolor(text, chunk_size=3):
+    if multicolorsplash == False:
+        return
+    colors = [
+       "\033[38;5;196m",  # Red
+       "\033[38;5;202m",  # Orange
+       "\033[38;5;220m",  # Yellow
+       "\033[38;5;46m",   # Green
+        "\033[38;5;21m",   # Blue
+        "\033[38;5;93m",   # Indigo
+        "\033[38;5;201m",  # Violet
+    ]
+    
+    chunks = [text[i:i+chunk_size] for i in range(0, len(text), chunk_size)]
+    
+    colored_text = ""
+    for chunk in chunks:
+        color = random.choice(colors)
+        colored_text += f"{color}{chunk}\033[0m"
+    
+    return colored_text
+splashtext = apply_multicolor(splashtext)
+
