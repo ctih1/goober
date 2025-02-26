@@ -6,6 +6,7 @@ import markovify
 import nltk
 from nltk.tokenize import word_tokenize
 import random
+from textblob import TextBlob
 import os
 import time
 import re
@@ -111,8 +112,8 @@ def check_for_update():
     gooberhash = latest_version_info.get("hash")
     if gooberhash == currenthash:
         if local_version < latest_version:
-            print(f"New version available: {latest_version} (Current: {local_version})")
-            print(f"Check {VERSION_URL}/goob/changes.txt to check out the changelog for version {latest_version}\n\n")
+            print(f"{YELLOW}New version available: {latest_version} (Current: {local_version}){RESET}")
+            print(f"Check {VERSION_URL}/goob/changes.txt to check out the changelog\n\n")
         elif local_version > latest_version:
             if IGNOREWARNING == False:
                 print(f"\n{RED}The version: {local_version} isnt valid!")
@@ -130,8 +131,9 @@ def check_for_update():
             print(f"{GREEN}You're using the latest version: {local_version}{RESET}")
             print(f"Check {VERSION_URL}/goob/changes.txt to check out the changelog\n\n")
     else:
-        print(f"{YELLOW}Goober has been modified! Skipping checks entirely...{RESET}")
-        print("Current Hash:", currenthash)
+        print(f"{YELLOW}Goober has been modified! Skipping server checks entirely...")
+        print(f"Reported Version: {local_version}{RESET}")
+        print(f"Current Hash: {currenthash}")
 
 
 check_for_update()
@@ -257,13 +259,15 @@ def ping_server():
     except Exception as e:
         print(f"An error occurred while sending data: {str(e)}")
 
-positive_keywords = ["happy", "good", "great", "amazing", "awesome", "joy", "love", "fantastic", "positive", "cheerful", "victory", "favorite", "lmao", "lol", "xd", "XD", "xD", "Xd"]
 
 positive_gifs = os.getenv("POSITIVE_GIFS").split(',')
 
 def is_positive(sentence):
-    sentence_lower = sentence.lower()
-    return any(keyword in sentence_lower for keyword in positive_keywords)
+    blob = TextBlob(sentence)
+    sentiment_score = blob.sentiment.polarity
+    print(sentiment_score)
+    return sentiment_score > 0.1
+
 
 async def send_message(ctx, message=None, embed=None, file=None, edit=False, message_reference=None):
     if edit and message_reference:
@@ -378,7 +382,7 @@ async def help(ctx):
     )
 
     command_categories = {
-        "General": ["mem", "talk", "ask", "about", "ping"],
+        "General": ["mem", "talk", "about", "ping"],
         "Administration": ["stats", "retrain"]
     }
 
