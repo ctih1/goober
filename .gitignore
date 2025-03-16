@@ -2,3 +2,4 @@
 __pycache__
 current_version.txt
 MEMORY_LOADED
+memory.json

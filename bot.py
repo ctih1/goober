@@ -25,9 +25,10 @@ import shutil
 print(splashtext) # you can use https://patorjk.com/software/taag/ for 3d text or just remove this entirely
 
 def download_json():
+    locales_dir = "locales"
     response = requests.get(f"{VERSION_URL}/goob/locales/{LOCALE}.json")
     if response.status_code == 200:
-        locales_dir = "locales"
+
         if not os.path.exists(locales_dir):
             os.makedirs(locales_dir)
         file_path = os.path.join(locales_dir, f"{LOCALE}.json")
@@ -38,6 +39,7 @@ def download_json():
                 file.write(response.text)
 
     if not os.path.exists(os.path.join(locales_dir, "en.json")):
+        
         response = requests.get(f"{VERSION_URL}/goob/locales/en.json")
         if response.status_code == 200:
             with open(os.path.join(locales_dir, "en.json"), "w", encoding="utf-8") as file:
@@ -101,7 +103,7 @@ def register_name(NAME):
             token = data.get("token")
             
             if not os.getenv("gooberTOKEN"):
-                print(f"{GREEN}{get_translation(LOCALE, 'add_token').format(token=token)} gooberTOKEN=<your_token>.{RESET}")
+                print(f"{GREEN}{get_translation(LOCALE, 'add_token').format(token=token)} gooberTOKEN=<token>.{RESET}")
                 quit()
             else:
                 print(f"{GREEN}{RESET}")
@@ -210,8 +212,8 @@ def check_for_update():
     gooberhash = latest_version_info.get("hash")
     if gooberhash == currenthash:
         if local_version < latest_version:
-            print(f"{YELLOW}{get_translation(LOCALE, 'new_version')}{RESET}")
-            print(f"{YELLOW}{get_translation(LOCALE, 'changelog').format(VERSION_URL=VERSION_URL)}")
+            print(f"{YELLOW}{get_translation(LOCALE, 'new_version').format(latest_version=latest_version, local_version=local_version)}{RESET}")
+            print(f"{YELLOW}{get_translation(LOCALE, 'changelog').format(VERSION_URL=VERSION_URL)}{RESET}")
         elif local_version > latest_version:
             if IGNOREWARNING == False:
                 print(f"\n{RED}{get_translation(LOCALE, 'invalid_version').format(local_version=local_version)}")
@@ -411,19 +413,19 @@ async def retrain(ctx):
         return
     data_size = len(memory)
     processed_data = 0
-    processing_message_ref = await send_message(ctx, f"{get_translation(LOCALE, 'command_markov_retraining')}")
+    processing_message_ref = await send_message(ctx, f"{get_translation(LOCALE, 'command_markov_retraining').format(processed_data=processed_data, data_size=data_size)}")
     start_time = time.time()
     for i, data in enumerate(memory):
         processed_data += 1
         if processed_data % 1000 == 0 or processed_data == data_size:
-            await send_message(ctx, f"{get_translation(LOCALE, 'command_markov_retraining')}", edit=True, message_reference=processing_message_ref)
+            await send_message(ctx, f"{get_translation(LOCALE, 'command_markov_retraining').format(processed_data=processed_data, data_size=data_size)}", edit=True, message_reference=processing_message_ref)
 
     global markov_model
     
     markov_model = train_markov_model(memory)
     save_markov_model(markov_model)
 
-    await send_message(ctx, f"{get_translation(LOCALE, 'command_markov_retrain_successful')}", edit=True, message_reference=processing_message_ref)
+    await send_message(ctx, f"{get_translation(LOCALE, 'command_markov_retrain_successful').format(data_size=data_size)}", edit=True, message_reference=processing_message_ref)
 
 @bot.hybrid_command(description=f"{get_translation(LOCALE, 'command_desc_talk')}")
 async def talk(ctx):
@@ -483,7 +485,7 @@ async def help(ctx):
     custom_commands = []
     for cog_name, cog in bot.cogs.items():
         for command in cog.get_commands():
-            if command.name not in command_categories[f"{get_translation(LOCALE, 'command_help_categories_general')}"] and command.name not in command_categories["Administration"]:
+            if command.name not in command_categories[f"{get_translation(LOCALE, 'command_help_categories_general')}"] and command.name not in command_categories[f"{get_translation(LOCALE, 'command_help_categories_admin')}"]:
                 custom_commands.append(command.name)
 
     if custom_commands:
