@@ -30,9 +30,9 @@ ALIVEPING = os.getenv("ALIVEPING")
 IGNOREWARNING = False
 song = os.getenv("song")
 arch = platform.machine()
-RED = "\033[31mError: "
-GREEN = "\033[32mSuccess: "
-YELLOW = "\033[33mWarning: "
-DEBUG = "\033[1;30mDebug: "
+RED = "\033[31m"
+GREEN = "\033[32m"
+YELLOW = "\033[33m"
+DEBUG = "\033[1;30m"
 RESET = "\033[0m"
 
