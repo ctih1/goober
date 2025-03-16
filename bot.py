@@ -554,7 +554,7 @@ async def about(ctx):
     print("-----------------------------------")
     embed = discord.Embed(title=f"{get_translation(LOCALE, 'command_about_embed_title')}", description="", color=discord.Color.blue())
     embed.add_field(name=f"{get_translation(LOCALE, 'command_about_embed_field1')}", value=f"{NAME}", inline=False)
-    embed.add_field(name=f"{get_translation(LOCALE, 'command_about_embed_field2name')}", value=f"f{get_translation(LOCALE, 'command_about_embed_field2value').format(local_version=local_version, latest_version=latest_version)}", inline=False)
+    embed.add_field(name=f"{get_translation(LOCALE, 'command_about_embed_field2name')}", value=f"{get_translation(LOCALE, 'command_about_embed_field2value').format(local_version=local_version, latest_version=latest_version)}", inline=False)
 
     await send_message(ctx, embed=embed)
 
