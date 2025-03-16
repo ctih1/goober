@@ -406,10 +406,10 @@ async def retrain(ctx):
         with open(MEMORY_FILE, 'r') as f:
             memory = json.load(f)
     except FileNotFoundError:
-        await send_message(ctx, f"{get_translation(LOCALE, 'command_memory_not_found')}")
+        await send_message(ctx, f"{get_translation(LOCALE, 'command_markov_memory_not_found')}")
         return
     except json.JSONDecodeError:
-        await send_message(ctx, f"{get_translation(LOCALE, 'command_memory_is_corrupt')}")
+        await send_message(ctx, f"{get_translation(LOCALE, 'command_markov_memory_is_corrupt')}")
         return
     data_size = len(memory)
     processed_data = 0
