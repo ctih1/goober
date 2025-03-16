@@ -203,6 +203,9 @@ def check_for_update():
         return None, None 
 
     local_version = get_local_version()
+    if local_version == "0.0.0":
+        with open(LOCAL_VERSION_FILE, "w") as f:
+            f.write(latest_version)
     generate_sha256_of_current_file()
     gooberhash = latest_version_info.get("hash")
     if gooberhash == currenthash:

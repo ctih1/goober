@@ -1,2 +1,4 @@
 .env
 __pycache__
+current_version.txt
+MEMORY_LOADED
