@@ -9,4 +9,4 @@ keep in mind most of (the bot) it was made at 2am
 
 
 
-![the goober](https://goober.whatdidyouexpect.eu/imgs/goobs/image.png)
+![the goober](https://goober.whatdidyouexpect.eu/imgs/goobs/goobs.png)
