@@ -5,7 +5,7 @@ goto wiki please
 keep in mind most of (the bot) it was made at 2am
 
 
-![the goober central src](https://github.com/whatdidyouexpect/goober-central)
+[the goober central src](https://github.com/whatdidyouexpect/goober-central)
 
 
 
