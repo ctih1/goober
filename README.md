@@ -1,12 +1,5 @@
-stupid little bot that learns off people
-
-goto wiki please
-
-keep in mind most of (the bot) it was made at 2am
-
-
-[the goober central src](https://github.com/whatdidyouexpect/goober-central)
-
-
-
-![the goober](https://goober.whatdidyouexpect.eu/imgs/goobs/goobs.png)
+Discord bot that learns from what people say!  
+Please see the [wiki](https://github.com/gooberinc/goober/wiki)  
+keep in mind that most of the bot was written at 2am  
+[Goober Central](https://github.com/whatdidyouexpect/goober-central)  
+![the goober](https://goober.whatdidyouexpect.eu/imgs/goobs/goobs.png)  
