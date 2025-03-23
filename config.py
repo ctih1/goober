@@ -4,7 +4,7 @@ import platform
 import random
 
 load_dotenv()
-VERSION_URL = "https://goober.whatdidyouexpect.eu"
+VERSION_URL = "https://goober.expect.ovh"
 UPDATE_URL = VERSION_URL+"/latest_version.json"
 LOCAL_VERSION_FILE = "current_version.txt" 
 TOKEN = os.getenv("DISCORD_BOT_TOKEN")

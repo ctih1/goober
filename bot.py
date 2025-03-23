@@ -203,7 +203,7 @@ def check_for_update():
     if not latest_version or not download_url:
         print(f"{RED}{get_translation(LOCALE, 'invalid_server')}{RESET}")
         return None, None 
-
+    
     local_version = get_local_version()
     if local_version == "0.0.0":
         with open(LOCAL_VERSION_FILE, "w") as f:
