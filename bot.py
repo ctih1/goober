@@ -428,17 +428,23 @@ async def retrain(ctx):
     await send_message(ctx, f"{get_translation(LOCALE, 'command_markov_retrain_successful').format(data_size=data_size)}", edit=True, message_reference=processing_message_ref)
 
 @bot.hybrid_command(description=f"{get_translation(LOCALE, 'command_desc_talk')}")
-async def talk(ctx):
+async def talk(ctx, sentence_size: int = 5):
     if not markov_model:
         await send_message(ctx, f"{get_translation(LOCALE, 'command_talk_insufficent_text')}")
         return
 
     response = None
-    for _ in range(20):  # Try to generate a coherent sentence
-        response = markov_model.make_sentence(tries=100)
+    for _ in range(20):
+        if sentence_size == 1:
+            response = markov_model.make_short_sentence(max_chars=100, tries=100)
+            if response:
+                response = response.split()[0]
+        else:
+            response = markov_model.make_sentence(tries=100, max_words=sentence_size)
+
         if response and response not in generated_sentences:
-            # Preprocess the sentence for grammar improvements
-            response = improve_sentence_coherence(response)
+            if sentence_size > 1:
+                response = improve_sentence_coherence(response)
             generated_sentences.add(response)
             break
 
