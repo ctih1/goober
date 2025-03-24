@@ -36,7 +36,7 @@
     "latest_version": "Stai utilizzando l'ultima versione:",
     "latest_version2": "Controlla {VERSION_URL}/goob/changes.txt per vedere il changelog",
     "pinging_disabled": "Il ping è disabilitato! Non dico al server che sono online...",
-    "goober_ping_success": "Ping inviato con successo a Goober central!",
+    "goober_ping_success": "Accesso a goober central come {NAME}",
     "goober_ping_fail": "Impossibile inviare i dati. Il server ha restituito il codice di stato:",
     "goober_ping_fail2": "Si è verificato un errore durante l'invio dei dati:",
     "sentence_positivity": "La positività della frase è:",

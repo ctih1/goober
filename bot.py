@@ -354,7 +354,7 @@ def ping_server():
     try:
         response = requests.post(VERSION_URL+"/ping", json=payload)
         if response.status_code == 200:
-            print(f"{GREEN}{get_translation(LOCALE, 'goober_ping_success')}{RESET}")
+            print(f"{GREEN}{get_translation(LOCALE, 'goober_ping_success').format(NAME=NAME)}{RESET}")
         else:
             print(f"{RED}{get_translation(LOCALE, 'goober_ping_fail')} {response.status_code}{RESET}")
     except Exception as e:
@@ -370,7 +370,7 @@ def is_positive(sentence):
         # forcin this fucker
     debug_message = f"{DEBUG}{get_translation(LOCALE, 'sentence_positivity')} {sentiment_score}{RESET}"
     print(debug_message) 
-    
+
     return sentiment_score > 0.1
 
 

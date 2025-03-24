@@ -36,7 +36,7 @@
     "latest_version": "You're using the latest version:",
     "latest_version2": "Check {VERSION_URL}/goob/changes.txt to check out the changelog",
     "pinging_disabled": "Pinging is disabled! Not telling the server im on...",
-    "goober_ping_success": "Sent alive ping to goober central!",
+    "goober_ping_success": "Logged into goober central as {NAME}",
     "goober_ping_fail": "Failed to send data. Server returned status code:",
     "goober_ping_fail2": "An error occurred while sending data:",
     "sentence_positivity": "Positivity of sentence is:",
