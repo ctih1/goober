@@ -6,7 +6,6 @@ import markovify
 import nltk
 from nltk.tokenize import word_tokenize
 import random
-from textblob import TextBlob
 import os
 import time
 import re
@@ -21,6 +20,9 @@ from better_profanity import profanity
 from config import *
 import traceback
 import shutil
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+
+analyzer = SentimentIntensityAnalyzer()
 
 print(splashtext) # you can use https://patorjk.com/software/taag/ for 3d text or just remove this entirely
 
@@ -362,9 +364,13 @@ def ping_server():
 positive_gifs = os.getenv("POSITIVE_GIFS").split(',')
 
 def is_positive(sentence):
-    blob = TextBlob(sentence)
-    sentiment_score = blob.sentiment.polarity
-    print(f"{DEBUG}{get_translation(LOCALE, 'sentence_positivity')} {sentiment_score}{RESET}")
+    scores = analyzer.polarity_scores(sentence)
+    sentiment_score = scores['compound']
+
+        # forcin this fucker
+    debug_message = f"{DEBUG}{get_translation(LOCALE, 'sentence_positivity')} {sentiment_score}{RESET}"
+    print(debug_message) 
+    
     return sentiment_score > 0.1
 
 
