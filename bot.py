@@ -125,14 +125,6 @@ def save_markov_model(model, filename='markov_model.pkl'):
         pickle.dump(model, f)
     print(f"Markov model saved to {filename}.")
 
-
-def backup_current_version():
-    if os.path.exists(LOCAL_VERSION_FILE):
-        shutil.copy(LOCAL_VERSION_FILE, LOCAL_VERSION_FILE + ".bak")
-        print(f"{GREEN}{get_translation(LOCALE, 'version_backup')} {LOCAL_VERSION_FILE}.bak{RESET}")
-    else:
-        print(f"{RED}{get_translation(LOCALE, 'backup_error').format(LOCAL_VERSION_FILE=LOCAL_VERSION_FILE)} {RESET}")
-
 def load_markov_model(filename='markov_model.pkl'):
 
     try:
@@ -179,15 +171,9 @@ def generate_sha256_of_current_file():
     currenthash = sha256_hash.hexdigest()
 
 
-def get_local_version():
-    """Read the current version from the local file."""
-    if os.path.exists(LOCAL_VERSION_FILE):
-        with open(LOCAL_VERSION_FILE, "r") as f:
-            return f.read().strip()
-    return "0.0.0"
 
 latest_version = "0.0.0"
-local_version = "0.0.0"
+local_version = "0.14.8.1"
 
 def check_for_update():
     if ALIVEPING == "false":
@@ -205,8 +191,7 @@ def check_for_update():
     if not latest_version or not download_url:
         print(f"{RED}{get_translation(LOCALE, 'invalid_server')}{RESET}")
         return None, None 
-    
-    local_version = get_local_version()
+
     if local_version == "0.0.0":
         with open(LOCAL_VERSION_FILE, "w") as f:
             f.write(latest_version)
@@ -216,19 +201,6 @@ def check_for_update():
         if local_version < latest_version:
             print(f"{YELLOW}{get_translation(LOCALE, 'new_version').format(latest_version=latest_version, local_version=local_version)}{RESET}")
             print(f"{YELLOW}{get_translation(LOCALE, 'changelog').format(VERSION_URL=VERSION_URL)}{RESET}")
-        elif local_version > latest_version:
-            if IGNOREWARNING == False:
-                print(f"\n{RED}{get_translation(LOCALE, 'invalid_version').format(local_version=local_version)}")
-                print(f"{get_translation(LOCALE, 'invalid_version2')}")
-                print(f"{get_translation(LOCALE, 'invalid_version3')}{RESET}\n\n")
-                userinp = input(f"{get_translation(LOCALE, 'input')}\n")
-                if userinp.lower() == "y":
-                    backup_current_version()
-                    with open(LOCAL_VERSION_FILE, "w") as f:
-                        f.write(latest_version)
-            else:
-                print(f"{RED}{get_translation(LOCALE, 'modification_ignored')} {LOCAL_VERSION_FILE}")
-                print(f"{get_translation(LOCALE, 'modification_ignored2')}{RESET}")
         else:
             print(f"{GREEN}{get_translation(LOCALE, 'latest_version')} {local_version}{RESET}")
             print(f"{get_translation(LOCALE, 'latest_version2').format(VERSION_URL=VERSION_URL)}\n\n")
