@@ -9,6 +9,7 @@ from datetime import datetime
 import time
 import aiohttp
 from aiohttp import WSMsgType
+from config import VERSION_URL
 
 class GooberWeb(commands.Cog):
     def __init__(self, bot):
@@ -576,12 +577,8 @@ class GooberWeb(commands.Cog):
                         <span class="stat-title">RAM:</span>
                         <span>{stats['ram_usage']}</span>
                     </div>
-                    <div class="stat-item" id="cpu-usage">
-                        <span class="stat-title">CPU:</span>
-                        <span>{stats['cpu_usage']}</span>
-                    </div>
                     <div class="stat-item" id="system-cpu">
-                        <span class="stat-title">System CPU:</span>
+                        <span class="stat-title">CPU:</span>
                         <span>{stats['system_cpu']}</span>
                     </div>
                     <div class="stat-item" id="latency">
@@ -622,6 +619,9 @@ class GooberWeb(commands.Cog):
                         <div class="stat-title">Version</div>
                         <div id="last-command">Installed Version: {stats['localversion']}</div>
                         <div id="last-command">Latest Version: {stats['latestversion']}</div>
+                        <br>
+                        <div class="stat-title">goober-central URL</div>
+                        <div id="last-command">{VERSION_URL}</div>
                         <br>
                         <div class="stat-title">Change song</div>
                         <form action="/changesong" method="get">
