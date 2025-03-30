@@ -173,7 +173,7 @@ def generate_sha256_of_current_file():
 
 
 latest_version = "0.0.0"
-local_version = "0.14.8.2"
+local_version = "0.14.8.3"
 os.environ['gooberlocal_version'] = local_version
 
 
@@ -519,13 +519,26 @@ async def on_message(message):
     # process any commands in the message
     await bot.process_commands(message)
 
+
 @bot.event
 async def on_interaction(interaction):
-    if interaction.type == discord.InteractionType.application_command:
-        if interaction.user.id in BLACKLISTED_USERS:
-            return
-
         print(f"{get_translation(LOCALE, 'command_ran_s').format(interaction=interaction)}{interaction.data['name']}")
+
+@bot.check
+async def block_blacklisted(ctx):
+    if str(ctx.author.id) in BLACKLISTED_USERS:
+        try:
+            if isinstance(ctx, discord.Interaction):
+                if not ctx.response.is_done():
+                    await ctx.response.send_message("You are blacklisted.", ephemeral=True)
+                else:
+                    await ctx.followup.send("You are blacklisted.", ephemeral=True)
+            else:
+                await ctx.send("You are blacklisted.", ephemeral=True)
+        except:
+            pass
+        return False
+    return True
 
 @bot.hybrid_command(description=f"{get_translation(LOCALE, 'command_desc_ping')}")
 async def ping(ctx):
