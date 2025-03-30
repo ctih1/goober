@@ -234,7 +234,6 @@ class GooberWeb(commands.Cog):
             <html>
             <head>
                 <title>goobs central</title>
-                <link rel="stylesheet" href="/styles.css">
                 <style>
                     body {{
                         background-color: #121212;
