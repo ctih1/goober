@@ -181,7 +181,8 @@ class GooberWeb(commands.Cog):
             "authenticated": os.getenv("gooberauthenticated"),
             "lastmsg": os.getenv("gooberlatestgen"),
             "localversion": os.getenv("gooberlocal_version"),
-            "latestversion": os.getenv("gooberlatest_version")
+            "latestversion": os.getenv("gooberlatest_version"),
+            "owner": os.getenv("ownerid")
         }
     
     async def handle_update(self, request):
@@ -229,12 +230,62 @@ class GooberWeb(commands.Cog):
             </div>
             """
 
+        owner_id = stats.get('owner')
+        owner = None
+        owner_username = "Owner"
+        owner_pfp = ""
+        
+        if owner_id:
+            try:
+                owner = await self.bot.fetch_user(int(owner_id))
+                owner_username = f"{owner.name}#{owner.discriminator}"
+                owner_pfp = str(owner.avatar.url) if owner and owner.avatar else ""
+            except:
+                pass
+
+
         html_content = f"""
             <!DOCTYPE html>
             <html>
             <head>
                 <title>goobs central</title>
                 <style>
+                    #loading-screen {{
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background-color: #000;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+                        z-index: 9999;
+                        transition: opacity 1.5s ease-out;
+                    }}
+                    
+                    #loading-screen.fade-out {{
+                        opacity: 0;
+                        pointer-events: none;
+                    }}
+                    
+                    #welcome-message {{
+                        color: #fff;
+                        font-size: 2em;
+                        margin-bottom: 20px;
+                        text-align: center;
+                        text-shadow: 0 0 10px #ff5555;
+                    }}
+                    
+                    #owner-avatar {{
+                        width: 100px;
+                        height: 100px;
+                        border-radius: 50%;
+                        object-fit: cover;
+                        border: 3px solid #5f1b1b;
+                        box-shadow: 0 0 20px #ff5555;
+                    }}
                     body {{
                         background-color: #121212;
                         color: #ffffff;
@@ -516,6 +567,10 @@ class GooberWeb(commands.Cog):
                 </style>
             </head>
             <body>
+                <div id="loading-screen">
+                    <img id="owner-avatar" src="{owner_pfp}" onerror="this.style.display='none'">
+                    <div id="welcome-message"><b>Welcome, {owner_username}</b></div>
+                </div>
                 <div class="topnav">
                     <div class="stat-item" id="ram-usage">
                         <span class="stat-title">RAM:</span>
@@ -590,6 +645,15 @@ class GooberWeb(commands.Cog):
                     </div>
                 </div>
                 <script>
+                    window.addEventListener('load', function() {{
+                        setTimeout(function() {{
+                            const loadingScreen = document.getElementById('loading-screen');
+                            loadingScreen.classList.add('fade-out');
+                            setTimeout(function() {{
+                                loadingScreen.remove();
+                            }}, 1500);
+                        }}, 1500);
+                    }});
                     const ws = new WebSocket('ws://' + window.location.host + '/ws');
                     
                     ws.onmessage = function(event) {{
