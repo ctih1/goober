@@ -1,6 +1,6 @@
 Discord bot that learns from what people say!
 
-Please see the [wiki](https://github.com/gooberinc/goober/wiki)
+Please see the [wiki](https://wiki.goober.whatdidyouexpect.eu)
 
 keep in mind that most of the bot was written at 2am 
 
