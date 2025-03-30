@@ -179,7 +179,9 @@ class GooberWeb(commands.Cog):
             "bot_name": self.bot.user.name,
             "bot_avatar_url": str(self.bot.user.avatar.url) if self.bot.user.avatar else "",
             "authenticated": os.getenv("gooberauthenticated"),
-            "lastmsg": os.getenv("gooberlatestgen")
+            "lastmsg": os.getenv("gooberlatestgen"),
+            "localversion": os.getenv("gooberlocal_version"),
+            "latestversion": os.getenv("gooberlatest_version")
         }
     
     async def handle_update(self, request):
@@ -235,33 +237,68 @@ class GooberWeb(commands.Cog):
                 <link rel="stylesheet" href="/styles.css">
                 <style>
                     body {{
-                        background-color: black;
-                        color: white;
-                        font-family: Arial, sans-serif;
+                        background-color: #121212;
+                        color: #ffffff;
+                        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
                         margin: 0;
                         padding: 0;
+                        line-height: 1.6;
                     }}
                     
                     .topnav {{
-                        background-color: rgb(95, 27, 27);
+                        background-color: #2a0a0a;
                         overflow: hidden;
                         display: flex;
                         flex-wrap: wrap;
                         justify-content: center;
                         padding: 10px;
-                        gap: 20px;
+                        gap: 15px;
+                        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
                     }}
                     
                     .stat-item {{
-                        display: flex;
                         gap: 5px;
                         color: white;
                         font-size: 14px;
+                        background-color: #1a1a1a;
+                        padding: 8px 15px;
+                        border-radius: 6px;
+                        align-items: center;
+                        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+                        position: relative;
+                        transition: all 0.3s ease;
+                    }}
+                    
+                    .stat-item:hover {{
+                        transform: translateY(-2px);
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+                    }}
+                    
+                    .stat-item::after {{
+                        content: '';
+                        position: absolute;
+                        bottom: -5px;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        width: 60%;
+                        height: 3px;
+                        background: linear-gradient(90deg, transparent, #ff5555, transparent);
+                        opacity: 0;
+                        transition: opacity 0.3s ease;
+                    }}
+                    
+                    .stat-item:hover::after {{
+                        opacity: 1;
                     }}
                     
                     .stat-title {{
                         font-weight: bold;
-                        color: #ccc;
+                        color: #ff9999;
+                    }}
+                    
+                    .stat-item span:not(.stat-title) {{
+                        font-weight: bold;
+                        color: #ffffff;
                     }}
                     
                     .center {{
@@ -283,11 +320,15 @@ class GooberWeb(commands.Cog):
                         width: 80px;
                         height: 80px;
                         border-radius: 50%;
-                        border: 3px solid rgb(95, 27, 27);
+                        border: 3px solid #5f1b1b;
+                        object-fit: cover;
+                        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
                     }}
                     
                     hr {{
-                        border: 1px solid rgb(95, 27, 27);
+                        border: 0;
+                        height: 1px;
+                        background-image: linear-gradient(to right, transparent, #5f1b1b, transparent);
                         margin: 20px 0;
                     }}
                     
@@ -302,10 +343,19 @@ class GooberWeb(commands.Cog):
                     
                     .stat-container {{
                         flex: 1;
-                        background-color: #1a1a1a;
+                        background-color: #1e1e1e;
                         padding: 20px;
                         border-radius: 8px;
-                        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+                        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+                        min-width: 0;
+                    }}
+                    
+                    .stat-title {{
+                        color: #ff5555;
+                        font-size: 1.1em;
+                        margin-bottom: 10px;
+                        border-bottom: 1px solid #333;
+                        padding-bottom: 5px;
                     }}
                     
                     .guild-item {{
@@ -313,8 +363,8 @@ class GooberWeb(commands.Cog):
                         align-items: center;
                         gap: 15px;
                         padding: 10px;
-                        margin: 10px 0;
-                        background-color: #2a2a2a;
+                        margin: 5px 0;
+                        background-color: #252525;
                         border-radius: 5px;
                         transition: background-color 0.2s;
                     }}
@@ -327,6 +377,7 @@ class GooberWeb(commands.Cog):
                         width: 48px;
                         height: 48px;
                         border-radius: 50%;
+                        object-fit: cover;
                     }}
                     
                     .guild-icon-placeholder {{
@@ -344,10 +395,15 @@ class GooberWeb(commands.Cog):
                     .guild-info {{
                         display: flex;
                         flex-direction: column;
+                        flex-grow: 1;
+                        min-width: 0;
                     }}
                     
                     .guild-name {{
                         font-weight: bold;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
                     }}
                     
                     .guild-members {{
@@ -360,16 +416,17 @@ class GooberWeb(commands.Cog):
                         align-items: center;
                         gap: 15px;
                         padding: 10px;
-                        margin: 10px 0;
-                        background-color: #2a2a2a;
+                        margin: 5px 0;
+                        background-color: #2a1a1a;
                         border-radius: 5px;
-                        border-left: 4px solid #f04747;
+                        border-left: 3px solid #ff5555;
                     }}
                     
                     .user-avatar {{
                         width: 48px;
                         height: 48px;
                         border-radius: 50%;
+                        object-fit: cover;
                     }}
                     
                     .user-avatar-placeholder {{
@@ -391,7 +448,7 @@ class GooberWeb(commands.Cog):
                     
                     .user-name {{
                         font-weight: bold;
-                        color: #f04747;
+                        color: #ff5555;
                     }}
                     
                     .user-id {{
@@ -400,16 +457,17 @@ class GooberWeb(commands.Cog):
                     }}
                     
                     input[type="text"] {{
-                        background-color: #2a2a2a;
+                        background-color: #252525;
                         color: white;
                         border: 1px solid #444;
                         padding: 8px;
                         border-radius: 4px;
+                        width: 200px;
                         margin-right: 10px;
                     }}
                     
                     button {{
-                        background-color: rgb(95, 27, 27);
+                        background-color: #5f1b1b;
                         color: white;
                         border: none;
                         padding: 8px 15px;
@@ -419,13 +477,13 @@ class GooberWeb(commands.Cog):
                     }}
                     
                     button:hover {{
-                        background-color: rgb(120, 40, 40);
+                        background-color: #7a2323;
                     }}
                     
                     #guild-list, #blacklisted-users {{
                         max-height: 400px;
                         overflow-y: auto;
-                        padding-right: 10px;
+                        padding-right: 5px;
                     }}
                     
                     #guild-list::-webkit-scrollbar, #blacklisted-users::-webkit-scrollbar {{
@@ -437,8 +495,24 @@ class GooberWeb(commands.Cog):
                     }}
                     
                     #guild-list::-webkit-scrollbar-thumb, #blacklisted-users::-webkit-scrollbar-thumb {{
-                        background: rgb(95, 27, 27);
+                        background-color: #5f1b1b;
                         border-radius: 3px;
+                    }}
+                    
+                    @media (max-width: 768px) {{
+                        .stat-container-row {{
+                            flex-direction: column;
+                        }}
+                        
+                        .topnav {{
+                            gap: 10px;
+                            padding: 10px 5px;
+                        }}
+                        
+                        .stat-item {{
+                            font-size: 12px;
+                            padding: 8px 12px;
+                        }}
                     }}
                 </style>
             </head>
@@ -471,12 +545,11 @@ class GooberWeb(commands.Cog):
                 </div>
 
                 <div class="center">
-                    <h2>
                     <div class="bot-info">
                         <img src="{stats['bot_avatar_url']}" alt="botvatar" class="bot-avatar" id="bot-avatar">
-                        <span id="bot-name">{stats['bot_name']}</span>
+                        <h1 id="bot-name">{stats['bot_name']}</h1>
                     </div>
-                    </h2>
+                    <hr>
                     <p>your stupid little goober that learns off other people's messages</p>
                 </div>
 
@@ -491,6 +564,10 @@ class GooberWeb(commands.Cog):
                         <br>
                         <div class="stat-title">Last generated message</div>
                         <div id="last-command">{stats['lastmsg']}</div>
+                        <br>
+                        <div class="stat-title">Version</div>
+                        <div id="last-command">Installed Version: {stats['localversion']}</div>
+                        <div id="last-command">Latest Version: {stats['latestversion']}</div>
                         <br>
                         <div class="stat-title">Change song</div>
                         <form action="/changesong" method="get">

@@ -175,7 +175,7 @@ def generate_sha256_of_current_file():
 latest_version = "0.0.0"
 local_version = "0.14.8.2"
 os.environ['gooberlocal_version'] = local_version
-os.environ['gooberlatest_version'] = latest_version
+
 
 def check_for_update():
     if ALIVEPING == "false":
@@ -188,6 +188,7 @@ def check_for_update():
         return None, None 
 
     latest_version = latest_version_info.get("version")
+    os.environ['gooberlatest_version'] = latest_version
     download_url = latest_version_info.get("download_url")
 
     if not latest_version or not download_url:
