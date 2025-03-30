@@ -173,7 +173,9 @@ def generate_sha256_of_current_file():
 
 
 latest_version = "0.0.0"
-local_version = "0.14.8.1"
+local_version = "0.14.8.2"
+os.environ['gooberlocal_version'] = local_version
+os.environ['gooberlatest_version'] = latest_version
 
 def check_for_update():
     if ALIVEPING == "false":
@@ -327,10 +329,13 @@ def ping_server():
         response = requests.post(VERSION_URL+"/ping", json=payload)
         if response.status_code == 200:
             print(f"{GREEN}{get_translation(LOCALE, 'goober_ping_success').format(NAME=NAME)}{RESET}")
+            os.environ['gooberauthenticated'] = 'Yes'
         else:
             print(f"{RED}{get_translation(LOCALE, 'goober_ping_fail')} {response.status_code}{RESET}")
+            os.environ['gooberauthenticated'] = 'No'
     except Exception as e:
         print(f"{RED}{get_translation(LOCALE, 'goober_ping_fail2')} {str(e)}{RESET}")
+        os.environ['gooberauthenticated'] = 'No'
 
 
 positive_gifs = os.getenv("POSITIVE_GIFS").split(',')
@@ -434,6 +439,8 @@ async def talk(ctx, sentence_size: int = 5):
             combined_message = f"{coherent_response}\n[jif]({gif_url})"
         else:
             combined_message = coherent_response
+        print(combined_message)
+        os.environ['gooberlatestgen'] = combined_message
         await send_message(ctx, combined_message)
     else:
         await send_message(ctx, f"{get_translation(LOCALE, 'command_talk_generation_fail')}")
@@ -510,6 +517,14 @@ async def on_message(message):
 
     # process any commands in the message
     await bot.process_commands(message)
+
+@bot.event
+async def on_interaction(interaction):
+    if interaction.type == discord.InteractionType.application_command:
+        if interaction.user.id in BLACKLISTED_USERS:
+            return
+
+        print(f"{get_translation(LOCALE, 'command_ran_s').format(interaction=interaction)}{interaction.data['name']}")
 
 @bot.hybrid_command(description=f"{get_translation(LOCALE, 'command_desc_ping')}")
 async def ping(ctx):

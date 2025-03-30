@@ -57,6 +57,7 @@
     "command_help_categories_admin": "Administration",
     "command_help_categories_custom": "Custom Commands",
     "command_ran": "Info: {message.author.name} ran {message.content}",
+    "command_ran_s": "Info: {interaction.user} ran ",
     "command_desc_ping": "ping",
     "command_ping_embed_desc": "Bot Latency:",
     "command_ping_footer": "Requested by",
