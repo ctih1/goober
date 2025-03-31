@@ -8,8 +8,11 @@ import json
 from datetime import datetime
 import time
 import aiohttp
+import re
 from aiohttp import WSMsgType
 from config import VERSION_URL
+import sys
+import subprocess
 
 class GooberWeb(commands.Cog):
     def __init__(self, bot):
@@ -29,11 +32,23 @@ class GooberWeb(commands.Cog):
             web.get('/data', self.handle_json_data),
             web.get('/ws', self.handle_websocket),
             web.get('/styles.css', self.handle_css),
+            web.get('/settings', self.handle_settings),
+            web.post('/update_settings', self.handle_update_settings),
+            web.post('/restart_bot', self.handle_restart_bot),
         ])
 
         self.bot.loop.create_task(self.start_web_server())
         self.update_clients.start()
-        
+
+    async def restart_bot(self):
+        await asyncio.sleep(1)
+        python = sys.executable
+        os.execl(python, python, *sys.argv)
+
+    async def handle_restart_bot(self, request):
+        asyncio.create_task(self.restart_bot())
+        return web.Response(text="Bot is restarting...")
+
     async def get_blacklisted_users(self):
         blacklisted_ids = os.getenv("BLACKLISTED_USERS", "").split(",")
         blacklisted_users = []
@@ -202,7 +217,133 @@ class GooberWeb(commands.Cog):
         if os.path.exists("goob/changes.txt"):
             return web.FileResponse("goob/changes.txt")
         return web.Response(text="Changelog not found", status=404)
+
+    async def read_env_file(self):
+        env_vars = {}
+        try:
+            with open('.env', 'r') as f:
+                for line in f:
+                    line = line.strip()
+                    if not line or line.startswith('#') or '=' not in line:
+                        continue
+
+                    key, value = line.split('=', 1)
+                    key = key.strip()
+                    if key in ['splashtext', 'DISCORD_BOT_TOKEN']:
+                        continue
+
+                    env_vars[key] = value.strip('"\'')
+        except FileNotFoundError:
+            print(".env file not found")
+        return env_vars
+
     
+    async def handle_settings(self, request):
+        env_vars = await self.read_env_file()
+        
+        # Get config.py variables
+        config_vars = {}
+        try:
+            with open('config.py', 'r') as f:
+                for line in f:
+                    if line.startswith('VERSION_URL'):
+                        config_vars['VERSION_URL'] = line.split('=', 1)[1].strip().strip('"')
+        except FileNotFoundError:
+            pass
+        
+        settings_html = """
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Goober Settings</title>
+            <style>
+                body { background-color: #121212; color: #ffffff; font-family: 'Segoe UI', sans-serif; }
+                h1 { color: #ff5555; text-align: center; }
+                .settings-container { max-width: 800px; margin: auto; background-color: #1e1e1e; padding: 20px; border-radius: 8px; }
+                .form-group { margin-bottom: 15px; }
+                label { display: block; margin-bottom: 5px; color: #ff9999; }
+                input { width: 100%; padding: 8px; background-color: #252525; color: white; border: 1px solid #444; border-radius: 4px; }
+                button { background-color: #5f1b1b; color: white; border: none; padding: 10px; border-radius: 4px; cursor: pointer; }
+                button:hover { background-color: #7a2323; }
+            </style>
+        </head>
+        <body>
+            <div class='settings-container'>
+                <h1>Goober Settings</h1>
+                <form id='settingsForm' action='/update_settings' method='post'>
+        """
+        
+        for key, value in env_vars.items():
+            settings_html += f"""
+            <div class='form-group'>
+                <label for='{key}'>{key}</label>
+                <input type='text' id='{key}' name='{key}' value='{value}'>
+            </div>
+            """
+        
+        for key, value in config_vars.items():
+            settings_html += f"""
+            <div class='form-group'>
+                <label for='{key}'>{key}</label>
+                <input type='text' id='{key}' name='{key}' value='{value}'>
+            </div>
+            """
+        
+        settings_html += """
+                <button type='submit'>Save Settings</button>
+                </form>
+                <form action="/restart_bot" method="POST">
+                    <button type="submit">Restart</button>
+                </form>
+            </div>
+        </body>
+        </html>
+        """
+        
+        return web.Response(text=settings_html, content_type='text/html')
+    
+    async def handle_update_settings(self, request):
+        data = await request.post()
+        env_text = ""
+
+        try:
+            with open('.env', 'r') as f:
+                env_text = f.read()
+        except FileNotFoundError:
+            pass
+
+        def replace_match(match):
+            key = match.group(1)
+            value = match.group(2)
+            if key in ['splashtext', 'DISCORD_BOT_TOKEN']:
+                return match.group(0)
+            if key in data:
+                new_value = data[key]
+                if not (new_value.startswith('"') and new_value.endswith('"')):
+                    new_value = f'"{new_value}"'
+                return f'{key}={new_value}'
+            return match.group(0)
+
+        env_text = re.sub(r'^(\w+)=([\s\S]+?)(?=\n\w+=|\Z)', replace_match, env_text, flags=re.MULTILINE)
+
+        with open('.env', 'w') as f:
+            f.write(env_text.strip() + '\n')
+
+        if 'VERSION_URL' in data:
+            config_text = ""
+            try:
+                with open('config.py', 'r') as f:
+                    config_text = f.read()
+            except FileNotFoundError:
+                pass
+
+            config_text = re.sub(r'^(VERSION_URL\s*=\s*").+?"', f'\\1{data["VERSION_URL"]}"', config_text, flags=re.MULTILINE)
+
+            with open('config.py', 'w') as f:
+                f.write(config_text.strip() + '\n')
+
+        return aiohttp.web.Response(text="Settings updated successfully!")
+
     async def handle_index(self, request):
         stats = await self.get_bot_stats()
 

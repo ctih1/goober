@@ -317,6 +317,7 @@ async def on_ready():
 def ping_server():
     if ALIVEPING == "false":
         print(f"{YELLOW}{get_translation(LOCALE, 'pinging_disabled')}{RESET}")
+        os.environ['gooberauthenticated'] = 'No'
         return
     file_info = get_file_info(MEMORY_FILE)
     payload = {
