@@ -1,0 +1,7 @@
+discord.py
+markovify
+nltk
+requests
+psutil
+better_profanity
+python-dotenv
