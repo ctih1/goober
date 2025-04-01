@@ -275,7 +275,7 @@ intents = discord.Intents.default()
 
 intents.messages = True
 intents.message_content = True
-bot = commands.Bot(command_prefix=PREFIX, intents=intents)
+bot = commands.Bot(command_prefix=PREFIX, intents=intents, allowed_mentions=discord.AllowedMentions(everyone=False, roles=False, users=False, replied_user=True))
 memory = load_memory() 
 markov_model = load_markov_model()
 if not markov_model:
