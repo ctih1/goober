@@ -1,5 +1,5 @@
 {
-    "modification_warning": "Goober has been modified! Skipping server checks entirely...",
+    "modification_warning": "Goober has been modified! Any changes will be lost in an update!",
     "reported_version": "Reported Version:",
     "current_hash": "Current Hash:",
     "not_found": "is not found!",
