@@ -173,7 +173,7 @@ def generate_sha256_of_current_file():
 
 
 latest_version = "0.0.0"
-local_version = "0.14.8.3"
+local_version = "0.14.8.3.1"
 os.environ['gooberlocal_version'] = local_version
 
 
