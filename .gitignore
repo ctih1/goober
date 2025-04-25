@@ -5,3 +5,4 @@ MEMORY_LOADED
 memory.json
 *.pkl
 *.json
+venv/

@@ -3,8 +3,6 @@ from discord.ext import commands, tasks
 from discord import app_commands
 import json
 import markovify
-import nltk
-from nltk.tokenize import word_tokenize
 import random
 import os
 import time
@@ -20,15 +18,35 @@ from better_profanity import profanity
 from config import *
 import traceback
 import shutil
-from nltk.sentiment.vader import SentimentIntensityAnalyzer
+import nltk
+from nltk.data import find
+from nltk import download
 
-analyzer = SentimentIntensityAnalyzer()
 
 print(splashtext) # you can use https://patorjk.com/software/taag/ for 3d text or just remove this entirely
 
+def check_resources():
+    resources = {
+        'vader_lexicon': 'sentiment/vader_lexicon',
+        'punkt_tab': 'tokenizers/punkt',
+    }
+    
+    for resource, path in resources.items():
+        try:
+            find(path)
+            print(f"{resource} is already installed.")
+        except LookupError:
+            print(f"{resource} is not installed. Downloading now...")
+            download(resource)
+
+
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+from nltk.tokenize import word_tokenize
+analyzer = SentimentIntensityAnalyzer()
+
 def download_json():
     locales_dir = "locales"
-    response = requests.get(f"{VERSION_URL}/goob/locales/{LOCALE}.json")
+    response = requests.get(f"https://raw.githubusercontent.com/gooberinc/goober/refs/heads/main/locales/{LOCALE}.json")
     if response.status_code == 200:
 
         if not os.path.exists(locales_dir):
@@ -42,7 +60,7 @@ def download_json():
 
     if not os.path.exists(os.path.join(locales_dir, "en.json")):
         
-        response = requests.get(f"{VERSION_URL}/goob/locales/en.json")
+        response = requests.get(f"https://raw.githubusercontent.com/gooberinc/goober/refs/heads/main/locales/en.json")
         if response.status_code == 200:
             with open(os.path.join(locales_dir, "en.json"), "w", encoding="utf-8") as file:
                 file.write(response.text)
@@ -222,8 +240,6 @@ def get_file_info(file_path):
         return {"file_size_bytes": file_size, "line_count": len(lines)}
     except Exception as e:
         return {"error": str(e)}
-
-nltk.download('punkt')
 
 def load_memory():
     data = []
