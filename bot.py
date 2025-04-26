@@ -39,6 +39,7 @@ def check_resources():
             print(f"{resource} is not installed. Downloading now...")
             download(resource)
 
+check_resources()
 
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from nltk.tokenize import word_tokenize
@@ -179,6 +180,17 @@ async def load_cogs_from_folder(bot, folder_name="cogs"):
                 print(f"{RED}{get_translation(LOCALE, 'cog_fail')} {cog_name} {e}{RESET}")
                 traceback.print_exc()
 
+async def load_modules(bot, folder_name="modules"):
+    for filename in os.listdir(folder_name):
+        if filename.endswith(".py") and not filename.startswith("_"):
+            cog_name = filename[:-3]
+            try:
+                await bot.load_extension(f"{folder_name}.{cog_name}")
+                print(f"{GREEN}{get_translation(LOCALE, 'loaded_cog2')} {cog_name}{RESET}")
+            except Exception as e:
+                print(f"{RED}{get_translation(LOCALE, 'cog_fail2')} {cog_name} {e}{RESET}")
+                traceback.print_exc()
+
 currenthash = ""
 def generate_sha256_of_current_file():
     global currenthash
@@ -312,6 +324,7 @@ async def on_ready():
     else:
        print(f"{DEBUG}{get_translation(LOCALE, 'folder_exists').format(folder_name=folder_name)}{RESET}")
     markov_model = train_markov_model(memory)
+    await load_modules(bot)
     await load_cogs_from_folder(bot)
     global slash_commands_enabled
     print(f"{GREEN}{get_translation(LOCALE, 'logged_in')} {bot.user}{RESET}")

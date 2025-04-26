@@ -6,6 +6,8 @@
     "version_error": "Impossibile recuperare le informazioni sulla versione. Codice di stato",
     "loaded_cog": "Cog caricato:",
     "cog_fail": "Impossibile caricare il cog:",
+    "loaded_cog2": "Module caricato:",
+    "cog_fail2": "Impossibile caricare il module:",
     "no_model": "Nessun modello Markov salvato trovato. Iniziamo da zero.",
     "folder_created": "Cartella '{folder_name}' creata.",
     "folder_exists": "La cartella '{folder_name}' esiste già. Saltando...",
