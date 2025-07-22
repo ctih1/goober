@@ -3,8 +3,13 @@ import json
 import markovify
 import pickle
 from modules.globalvars import *
-from modules.volta.main import _
 import logging
+import modules.keys as k
+from modules.settings import Settings as SettingsManager
+settings_manager = SettingsManager()
+settings = settings_manager.settings
+
+
 logger = logging.getLogger("goober")
 # Get file size and line count for a given file path
 def get_file_info(file_path):
@@ -22,7 +27,7 @@ def load_memory():
 
     # Try to load data from MEMORY_FILE
     try:
-        with open(MEMORY_FILE, "r") as f:
+        with open(settings["bot"]["active_memory"], "r") as f:
             data = json.load(f)
     except FileNotFoundError:
         pass
@@ -31,7 +36,7 @@ def load_memory():
 
 # Save memory data to MEMORY_FILE
 def save_memory(memory):
-    with open(MEMORY_FILE, "w") as f:
+    with open(settings["bot"]["active_memory"], "w") as f:
         json.dump(memory, f, indent=4)
 
 def train_markov_model(memory, additional_data=None):
@@ -57,8 +62,8 @@ def load_markov_model(filename='markov_model.pkl'):
     try:
         with open(filename, 'rb') as f:
             model = pickle.load(f)
-        logger.info(f"{_('model_loaded')} {filename}.{RESET}")
+        logger.info(f"{k.model_loaded()} {filename}.{RESET}")
         return model
     except FileNotFoundError:
-        logger.error(f"{filename} {_('not_found')}{RESET}")
+        logger.error(f"{filename} {k.not_found()}{RESET}")
         return None

@@ -99,6 +99,9 @@ class GooberWeb(commands.Cog):
         print("Goober web server started on port 8080")
     
     async def stop_web_server(self):
+        if self.site is None or self.runner is None:
+            return
+        
         await self.site.stop()
         await self.runner.cleanup()
         print("Web server stopped")

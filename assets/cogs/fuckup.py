@@ -1,9 +1,9 @@
 import discord
 from discord.ext import commands
 from modules.image import *
-from modules.volta.main import _
 from PIL import Image, ImageEnhance, ImageFilter, ImageOps, ImageChops, ImageColor
 import os, random, shutil, tempfile
+import modules.keys as k
 
 async def deepfryimage(path):
     with Image.open(path).convert("RGB") as im:
@@ -66,7 +66,7 @@ class whami(commands.Cog):
             else:
                 fallback_image = get_random_asset_image()
                 if fallback_image is None:
-                    await ctx.reply(_('no_image_available'))
+                    await ctx.reply(k.no_image_available())
                     return
                 temp_input = tempfile.mktemp(suffix=os.path.splitext(fallback_image)[1])
                 shutil.copy(fallback_image, temp_input)
@@ -74,7 +74,7 @@ class whami(commands.Cog):
         else:
             fallback_image = get_random_asset_image()
             if fallback_image is None:
-                await ctx.reply(_('no_image_available'))
+                await ctx.reply(k.no_image_available())
                 return
             temp_input = tempfile.mktemp(suffix=os.path.splitext(fallback_image)[1])
             shutil.copy(fallback_image, temp_input)
@@ -85,7 +85,7 @@ class whami(commands.Cog):
         if output_path is None or not os.path.isfile(output_path):
             if temp_input and os.path.exists(temp_input):
                 os.remove(temp_input)
-            await ctx.reply(_('failed_generate_image'))
+            await ctx.reply(k.failed_generate_image())
             return
 
         deepfried_path = await deepfryimage(output_path)

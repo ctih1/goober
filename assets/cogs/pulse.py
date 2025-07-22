@@ -2,7 +2,10 @@ from discord.ext import commands
 import discord
 from collections import defaultdict, Counter
 import datetime
-from modules.globalvars import ownerid
+from modules.settings import Settings as SettingsManager
+settings_manager = SettingsManager()
+settings = settings_manager.settings
+
 class StatsCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -31,7 +34,7 @@ class StatsCog(commands.Cog):
 
     @commands.command()
     async def spyware(self, ctx):
-        if ctx.author.id != ownerid:
+        if ctx.author.id not in settings["bot"]["owner_ids"]:
             return
         uptime = datetime.datetime.utcnow() - self.start_time
         hours_elapsed = max((uptime.total_seconds() / 3600), 1)

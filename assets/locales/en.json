@@ -131,6 +131,12 @@
     "command_stats_embed_field2name": "Version",
     "command_stats_embed_field2value": "Local: {local_version} \nLatest: {latest_version}",
     "command_stats_embed_field3name": "Variable Info",
-    "command_stats_embed_field3value": "Name: {NAME} \nPrefix: {PREFIX} \nOwner ID: {ownerid}\nPing line: {PING_LINE} \nMemory Sharing Enabled: {showmemenabled} \nUser Training Enabled: {USERTRAIN_ENABLED}\nSong: {song} \nSplashtext: ```{splashtext}```"
+    "command_stats_embed_field3value": "Name: {NAME} \nPrefix: {PREFIX} \nOwner ID: {ownerid}\nPing line: {PING_LINE} \nMemory Sharing Enabled: {showmemenabled} \nUser Training Enabled: {USERTRAIN_ENABLED}\nSong: {song} \nSplashtext: ```{splashtext}```",
+    "no_image_available": "No images available!",
+    "failed_generate_image": "Failed to generate an image",
+    "markov_model_not_found": "Markov model not found!",
+    "blacklisted": "blacklisted",
+    "blacklisted_user": "Blacklisted user",
+    "edit_fail": "Failed to edit message"
 }
   

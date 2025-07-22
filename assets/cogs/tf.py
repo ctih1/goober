@@ -14,12 +14,12 @@ MODEL_MATCH_STRING = r"[0-9]{2}_[0-9]{2}_[0-9]{4}-[0-9]{2}_[0-9]{2}"
 
 try:
     import tensorflow as tf    
-    from tensorflow import keras
-    from tensorflow.keras.preprocessing.text import Tokenizer
-    from tensorflow.keras.preprocessing.sequence import pad_sequences
-    from tensorflow.keras.models import Sequential, load_model
-    from tensorflow.keras.layers import Embedding, LSTM, Dense
-    from tensorflow.keras.backend import clear_session
+    import keras
+    from keras.preprocessing.text import Tokenizer
+    from keras.preprocessing.sequence import pad_sequences
+    from keras.models import Sequential, load_model
+    from keras.layers import Embedding, LSTM, Dense
+    from keras.backend import clear_session
     
     if tf.config.list_physical_devices('GPU'):
         print("Using GPU acceleration")

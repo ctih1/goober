@@ -1,8 +1,14 @@
 import sys
 import traceback
 import os
-from modules.globalvars import RED, RESET, splashtext
-from modules.volta.main import _
+from modules.settings import Settings as SettingsManager
+import logging
+from modules.globalvars import RED, RESET
+import modules.keys as k
+
+settings_manager = SettingsManager()
+settings = settings_manager.settings
+logger = logging.getLogger("goober")
 
 def handle_exception(exc_type, exc_value, exc_traceback, *, context=None):
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -11,11 +17,13 @@ def handle_exception(exc_type, exc_value, exc_traceback, *, context=None):
         sys.__excepthook__(exc_type, exc_value, exc_traceback)
         return
 
-    print(splashtext)
+    with open(settings['splash_text_loc'], "r") as f:
+        print("".join(f.readlines()))
+
     print(f"{RED}=====BEGINNING OF TRACEBACK====={RESET}")
     traceback.print_exception(exc_type, exc_value, exc_traceback)
     print(f"{RED}========END OF TRACEBACK========{RESET}")
-    print(f"{RED}{_('unhandled_exception')}{RESET}")
+    print(f"{RED}{k.unhandled_exception()}{RESET}")
 
     
     if context:

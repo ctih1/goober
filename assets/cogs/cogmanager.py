@@ -1,6 +1,11 @@
 import discord
 from discord.ext import commands
-from modules.globalvars import ownerid
+import discord.ext
+import discord.ext.commands
+from modules.settings import Settings as SettingsManager
+settings_manager = SettingsManager()
+settings = settings_manager.settings
+
 
 COG_PREFIX = "assets.cogs."
 
@@ -9,9 +14,33 @@ class CogManager(commands.Cog):
         self.bot = bot
 
     @commands.command()
-    async def load(self, ctx, cog_name: str = None):
-        if ctx.author.id != ownerid:
+    async def enable(self, ctx, cog_name: str):
+        if ctx.author.id not in settings["bot"]["owner_ids"]:
             await ctx.send("You do not have permission to use this command.")
+            return
+        
+        try:
+            await self.bot.load_extension(COG_PREFIX + cog_name)
+            await ctx.send(f"Loaded cog `{cog_name}` successfully.")
+            settings["bot"]["enabled_cogs"].append(cog_name)
+            settings_manager.commit()
+
+        except Exception as e:
+            await ctx.send(f"Error enabling cog `{cog_name}`: {e}")
+
+
+    @commands.command()
+    async def load(self, ctx, cog_name: str | None = None):
+        if ctx.author.id not in settings["bot"]["owner_ids"]:
+            await ctx.send("You do not have permission to use this command.")
+            return
+        
+        if cog_name is None:
+            await ctx.send("Give cog_name")
+            return
+        
+        if cog_name[:-3] not in settings["bot"]["enabled_cogs"]:
+            await ctx.send("Please enable the cog first!")
             return
         if cog_name is None:
             await ctx.send("Please provide the cog name to load.")
@@ -23,8 +52,8 @@ class CogManager(commands.Cog):
             await ctx.send(f"Error loading cog `{cog_name}`: {e}")
 
     @commands.command()
-    async def unload(self, ctx, cog_name: str = None):
-        if ctx.author.id != ownerid:
+    async def unload(self, ctx, cog_name: str | None = None):
+        if ctx.author.id not in settings["bot"]["owner_ids"]:
             await ctx.send("You do not have permission to use this command.")
             return
         if cog_name is None:
@@ -37,12 +66,33 @@ class CogManager(commands.Cog):
             await ctx.send(f"Error unloading cog `{cog_name}`: {e}")
 
     @commands.command()
-    async def reload(self, ctx, cog_name: str = None):
-        if ctx.author.id != ownerid:
+    async def disable(self, ctx, cog_name: str | None = None):
+        if ctx.author.id not in settings["bot"]["owner_ids"]:
+            await ctx.send("You do not have permission to use this command.")
+            return
+        if cog_name is None:
+            await ctx.send("Please provide the cog name to disable.")
+            return
+        try:
+            await self.bot.unload_extension(COG_PREFIX + cog_name)
+            await ctx.send(f"Unloaded cog `{cog_name}` successfully.")
+            settings["bot"]["enabled_cogs"].remove(cog_name)
+            settings_manager.commit()
+        except Exception as e:
+            await ctx.send(f"Error unloading cog `{cog_name}`: {e}")
+
+
+    @commands.command()
+    async def reload(self, ctx, cog_name: str | None = None):
+        if ctx.author.id not in settings["bot"]["owner_ids"]:
             await ctx.send("You do not have permission to use this command.")
             return
         if cog_name is None:
             await ctx.send("Please provide the cog name to reload.")
+            return
+
+        if cog_name[:-3] not in settings["bot"]["enabled_cogs"]:
+            await ctx.send("Please enable the cog first!")
             return
         try:
             await self.bot.unload_extension(COG_PREFIX + cog_name)

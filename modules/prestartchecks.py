@@ -1,5 +1,4 @@
 from modules.globalvars import *
-from modules.volta.main import _, check_missing_translations
 import time
 import os
 import sys
@@ -11,6 +10,11 @@ import re
 from spacy.util import is_package
 import importlib.metadata
 import logging
+import modules.keys as k
+from modules.settings import Settings as SettingsManager
+settings_manager = SettingsManager()
+settings = settings_manager.settings
+
 
 logger = logging.getLogger("goober")
 
@@ -21,7 +25,7 @@ try:
     import psutil
 except ImportError:
     psutilavaliable = False
-    logger.error(_('missing_requests_psutil'))
+    logger.error(k.missing_requests_psutil())
 
 def check_for_model():
     if is_package("en_core_web_sm"):
@@ -34,7 +38,7 @@ def iscloned():
     if os.path.exists(".git"):
         return True
     else:
-        logger.error(f"{_('not_cloned')}") 
+        logger.error(f"{k.not_cloned()}") 
         sys.exit(1)
 
 def get_stdlib_modules():
@@ -67,7 +71,7 @@ def check_requirements():
     requirements_path = os.path.abspath(os.path.join(parent_dir, '..', 'requirements.txt'))
 
     if not os.path.exists(requirements_path):
-        logger.error(f"{(_('requirements_not_found')).format(path=requirements_path)}")
+        logger.error(f"{k.requirements_not_found(path=requirements_path)}")
         return
 
     with open(requirements_path, 'r') as f:
@@ -85,24 +89,24 @@ def check_requirements():
 
     for req in sorted(requirements):
         if req in STD_LIB_MODULES or req == 'modules':
-            print((_('std_lib_local_skipped')).format(package=req))
+            print(k.std_lib_local_skipped(package=req))
             continue
 
         check_name = req.lower()
 
         if check_name in installed_packages:
-            logger.info(f"{_('ok_installed').format(package=check_name)} {check_name}")
+            logger.info(f"{k.ok_installed()} {check_name}")
         else:
-            logger.error(f"{(_('missing_package')).format(package=check_name)} {check_name} {(_('missing_package2'))}")
+            logger.error(f"{k.missing_package()} {check_name} {k.missing_package2()}")
             missing.append(check_name)
 
     if missing:
-        logger.error(_('missing_packages_detected'))
+        logger.error(k.missing_packages_detected())
         for pkg in missing:
             print(f"  - {pkg}")
         sys.exit(1)
     else:
-        logger.info(_('all_requirements_satisfied'))
+        logger.info(k.all_requirements_satisfied())
 
 def check_latency():
     host = "1.1.1.1"
@@ -132,16 +136,16 @@ def check_latency():
             match = re.search(latency_pattern, result.stdout)
             if match:
                 latency_ms = float(match.group(1))
-                logger.info((_('ping_to')).format(host=host, latency=latency_ms))
+                logger.info(k.ping_to(host=host, latency=latency_ms))
                 if latency_ms > 300:
-                    logger.warning(f"{(_('high_latency'))}")
+                    logger.warning(f"{k.high_latency()}")
             else:
-                logger.warning((_('could_not_parse_latency')))
+                logger.warning(k.could_not_parse_latency())
         else:
             print(result.stderr)
-            logger.error(f"{(_('ping_failed')).format(host=host)}{RESET}")
+            logger.error(f"{k.ping_failed(host=host)}{RESET}")
     except Exception as e:
-        logger.error((_('error_running_ping')).format(error=e))
+        logger.error(k.error_running_ping(error=e))
 
 def check_memory():
     if psutilavaliable == False:
@@ -152,48 +156,48 @@ def check_memory():
         used_memory = memory_info.used / (1024 ** 3)
         free_memory = memory_info.available / (1024 ** 3)
 
-        logger.info((_('memory_usage')).format(used=used_memory, total=total_memory, percent=(used_memory / total_memory) * 100))
+        logger.info(k.memory_usage(used=used_memory, total=total_memory, percent=(used_memory / total_memory) * 100))
         if used_memory > total_memory * 0.9:
-            print(f"{YELLOW}{(_('memory_above_90')).format(percent=(used_memory / total_memory) * 100)}{RESET}")
-        logger.info((_('total_memory')).format(total=total_memory))
-        logger.info((_('used_memory')).format(used=used_memory))
+            print(f"{YELLOW}{k.memory_above_90(percent=(used_memory / total_memory) * 100)}{RESET}")
+        logger.info(k.total_memory(total=total_memory))
+        logger.info(k.used_memory(used=used_memory))
         if free_memory < 1:
-            logger.warning(f"{(_('low_free_memory')).format(free=free_memory)}")
+            logger.warning(f"{k.low_free_memory(free=free_memory)}")
             sys.exit(1)
     except ImportError:
-        logger.error(_('psutil_not_installed')) # todo: translate this into italian and put it in the translations "psutil is not installed. Memory check skipped."
+        logger.error(k.psutil_not_installed()) # todo: translate this into italian and put it in the translations "psutil is not installed. Memory check skipped."
 
 def check_cpu():
     if psutilavaliable == False:
         return
-    logger.info((_('measuring_cpu')))
+    logger.info(k.measuring_cpu())
     cpu_per_core = psutil.cpu_percent(interval=1, percpu=True)  # type: ignore
     total_cpu = sum(cpu_per_core) / len(cpu_per_core)
-    logger.info((_('total_cpu_usage')).format(usage=total_cpu))
+    logger.info(k.total_cpu_usage(usage=total_cpu))
     if total_cpu > 85:
-        logger.warning(f"{(_('high_avg_cpu')).format(usage=total_cpu)}")
+        logger.warning(f"{k.high_avg_cpu(usage=total_cpu)}")
     if total_cpu > 95:
-        logger.error(_('really_high_cpu'))
+        logger.error(k.really_high_cpu())
         sys.exit(1)
 
 def check_memoryjson():
     try:
-        logger.info((_('memory_file')).format(size=os.path.getsize(MEMORY_FILE) / (1024 ** 2)))
-        if os.path.getsize(MEMORY_FILE) > 1_073_741_824:
-            logger.warning(f"{(_('memory_file_large'))}")
+        logger.info(k.memory_file(size=os.path.getsize(settings["bot"]["active_memory"]) / (1024 ** 2)))
+        if os.path.getsize(settings["bot"]["active_memory"]) > 1_073_741_824:
+            logger.warning(f"{k.memory_file_large()}")
         try:
-            with open(MEMORY_FILE, 'r', encoding='utf-8') as f:
+            with open(settings["bot"]["active_memory"], 'r', encoding='utf-8') as f:
                 json.load(f)
         except json.JSONDecodeError as e:
-            logger.error(f"{(_('memory_file_corrupted')).format(error=e)}")
-            logger.warning(f"{(_('consider_backup_memory'))}")
+            logger.error(f"{k.memory_file_corrupted(error=e)}")
+            logger.warning(f"{k.consider_backup_memory()}")
         except UnicodeDecodeError as e:
-            logger.error(f"{(_('memory_file_encoding')).format(error=e)}")
-            logger.warning(f"{(_('consider_backup_memory'))}")
+            logger.error(f"{k.memory_file_encoding(error=e)}")
+            logger.warning(f"{k.consider_backup_memory()}")
         except Exception as e:
-            logger.error(f"{(_('error_reading_memory')).format(error=e)}")
+            logger.error(f"{k.error_reading_memory(error=e)}")
     except FileNotFoundError:
-        logger(f"{(_('memory_file_not_found'))}")
+        logger.info(f"{k.memory_file_not_found()}")
 
 def presskey2skip(timeout):
     if os.name == 'nt':
@@ -228,13 +232,13 @@ def presskey2skip(timeout):
             termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
 beta = beta
 def start_checks():
-    if CHECKS_DISABLED == "True":
-        logger.warning(f"{(_('checks_disabled'))}")
+    if settings["disable_checks"]:
+        logger.warning(f"{k.checks_disabled()}")
         return
-    logger.info(_('running_prestart_checks'))
+    
+    logger.info(k.running_prestart_checks())
     check_for_model()
     iscloned()
-    check_missing_translations()
     check_requirements()
     check_latency()
     check_memory()
@@ -243,13 +247,15 @@ def start_checks():
     if os.path.exists(".env"):
         pass
     else:
-        logger.warning(f"{(_('env_file_not_found'))}")
+        logger.warning(f"{k.env_file_not_found()}")
         sys.exit(1)
     if beta == True:
         logger.warning(f"this build isnt finished yet, some things might not work as expected")
     else:
         pass
-    logger.info(_('continuing_in_seconds').format(seconds=5))
+    logger.info(k.continuing_in_seconds(seconds=5))
     presskey2skip(timeout=5)
     os.system('cls' if os.name == 'nt' else 'clear')
-    print(splashtext)
+
+    with open(settings ["splash_text_loc"], "r") as f:
+        print("".join(f.readlines()))

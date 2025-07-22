@@ -1,5 +1,3 @@
-from modules.volta.main import _
-from modules.globalvars import *
 import requests
 import subprocess
 import sys
@@ -7,6 +5,13 @@ import logging
 import json
 import time
 import random
+import modules.keys as k
+from modules.globalvars import *
+from modules.settings import Settings as SettingsManager
+
+settings_manager = SettingsManager()
+settings = settings_manager.settings
+
 logger = logging.getLogger("goober")
 launched = False
 
@@ -24,18 +29,18 @@ def is_remote_ahead(branch='main', remote='origin'):
 # Automatically update the local repository if the remote is ahead
 def auto_update(branch='main', remote='origin'):
     if launched == True:
-        print(_("already_started"))
+        print(k.already_started())
         return
-    if AUTOUPDATE != "True":
+    if settings["auto_update"] != "True":
         pass  # Auto-update is disabled
     if is_remote_ahead(branch, remote):
-        print(_( "remote_ahead").format(remote=remote, branch=branch))
+        logger.info(k.remote_ahead(remote, branch))
         pull_result = run_cmd(f'git pull {remote} {branch}')
         logger.info(pull_result)
-        logger.info(_( "please_restart"))
+        logger.info(k.please_restart())
         sys.exit(0)
     else:
-        logger.info(_( "local_ahead").format(remote=remote, branch=branch))
+        logger.info(k.local_ahead(remote, branch))
 
 def get_latest_version_info():
     try:
@@ -75,31 +80,34 @@ def check_for_update():
 
     latest_version_info = get_latest_version_info()
     if not latest_version_info:
-        logger.error(f"{_('fetch_update_fail')}")
-        return None, None
+        logger.error(f"{k.fetch_update_fail()}")
+        return None
 
     latest_version = latest_version_info.get("version")
     os.environ['gooberlatest_version'] = latest_version
     download_url = latest_version_info.get("download_url")
 
     if not latest_version or not download_url:
-        logger.error(f"{RED}{_('invalid_server')}{RESET}")
-        return None, None
+        logger.error(k.invalid_server())
+        return None
+    
     # Check if local_version is valid
     if local_version == "0.0.0" or None:
-        logger.error(f"{RED}{_('cant_find_local_version')}{RESET}")
+        logger.error(k.cant_find_local_version())
         return
     # Compare local and latest versions
+
     if local_version < latest_version:
-        logger.info(f"{YELLOW}{_('new_version').format(latest_version=latest_version, local_version=local_version)}{RESET}")
-        logger.info(f"{YELLOW}{_('changelog').format(VERSION_URL=VERSION_URL)}{RESET}")
+        logger.warning(k.new_version(latest_version=latest_version, local_version=local_version))
+        logger.warning(k.changelog(VERSION_URL=VERSION_URL))
         auto_update()
+
     elif beta == True:
         logger.warning(f"You are running an \"unstable\" version of Goober, do not expect it to work properly.\nVersion {local_version}\nServer: {latest_version}{RESET}")
     elif local_version > latest_version:
-        logger.warning(f"{_('modification_warning')}")
+        logger.warning(f"{k.modification_warning()}")
     elif local_version == latest_version:
-        logger.info(f"{_('latest_version')} {local_version}")
-        logger.info(f"{_('latest_version2').format(VERSION_URL=VERSION_URL)}\n\n")
+        logger.info(f"{k.latest_version()} {local_version}")
+        logger.info(f"{k.latest_version2(VERSION_URL=VERSION_URL)}\n\n")
     launched = True
     return latest_version
