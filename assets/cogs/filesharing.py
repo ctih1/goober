@@ -2,30 +2,41 @@ import discord
 import discord.context_managers
 from discord.ext import commands
 from modules.globalvars import ownerid
+import logging
+from typing import Literal, get_args, cast
+
+logger = logging.getLogger("goober")
+
+AvailableModes = Literal["r", "s"]
+
 class FileSync(commands.Cog):
     def __init__(self, bot):
-        self.bot = bot
-        self.mode = None
+        self.bot: discord.Client = bot
+        self.mode: AvailableModes | None = None
         self.peer_id = None
         self.awaiting_file = False
 
     @commands.command()
     async def syncfile(self, ctx: commands.Context, mode: str, peer: discord.User):
-        self.mode = mode.lower()
+        if self.mode not in get_args(AvailableModes):
+            await ctx.send("Invalid mode, use 's' or 'r'.")
+            return
+        
+        self.mode: AvailableModes = cast(AvailableModes, mode.lower())
         self.peer_id = peer.id
+
         if ctx.author.id != ownerid:
             await ctx.send("You don't have permission to execute this command.")
             return
+        
         if self.mode == "s":
             await ctx.send(f"<@{self.peer_id}> FILE_TRANSFER_REQUEST")
             await ctx.send(file=discord.File("memory.json"))
             await ctx.send("File sent in this channel.")
+            
         elif self.mode == "r":
             await ctx.send("Waiting for incoming file...")
             self.awaiting_file = True
-        else:
-            await ctx.send("Invalid mode, use 's' or 'r'.")
-
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
@@ -36,7 +47,7 @@ class FileSync(commands.Cog):
             return
 
         if message.content == "FILE_TRANSFER_REQUEST":
-            print("Ping received. Awaiting file...")
+            logger.info("Ping received. Awaiting file...")
         if not message.attachments:
             return
         
@@ -49,7 +60,7 @@ class FileSync(commands.Cog):
             with open(filename, "wb") as f:
                 await attachment.save(f)
 
-            print(f"File saved as {filename}")
+            logger.info(f"File saved as {filename}")
             await message.channel.send("File received and saved.")
             self.awaiting_file = False
 
