@@ -1,0 +1,27 @@
+{
+    "bot": {
+        "prefix": "\u00e4.",
+        "owner_ids": [
+            642441889181728810
+        ],
+        "blacklisted_users": [],
+        "user_training": true,
+        "allow_show_mem_command": true,
+        "react_to_messages": true,
+        "misc": {
+            "ping_line": "The Beretta fires fast and won't make you feel any better!",
+            "active_song": "Basket Case - Green Day",
+            "positive_gifs": [],
+            "block_profanity": false
+        },
+        "active_memory": "memory.json",
+        "enabled_cogs": [
+            "cogmanager"
+        ]
+    },
+    "locale": "fi",
+    "name": "gubert",
+    "auto_update": true,
+    "disable_checks": false,
+    "splash_text_loc": "settings/splash.txt"
+}

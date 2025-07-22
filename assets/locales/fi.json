@@ -102,7 +102,7 @@
     "command_markov_retrain": "Uudelleenkoulutetaan markov-mallia... Odota.",
     "command_markov_memory_not_found": "Virhe: muistitiedostoa ei löytynyt!",
     "command_markov_memory_is_corrupt": "Virhe: muistitiedosto on korruptoitu!",
-    "command_markov_retraining": "Käsitellään {processed_data}/{data_size} datapisteestä...",
+    "command_markov_retraining": "Käsitellään {processed_data}/{data_size} datapistettä...",
     "command_markov_retrain_successful": "Markov-malli koulutettiin uudestaan {data_size} datapisteellä!",
     "command_desc_talk":"puhuu ja sillei",
     "command_talk_insufficent_text": "Minun pitää oppia lisää viesteistä ennen kun puhun.",
@@ -131,5 +131,6 @@
     "command_stats_embed_field2value": "Paikallinen: {local_version} \nUusin: {latest_version}",
     "command_stats_embed_field3name": "Muuttajainformaatio",
     "command_stats_embed_field3value": "Nimi: {NAME} \nEtuliite: {PREFIX} \nOmistajan ID: {ownerid}\nPing-linja: {PING_LINE} \nMuistin jako päällä: {showmemenabled} \nOppiminen käyttäjistä: {USERTRAIN_ENABLED}\nLaulu: {song} \nRoisketeksti: ```{splashtext}```"
+    
 }
   

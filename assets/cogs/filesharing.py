@@ -1,9 +1,12 @@
 import discord
 import discord.context_managers
 from discord.ext import commands
-from modules.globalvars import ownerid
 import logging
 from typing import Literal, get_args, cast
+from modules.settings import Settings as SettingsManager
+settings_manager = SettingsManager()
+settings = settings_manager.settings
+
 
 logger = logging.getLogger("goober")
 
@@ -22,10 +25,10 @@ class FileSync(commands.Cog):
             await ctx.send("Invalid mode, use 's' or 'r'.")
             return
         
-        self.mode: AvailableModes = cast(AvailableModes, mode.lower())
+        self.mode = cast(AvailableModes, mode.lower())
         self.peer_id = peer.id
 
-        if ctx.author.id != ownerid:
+        if ctx.author.id not in settings["bot"]["owner_ids"]:
             await ctx.send("You don't have permission to execute this command.")
             return
         

@@ -5,7 +5,10 @@ from bs4 import BeautifulSoup
 import json
 import asyncio
 from urllib.parse import urljoin
-from modules.globalvars import ownerid 
+from modules.settings import Settings as SettingsManager
+settings_manager = SettingsManager()
+settings = settings_manager.settings
+
 class WebScraper(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -81,7 +84,7 @@ class WebScraper(commands.Cog):
     @commands.command()
     async def start_scrape(self, ctx, start_url: str):
         """Command to start the scraping process."""
-        if ctx.author.id != ownerid:
+        if ctx.author.id not in settings["bot"]["owner_ids"]:
             await ctx.send("You do not have permission to use this command.")
             return
 
@@ -99,7 +102,7 @@ class WebScraper(commands.Cog):
     @commands.command()
     async def undo_scrape(self, ctx):
         """Command to undo the last scrape."""
-        if ctx.author.id != ownerid:
+        if ctx.author.id not in settings["bot"]["owner_ids"]:
             await ctx.send("You do not have permission to use this command.")
             return
 
