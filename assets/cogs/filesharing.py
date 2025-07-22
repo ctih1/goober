@@ -1,4 +1,5 @@
 import discord
+import discord.context_managers
 from discord.ext import commands
 from modules.globalvars import ownerid
 class FileSync(commands.Cog):
@@ -9,7 +10,7 @@ class FileSync(commands.Cog):
         self.awaiting_file = False
 
     @commands.command()
-    async def syncfile(self, ctx, mode: str, peer: discord.User):
+    async def syncfile(self, ctx: commands.Context, mode: str, peer: discord.User):
         self.mode = mode.lower()
         self.peer_id = peer.id
         if ctx.author.id != ownerid:
@@ -27,22 +28,30 @@ class FileSync(commands.Cog):
 
 
     @commands.Cog.listener()
-    async def on_message(self, message):
+    async def on_message(self, message: discord.Message):
         if message.author == self.bot.user or not self.awaiting_file:
             return
+
         if message.author.id != self.peer_id:
             return
 
         if message.content == "FILE_TRANSFER_REQUEST":
             print("Ping received. Awaiting file...")
-        if message.attachments:
-            for attachment in message.attachments:
-                if attachment.filename.endswith(".json"):
-                    filename = "received_memory.json"
-                    await attachment.save(filename)
-                    print(f"File saved as {filename}")
-                    await message.channel.send("File received and saved.")
-                    self.awaiting_file = False
+        if not message.attachments:
+            return
+        
+
+        for attachment in message.attachments:
+            if not attachment.filename.endswith(".json"):
+                continue
+    
+            filename = "received_memory.json"
+            with open(filename, "wb") as f:
+                await attachment.save(f)
+
+            print(f"File saved as {filename}")
+            await message.channel.send("File received and saved.")
+            self.awaiting_file = False
 
 async def setup(bot):
     await bot.add_cog(FileSync(bot))
