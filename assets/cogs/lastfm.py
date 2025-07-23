@@ -6,10 +6,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-#stole most of this code from my old expect bot so dont be suprised if its poorly made
+# stole most of this code from my old expect bot so dont be suprised if its poorly made
 
 LASTFM_API_KEY = os.getenv("LASTFM_API_KEY")
 LASTFM_USERNAME = os.getenv("LASTFM_USERNAME")
+
 
 class LastFmCog(commands.Cog):
     def __init__(self, bot):
@@ -34,7 +35,11 @@ class LastFmCog(commands.Cog):
             self.current_track = track
             artist, song = track
             activity_name = f"{artist} - {song}"
-            await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=activity_name))
+            await self.bot.change_presence(
+                activity=discord.Activity(
+                    type=discord.ActivityType.listening, name=activity_name
+                )
+            )
             print(f"Updated song to {artist} - {song}")
         else:
             print("LastFM gave me the same track! not updating...")
@@ -52,7 +57,11 @@ class LastFmCog(commands.Cog):
         self.current_track = track
         artist, song = track
         activity_name = f"{artist} - {song}"
-        await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=activity_name))
+        await self.bot.change_presence(
+            activity=discord.Activity(
+                type=discord.ActivityType.listening, name=activity_name
+            )
+        )
         await ctx.send(f"Updated presence to: Listening to {activity_name}")
 
     async def fetch_current_track(self):
@@ -71,11 +80,12 @@ class LastFmCog(commands.Cog):
             return None
 
         track = recenttracks[0]
-        if '@attr' in track and track['@attr'].get('nowplaying') == 'true':
-            artist = track.get('artist', {}).get('#text', 'Unknown Artist')
-            song = track.get('name', 'Unknown Song')
+        if "@attr" in track and track["@attr"].get("nowplaying") == "true":
+            artist = track.get("artist", {}).get("#text", "Unknown Artist")
+            song = track.get("name", "Unknown Song")
             return artist, song
         return None
+
 
 async def setup(bot):
     if not LASTFM_API_KEY or not LASTFM_USERNAME:

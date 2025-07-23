@@ -10,14 +10,15 @@ settings_manager = SettingsManager()
 settings = settings_manager.settings
 logger = logging.getLogger("goober")
 
+
 def handle_exception(exc_type, exc_value, exc_traceback, *, context=None):
-    os.system('cls' if os.name == 'nt' else 'clear')
-    
+    os.system("cls" if os.name == "nt" else "clear")
+
     if issubclass(exc_type, KeyboardInterrupt):
         sys.__excepthook__(exc_type, exc_value, exc_traceback)
         return
 
-    with open(settings['splash_text_loc'], "r") as f:
+    with open(settings["splash_text_loc"], "r") as f:
         print("".join(f.readlines()))
 
     print(f"{RED}=====BEGINNING OF TRACEBACK====={RESET}")
@@ -25,9 +26,5 @@ def handle_exception(exc_type, exc_value, exc_traceback, *, context=None):
     print(f"{RED}========END OF TRACEBACK========{RESET}")
     print(f"{RED}{k.unhandled_exception()}{RESET}")
 
-    
     if context:
         print(f"{RED}Context: {context}{RESET}")
-
-
-

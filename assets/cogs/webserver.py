@@ -14,6 +14,7 @@ from modules.globalvars import VERSION_URL
 import sys
 import subprocess
 
+
 class GooberWeb(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -24,18 +25,20 @@ class GooberWeb(commands.Cog):
         self.last_command_time = "Never"
         self.start_time = time.time()
         self.websockets = set()
-        
-        self.app.add_routes([
-            web.get('/', self.handle_index),
-            web.get('/changesong', self.handle_changesong),
-            web.get('/stats', self.handle_stats),
-            web.get('/data', self.handle_json_data),
-            web.get('/ws', self.handle_websocket),
-            web.get('/styles.css', self.handle_css),
-            web.get('/settings', self.handle_settings),
-            web.post('/update_settings', self.handle_update_settings),
-            web.post('/restart_bot', self.handle_restart_bot),
-        ])
+
+        self.app.add_routes(
+            [
+                web.get("/", self.handle_index),
+                web.get("/changesong", self.handle_changesong),
+                web.get("/stats", self.handle_stats),
+                web.get("/data", self.handle_json_data),
+                web.get("/ws", self.handle_websocket),
+                web.get("/styles.css", self.handle_css),
+                web.get("/settings", self.handle_settings),
+                web.post("/update_settings", self.handle_update_settings),
+                web.post("/restart_bot", self.handle_restart_bot),
+            ]
+        )
 
         self.bot.loop.create_task(self.start_web_server())
         self.update_clients.start()
@@ -52,72 +55,82 @@ class GooberWeb(commands.Cog):
     async def get_blacklisted_users(self):
         blacklisted_ids = os.getenv("BLACKLISTED_USERS", "").split(",")
         blacklisted_users = []
-        
+
         for user_id in blacklisted_ids:
             if not user_id.strip():
                 continue
-                
+
             try:
                 user = await self.bot.fetch_user(int(user_id))
-                blacklisted_users.append({
-                    "name": f"{user.name}",
-                    "avatar_url": str(user.avatar.url) if user.avatar else str(user.default_avatar.url),
-                    "id": user.id
-                })
+                blacklisted_users.append(
+                    {
+                        "name": f"{user.name}",
+                        "avatar_url": (
+                            str(user.avatar.url)
+                            if user.avatar
+                            else str(user.default_avatar.url)
+                        ),
+                        "id": user.id,
+                    }
+                )
             except discord.NotFound:
-                blacklisted_users.append({
-                    "name": f"Unknown User ({user_id})",
-                    "avatar_url": "",
-                    "id": user_id
-                })
+                blacklisted_users.append(
+                    {
+                        "name": f"Unknown User ({user_id})",
+                        "avatar_url": "",
+                        "id": user_id,
+                    }
+                )
             except discord.HTTPException as e:
                 print(f"Error fetching user {user_id}: {e}")
                 continue
-                
+
         return blacklisted_users
-        
+
     async def get_enhanced_guild_info(self):
         guilds = sorted(self.bot.guilds, key=lambda g: g.member_count, reverse=True)
         guild_info = []
-        
+
         for guild in guilds:
             icon_url = str(guild.icon.url) if guild.icon else ""
-            guild_info.append({
-                "name": guild.name,
-                "member_count": guild.member_count,
-                "icon_url": icon_url,
-                "id": guild.id
-            })
-            
+            guild_info.append(
+                {
+                    "name": guild.name,
+                    "member_count": guild.member_count,
+                    "icon_url": icon_url,
+                    "id": guild.id,
+                }
+            )
+
         return guild_info
-        
+
     async def start_web_server(self):
         self.runner = web.AppRunner(self.app)
         await self.runner.setup()
-        self.site = web.TCPSite(self.runner, '0.0.0.0', 8080)
+        self.site = web.TCPSite(self.runner, "0.0.0.0", 8080)
         await self.site.start()
         print("Goober web server started on port 8080")
-    
+
     async def stop_web_server(self):
         if self.site is None or self.runner is None:
             return
-        
+
         await self.site.stop()
         await self.runner.cleanup()
         print("Web server stopped")
-    
+
     def cog_unload(self):
         self.update_clients.cancel()
         self.bot.loop.create_task(self.stop_web_server())
-    
+
     @tasks.loop(seconds=5)
     async def update_clients(self):
         if not self.websockets:
             return
-            
+
         stats = await self.get_bot_stats()
         message = json.dumps(stats)
-        
+
         for ws in set(self.websockets):
             try:
                 await ws.send_str(message)
@@ -126,62 +139,62 @@ class GooberWeb(commands.Cog):
             except Exception as e:
                 print(f"Error sending to websocket: {e}")
                 self.websockets.remove(ws)
-    
+
     async def handle_websocket(self, request):
         ws = web.WebSocketResponse()
         await ws.prepare(request)
         self.websockets.add(ws)
-        
+
         try:
             async for msg in ws:
                 if msg.type == WSMsgType.ERROR:
                     print(f"WebSocket error: {ws.exception()}")
         finally:
             self.websockets.remove(ws)
-            
+
         return ws
-    
+
     async def handle_css(self, request):
-        css_path = os.path.join(os.path.dirname(__file__), 'styles.css')
+        css_path = os.path.join(os.path.dirname(__file__), "styles.css")
         if os.path.exists(css_path):
             return web.FileResponse(css_path)
         return web.Response(text="CSS file not found", status=404)
-    
+
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.author.bot:
             return
-            
+
         ctx = await self.bot.get_context(message)
         if ctx.valid and ctx.command:
             self._update_command_stats(ctx.command.name, ctx.author)
-    
+
     @commands.Cog.listener()
     async def on_app_command_completion(self, interaction, command):
         self._update_command_stats(command.name, interaction.user)
-    
+
     def _update_command_stats(self, command_name, user):
         self.last_command = f"{command_name} (by {user.name})"
         self.last_command_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         if self.websockets:
             asyncio.create_task(self.update_clients())
-    
+
     async def get_bot_stats(self):
         process = psutil.Process(os.getpid())
         mem_info = process.memory_full_info()
         cpu_percent = psutil.cpu_percent()
         process_cpu = process.cpu_percent()
-        
+
         memory_json_size = "N/A"
         if os.path.exists("memory.json"):
             memory_json_size = f"{os.path.getsize('memory.json') / 1024:.2f} KB"
-        
+
         guild_info = await self.get_enhanced_guild_info()
         blacklisted_users = await self.get_blacklisted_users()
-        
+
         uptime_seconds = int(time.time() - self.start_time)
         uptime_str = f"{uptime_seconds // 86400}d {(uptime_seconds % 86400) // 3600}h {(uptime_seconds % 3600) // 60}m {uptime_seconds % 60}s"
-        
+
         return {
             "ram_usage": f"{mem_info.rss / 1024 / 1024:.2f} MB",
             "cpu_usage": f"{process_cpu}%",
@@ -196,23 +209,29 @@ class GooberWeb(commands.Cog):
             "bot_uptime": uptime_str,
             "latency": f"{self.bot.latency * 1000:.2f} ms",
             "bot_name": self.bot.user.name,
-            "bot_avatar_url": str(self.bot.user.avatar.url) if self.bot.user.avatar else "",
+            "bot_avatar_url": (
+                str(self.bot.user.avatar.url) if self.bot.user.avatar else ""
+            ),
             "authenticated": os.getenv("gooberauthenticated"),
             "lastmsg": os.getenv("gooberlatestgen"),
             "localversion": os.getenv("gooberlocal_version"),
             "latestversion": os.getenv("gooberlatest_version"),
-            "owner": os.getenv("ownerid")
+            "owner": os.getenv("ownerid"),
         }
-    
+
     async def handle_update(self, request):
         if os.path.exists("goob/update.py"):
             return web.FileResponse("goob/update.py")
         return web.Response(text="Update file not found", status=404)
 
     async def handle_changesong(self, request):
-        song = request.query.get('song', '')
+        song = request.query.get("song", "")
         if song:
-            await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=song))
+            await self.bot.change_presence(
+                activity=discord.Activity(
+                    type=discord.ActivityType.listening, name=song
+                )
+            )
             return web.Response(text=f"Changed song to: {song}")
         return web.Response(text="Please provide a song parameter", status=400)
 
@@ -224,36 +243,37 @@ class GooberWeb(commands.Cog):
     async def read_env_file(self):
         env_vars = {}
         try:
-            with open('.env', 'r') as f:
+            with open(".env", "r") as f:
                 for line in f:
                     line = line.strip()
-                    if not line or line.startswith('#') or '=' not in line:
+                    if not line or line.startswith("#") or "=" not in line:
                         continue
 
-                    key, value = line.split('=', 1)
+                    key, value = line.split("=", 1)
                     key = key.strip()
-                    if key in ['splashtext', 'DISCORD_BOT_TOKEN']:
+                    if key in ["splashtext", "DISCORD_BOT_TOKEN"]:
                         continue
 
-                    env_vars[key] = value.strip('"\'')
+                    env_vars[key] = value.strip("\"'")
         except FileNotFoundError:
             print(".env file not found")
         return env_vars
 
-    
     async def handle_settings(self, request):
         env_vars = await self.read_env_file()
-        
+
         # Get config.py variables
         config_vars = {}
         try:
-            with open('config.py', 'r') as f:
+            with open("config.py", "r") as f:
                 for line in f:
-                    if line.startswith('VERSION_URL'):
-                        config_vars['VERSION_URL'] = line.split('=', 1)[1].strip().strip('"')
+                    if line.startswith("VERSION_URL"):
+                        config_vars["VERSION_URL"] = (
+                            line.split("=", 1)[1].strip().strip('"')
+                        )
         except FileNotFoundError:
             pass
-        
+
         settings_html = """
         <!DOCTYPE html>
         <html>
@@ -275,7 +295,7 @@ class GooberWeb(commands.Cog):
                 <h1>Goober Settings</h1>
                 <form id='settingsForm' action='/update_settings' method='post'>
         """
-        
+
         for key, value in env_vars.items():
             settings_html += f"""
             <div class='form-group'>
@@ -283,7 +303,7 @@ class GooberWeb(commands.Cog):
                 <input type='text' id='{key}' name='{key}' value='{value}'>
             </div>
             """
-        
+
         for key, value in config_vars.items():
             settings_html += f"""
             <div class='form-group'>
@@ -291,7 +311,7 @@ class GooberWeb(commands.Cog):
                 <input type='text' id='{key}' name='{key}' value='{value}'>
             </div>
             """
-        
+
         settings_html += """
                 <button type='submit'>Save Settings</button>
                 </form>
@@ -302,15 +322,15 @@ class GooberWeb(commands.Cog):
         </body>
         </html>
         """
-        
-        return web.Response(text=settings_html, content_type='text/html')
-    
+
+        return web.Response(text=settings_html, content_type="text/html")
+
     async def handle_update_settings(self, request):
         data = await request.post()
         env_text = ""
 
         try:
-            with open('.env', 'r') as f:
+            with open(".env", "r") as f:
                 env_text = f.read()
         except FileNotFoundError:
             pass
@@ -318,32 +338,42 @@ class GooberWeb(commands.Cog):
         def replace_match(match):
             key = match.group(1)
             value = match.group(2)
-            if key in ['splashtext', 'DISCORD_BOT_TOKEN']:
+            if key in ["splashtext", "DISCORD_BOT_TOKEN"]:
                 return match.group(0)
             if key in data:
                 new_value = data[key]
                 if not (new_value.startswith('"') and new_value.endswith('"')):
                     new_value = f'"{new_value}"'
-                return f'{key}={new_value}'
+                return f"{key}={new_value}"
             return match.group(0)
 
-        env_text = re.sub(r'^(\w+)=([\s\S]+?)(?=\n\w+=|\Z)', replace_match, env_text, flags=re.MULTILINE)
+        env_text = re.sub(
+            r"^(\w+)=([\s\S]+?)(?=\n\w+=|\Z)",
+            replace_match,
+            env_text,
+            flags=re.MULTILINE,
+        )
 
-        with open('.env', 'w') as f:
-            f.write(env_text.strip() + '\n')
+        with open(".env", "w") as f:
+            f.write(env_text.strip() + "\n")
 
-        if 'VERSION_URL' in data:
+        if "VERSION_URL" in data:
             config_text = ""
             try:
-                with open('config.py', 'r') as f:
+                with open("config.py", "r") as f:
                     config_text = f.read()
             except FileNotFoundError:
                 pass
 
-            config_text = re.sub(r'^(VERSION_URL\s*=\s*").+?"', f'\\1{data["VERSION_URL"]}"', config_text, flags=re.MULTILINE)
+            config_text = re.sub(
+                r'^(VERSION_URL\s*=\s*").+?"',
+                f'\\1{data["VERSION_URL"]}"',
+                config_text,
+                flags=re.MULTILINE,
+            )
 
-            with open('config.py', 'w') as f:
-                f.write(config_text.strip() + '\n')
+            with open("config.py", "w") as f:
+                f.write(config_text.strip() + "\n")
 
         return aiohttp.web.Response(text="Settings updated successfully!")
 
@@ -351,8 +381,12 @@ class GooberWeb(commands.Cog):
         stats = await self.get_bot_stats()
 
         guild_list_html = ""
-        for guild in stats['guilds']:
-            icon_html = f'<img src="{guild["icon_url"]}" alt="guild icon" class="guild-icon">' if guild["icon_url"] else '<div class="guild-icon-placeholder"></div>'
+        for guild in stats["guilds"]:
+            icon_html = (
+                f'<img src="{guild["icon_url"]}" alt="guild icon" class="guild-icon">'
+                if guild["icon_url"]
+                else '<div class="guild-icon-placeholder"></div>'
+            )
             guild_list_html += f"""
             <div class="guild-item">
                 {icon_html}
@@ -363,8 +397,12 @@ class GooberWeb(commands.Cog):
             </div>
             """
         blacklisted_users_html = ""
-        for user in stats['blacklisted_users']:
-            avatar_html = f'<img src="{user["avatar_url"]}" alt="user avatar" class="user-avatar">' if user["avatar_url"] else '<div class="user-avatar-placeholder"></div>'
+        for user in stats["blacklisted_users"]:
+            avatar_html = (
+                f'<img src="{user["avatar_url"]}" alt="user avatar" class="user-avatar">'
+                if user["avatar_url"]
+                else '<div class="user-avatar-placeholder"></div>'
+            )
             blacklisted_users_html += f"""
             <div class="blacklisted-user">
                 {avatar_html}
@@ -375,11 +413,11 @@ class GooberWeb(commands.Cog):
             </div>
             """
 
-        owner_id = stats.get('owner')
+        owner_id = stats.get("owner")
         owner = None
         owner_username = "Owner"
         owner_pfp = ""
-        
+
         if owner_id:
             try:
                 owner = await self.bot.fetch_user(int(owner_id))
@@ -387,7 +425,6 @@ class GooberWeb(commands.Cog):
                 owner_pfp = str(owner.avatar.url) if owner and owner.avatar else ""
             except:
                 pass
-
 
         html_content = f"""
             <!DOCTYPE html>
@@ -869,15 +906,16 @@ class GooberWeb(commands.Cog):
             </body>
             </html>
         """
-        
-        return web.Response(text=html_content, content_type='text/html')
-    
+
+        return web.Response(text=html_content, content_type="text/html")
+
     async def handle_stats(self, request):
         return await self.handle_index(request)
-    
+
     async def handle_json_data(self, request):
         stats = await self.get_bot_stats()
         return web.json_response(stats)
+
 
 async def setup(bot):
     await bot.add_cog(GooberWeb(bot))

@@ -2,23 +2,23 @@ import discord
 from discord.ext import commands
 import discord.ext
 import discord.ext.commands
+from modules.permission import requires_admin
 from modules.settings import Settings as SettingsManager
+
 settings_manager = SettingsManager()
 settings = settings_manager.settings
 
 
 COG_PREFIX = "assets.cogs."
 
+
 class CogManager(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    @requires_admin()
     @commands.command()
     async def enable(self, ctx, cog_name: str):
-        if ctx.author.id not in settings["bot"]["owner_ids"]:
-            await ctx.send("You do not have permission to use this command.")
-            return
-        
         try:
             await self.bot.load_extension(COG_PREFIX + cog_name)
             await ctx.send(f"Loaded cog `{cog_name}` successfully.")
@@ -28,17 +28,13 @@ class CogManager(commands.Cog):
         except Exception as e:
             await ctx.send(f"Error enabling cog `{cog_name}`: {e}")
 
-
+    @requires_admin()
     @commands.command()
     async def load(self, ctx, cog_name: str | None = None):
-        if ctx.author.id not in settings["bot"]["owner_ids"]:
-            await ctx.send("You do not have permission to use this command.")
-            return
-        
         if cog_name is None:
             await ctx.send("Give cog_name")
             return
-        
+
         if cog_name[:-3] not in settings["bot"]["enabled_cogs"]:
             await ctx.send("Please enable the cog first!")
             return
@@ -51,11 +47,9 @@ class CogManager(commands.Cog):
         except Exception as e:
             await ctx.send(f"Error loading cog `{cog_name}`: {e}")
 
+    @requires_admin()
     @commands.command()
     async def unload(self, ctx, cog_name: str | None = None):
-        if ctx.author.id not in settings["bot"]["owner_ids"]:
-            await ctx.send("You do not have permission to use this command.")
-            return
         if cog_name is None:
             await ctx.send("Please provide the cog name to unload.")
             return
@@ -65,11 +59,9 @@ class CogManager(commands.Cog):
         except Exception as e:
             await ctx.send(f"Error unloading cog `{cog_name}`: {e}")
 
+    @requires_admin()
     @commands.command()
     async def disable(self, ctx, cog_name: str | None = None):
-        if ctx.author.id not in settings["bot"]["owner_ids"]:
-            await ctx.send("You do not have permission to use this command.")
-            return
         if cog_name is None:
             await ctx.send("Please provide the cog name to disable.")
             return
@@ -81,12 +73,9 @@ class CogManager(commands.Cog):
         except Exception as e:
             await ctx.send(f"Error unloading cog `{cog_name}`: {e}")
 
-
+    @requires_admin()
     @commands.command()
     async def reload(self, ctx, cog_name: str | None = None):
-        if ctx.author.id not in settings["bot"]["owner_ids"]:
-            await ctx.send("You do not have permission to use this command.")
-            return
         if cog_name is None:
             await ctx.send("Please provide the cog name to reload.")
             return
@@ -109,9 +98,13 @@ class CogManager(commands.Cog):
             await ctx.send("No cogs are currently loaded.")
             return
 
-        embed = discord.Embed(title="Loaded Cogs", description="Here is a list of all currently loaded cogs:")
+        embed = discord.Embed(
+            title="Loaded Cogs",
+            description="Here is a list of all currently loaded cogs:",
+        )
         embed.add_field(name="Cogs", value="\n".join(cogs), inline=False)
         await ctx.send(embed=embed)
+
 
 async def setup(bot):
     await bot.add_cog(CogManager(bot))

@@ -2,9 +2,12 @@ from discord.ext import commands
 import discord
 from collections import defaultdict, Counter
 import datetime
+from modules.permission import requires_admin
 from modules.settings import Settings as SettingsManager
+
 settings_manager = SettingsManager()
 settings = settings_manager.settings
+
 
 class StatsCog(commands.Cog):
     def __init__(self, bot):
@@ -32,38 +35,54 @@ class StatsCog(commands.Cog):
     async def on_command(self, ctx):
         self.command_usage[ctx.command.qualified_name] += 1
 
+    @requires_admin()
     @commands.command()
     async def spyware(self, ctx):
-        if ctx.author.id not in settings["bot"]["owner_ids"]:
-            return
         uptime = datetime.datetime.utcnow() - self.start_time
         hours_elapsed = max((uptime.total_seconds() / 3600), 1)
         avg_per_hour = self.total_messages / hours_elapsed
         if self.messages_per_hour:
-            peak_hour, peak_count = max(self.messages_per_hour.items(), key=lambda x: x[1])
+            peak_hour, peak_count = max(
+                self.messages_per_hour.items(), key=lambda x: x[1]
+            )
         else:
             peak_hour, peak_count = "N/A", 0
 
         top_users = self.user_message_counts.most_common(5)
 
         embed = discord.Embed(title="Community Stats", color=discord.Color.blue())
-        embed.add_field(name="Uptime", value=str(uptime).split('.')[0], inline=False)
-        embed.add_field(name="Total Messages", value=str(self.total_messages), inline=True)
-        embed.add_field(name="Active Users", value=str(len(self.active_users)), inline=True)
-        embed.add_field(name="Avg Messages/Hour", value=f"{avg_per_hour:.2f}", inline=True)
-        embed.add_field(name="Peak Hour (UTC)", value=f"{peak_hour}: {peak_count} messages", inline=True)
+        embed.add_field(name="Uptime", value=str(uptime).split(".")[0], inline=False)
+        embed.add_field(
+            name="Total Messages", value=str(self.total_messages), inline=True
+        )
+        embed.add_field(
+            name="Active Users", value=str(len(self.active_users)), inline=True
+        )
+        embed.add_field(
+            name="Avg Messages/Hour", value=f"{avg_per_hour:.2f}", inline=True
+        )
+        embed.add_field(
+            name="Peak Hour (UTC)",
+            value=f"{peak_hour}: {peak_count} messages",
+            inline=True,
+        )
 
-        top_str = "\n".join(
-            f"<@{user_id}>: {count} messages" for user_id, count in top_users
-        ) or "No data"
+        top_str = (
+            "\n".join(f"<@{user_id}>: {count} messages" for user_id, count in top_users)
+            or "No data"
+        )
         embed.add_field(name="Top Chatters", value=top_str, inline=False)
 
-        cmd_str = "\n".join(
-            f"{cmd}: {count}" for cmd, count in self.command_usage.most_common(5)
-        ) or "No commands used yet"
+        cmd_str = (
+            "\n".join(
+                f"{cmd}: {count}" for cmd, count in self.command_usage.most_common(5)
+            )
+            or "No commands used yet"
+        )
         embed.add_field(name="Top Commands", value=cmd_str, inline=False)
 
         await ctx.send(embed=embed)
+
 
 async def setup(bot):
     await bot.add_cog(StatsCog(bot))

@@ -2,7 +2,7 @@
     "bot": {
         "prefix": "\u00e4.",
         "owner_ids": [
-            642441889181728810
+            
         ],
         "blacklisted_users": [],
         "user_training": true,

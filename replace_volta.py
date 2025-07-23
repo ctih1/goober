@@ -15,6 +15,7 @@ pattern = re.compile(
     re.VERBOSE,
 )
 
+
 def fix_content(content):
     def repl(match):
         key = match.group(1)
@@ -25,6 +26,7 @@ def fix_content(content):
             return f"k.{key}()"
 
     return pattern.sub(repl, content)
+
 
 # File types we sweepin 🧹
 file_exts = [".py", ".html", ".txt", ".js"]
@@ -44,4 +46,6 @@ for subdir, _, files in os.walk(folder_path):
                 with open(path, "w", encoding="utf-8") as f:
                     f.write(updated)
 
-print("🚀💥 ALL cleaned. No `_('...')` left on road — now it’s k.dot or nothin fam 😎🔫")
+print(
+    "🚀💥 ALL cleaned. No `_('...')` left on road — now it’s k.dot or nothin fam 😎🔫"
+)
