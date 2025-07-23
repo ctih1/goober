@@ -160,6 +160,7 @@ async def on_ready() -> None:
     if launched:
         return
 
+    await load_cogs_from_folder(bot)
     await load_cogs_from_folder(bot, "assets/cogs/internal")
     try:
         synced: List[discord.app_commands.AppCommand] = await bot.tree.sync()
