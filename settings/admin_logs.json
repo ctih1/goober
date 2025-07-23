@@ -33,5 +33,19 @@
         "change": "enabled_cogs",
         "messageId": 1397558837644365935,
         "target": "songchanger"
+    },
+    {
+        "action": "del",
+        "author": 642441889181728810,
+        "change": "owner_ids",
+        "messageId": 1397565241797382346,
+        "target": 642441889181728810
+    },
+    {
+        "action": "del",
+        "author": 642441889181728810,
+        "change": "owner_ids",
+        "messageId": 1397565617254699080,
+        "target": 642441889181728810
     }
 ]

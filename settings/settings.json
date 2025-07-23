@@ -1,9 +1,7 @@
 {
     "bot": {
         "prefix": "ä.",
-        "owner_ids": [
-            642441889181728810
-        ],
+        "owner_ids": [],
         "blacklisted_users": [],
         "user_training": true,
         "allow_show_mem_command": true,
