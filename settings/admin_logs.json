@@ -47,5 +47,33 @@
         "change": "owner_ids",
         "messageId": 1397565617254699080,
         "target": 642441889181728810
+    },
+    {
+        "action": "add",
+        "author": 642441889181728810,
+        "change": "owner_ids",
+        "messageId": 1397566033547628624,
+        "target": 1391805740716527666
+    },
+    {
+        "action": "add",
+        "author": 642441889181728810,
+        "change": "enabled_cogs",
+        "messageId": 1397566902422732908,
+        "target": "pulse"
+    },
+    {
+        "action": "add",
+        "author": 642441889181728810,
+        "change": "owner_ids",
+        "messageId": 1397566987382685706,
+        "target": 542701119948849163
+    },
+    {
+        "action": "del",
+        "author": 642441889181728810,
+        "change": "owner_ids",
+        "messageId": 1397567077233066095,
+        "target": 542701119948849163
     }
 ]

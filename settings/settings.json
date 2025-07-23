@@ -1,7 +1,10 @@
 {
     "bot": {
         "prefix": "ä.",
-        "owner_ids": [],
+        "owner_ids": [
+            642441889181728810,
+            1391805740716527666
+        ],
         "blacklisted_users": [],
         "user_training": true,
         "allow_show_mem_command": true,
@@ -15,7 +18,8 @@
         "active_memory": "memory.json",
         "enabled_cogs": [
             "fuckup",
-            "songchanger"
+            "songchanger",
+            "pulse"
         ]
     },
     "locale": "fi",
