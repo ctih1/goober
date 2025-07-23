@@ -5,9 +5,12 @@ from bs4 import BeautifulSoup
 import json
 import asyncio
 from urllib.parse import urljoin
+from modules.permission import requires_admin
 from modules.settings import Settings as SettingsManager
+
 settings_manager = SettingsManager()
 settings = settings_manager.settings
+
 
 class WebScraper(commands.Cog):
     def __init__(self, bot):
@@ -25,7 +28,7 @@ class WebScraper(commands.Cog):
 
     def extract_sentences(self, text):
         """Extract sentences from text."""
-        sentences = text.split('.')
+        sentences = text.split(".")
         return [sentence.strip() for sentence in sentences if sentence.strip()]
 
     def save_to_json(self, sentences):
@@ -52,7 +55,6 @@ class WebScraper(commands.Cog):
                 print("No data to undo.")
                 return False
 
-            
             data = data[:-1]
 
             with open("memory.json", "w") as file:
@@ -76,18 +78,14 @@ class WebScraper(commands.Cog):
 
         soup = BeautifulSoup(html, "html.parser")
 
-        for paragraph in soup.find_all('p'):
+        for paragraph in soup.find_all("p"):
             sentences = self.extract_sentences(paragraph.get_text())
             self.save_to_json(sentences)
 
-
+    @requires_admin()
     @commands.command()
     async def start_scrape(self, ctx, start_url: str):
         """Command to start the scraping process."""
-        if ctx.author.id not in settings["bot"]["owner_ids"]:
-            await ctx.send("You do not have permission to use this command.")
-            return
-
         if not start_url.startswith("http"):
             await ctx.send("Please provide a valid URL.")
             return
@@ -99,18 +97,16 @@ class WebScraper(commands.Cog):
 
         await ctx.send("Scraping complete! Sentences saved to memory.json.")
 
+    @requires_admin()
     @commands.command()
     async def undo_scrape(self, ctx):
         """Command to undo the last scrape."""
-        if ctx.author.id not in settings["bot"]["owner_ids"]:
-            await ctx.send("You do not have permission to use this command.")
-            return
-
         success = self.undo_last_scrape()
         if success:
             await ctx.send("Last scrape undone successfully.")
         else:
             await ctx.send("No data to undo or an error occurred.")
+
 
 async def setup(bot):
     await bot.add_cog(WebScraper(bot))

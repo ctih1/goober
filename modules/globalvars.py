@@ -3,17 +3,23 @@ import platform
 from dotenv import load_dotenv
 import pathlib
 import subprocess
+
+
 def get_git_branch():
     try:
-        branch = subprocess.check_output(
-            ["git", "rev-parse", "--abbrev-ref", "HEAD"],
-            stderr=subprocess.DEVNULL
-        ).decode('utf-8').strip()
+        branch = (
+            subprocess.check_output(
+                ["git", "rev-parse", "--abbrev-ref", "HEAD"], stderr=subprocess.DEVNULL
+            )
+            .decode("utf-8")
+            .strip()
+        )
         return branch
     except subprocess.CalledProcessError:
         return None
 
-env_path = pathlib.Path(__file__).parent.parent / '.env'
+
+env_path = pathlib.Path(__file__).parent.parent / ".env"
 load_dotenv(dotenv_path=env_path)
 
 ANSI = "\033["
@@ -25,9 +31,9 @@ DEBUG = f"{ANSI}1;30m"
 RESET = f"{ANSI}0m"
 
 VERSION_URL = "https://raw.githubusercontent.com/gooberinc/version/main"
-UPDATE_URL = VERSION_URL+"/latest_version.json"
+UPDATE_URL = VERSION_URL + "/latest_version.json"
 print(UPDATE_URL)
-LOCAL_VERSION_FILE = "current_version.txt" 
+LOCAL_VERSION_FILE = "current_version.txt"
 
 # TOKEN = os.getenv("DISCORDBOTTOKEN", "0")
 # PREFIX = os.getenv("BOTPREFIX", "g.")
@@ -52,9 +58,9 @@ LOCAL_VERSION_FILE = "current_version.txt"
 # IGNOREWARNING = False # is this either??? i don't think so?
 # song = os.getenv("song")
 arch = platform.machine()
-slash_commands_enabled = True # 100% broken, its a newer enough version so its probably enabled by default.... fix this at somepoint or hard code it in goober central code
+slash_commands_enabled = True  # 100% broken, its a newer enough version so its probably enabled by default.... fix this at somepoint or hard code it in goober central code
 launched = False
 latest_version = "0.0.0"
 local_version = "2.3.3"
-os.environ['gooberlocal_version'] = local_version
+os.environ["gooberlocal_version"] = local_version
 beta = get_git_branch() == "dev"

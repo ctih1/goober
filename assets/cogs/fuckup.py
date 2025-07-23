@@ -5,6 +5,7 @@ from PIL import Image, ImageEnhance, ImageFilter, ImageOps, ImageChops, ImageCol
 import os, random, shutil, tempfile
 import modules.keys as k
 
+
 async def deepfryimage(path):
     with Image.open(path).convert("RGB") as im:
         # make it burn
@@ -44,14 +45,17 @@ class whami(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-
     @commands.command()
     async def fuckup(self, ctx):
         assets_folder = "assets/images"
         temp_input = None
 
         def get_random_asset_image():
-            files = [f for f in os.listdir(assets_folder) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.webp'))]
+            files = [
+                f
+                for f in os.listdir(assets_folder)
+                if f.lower().endswith((".png", ".jpg", ".jpeg", ".webp"))
+            ]
             if not files:
                 return None
             return os.path.join(assets_folder, random.choice(files))
@@ -93,6 +97,7 @@ class whami(commands.Cog):
 
         if temp_input and os.path.exists(temp_input):
             os.remove(temp_input)
+
 
 async def setup(bot):
     await bot.add_cog(whami(bot))
