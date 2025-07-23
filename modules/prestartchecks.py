@@ -192,8 +192,10 @@ def check_cpu():
     cpu_per_core = psutil.cpu_percent(interval=1, percpu=True)  # type: ignore
     total_cpu = sum(cpu_per_core) / len(cpu_per_core)
     logger.info(k.total_cpu_usage(usage=total_cpu))
+
     if total_cpu > 85:
         logger.warning(f"{k.high_avg_cpu(usage=total_cpu)}")
+
     if total_cpu > 95:
         logger.error(k.really_high_cpu())
         sys.exit(1)
@@ -211,12 +213,15 @@ def check_memoryjson():
         try:
             with open(settings["bot"]["active_memory"], "r", encoding="utf-8") as f:
                 json.load(f)
+
         except json.JSONDecodeError as e:
             logger.error(f"{k.memory_file_corrupted(error=e)}")
             logger.warning(f"{k.consider_backup_memory()}")
+
         except UnicodeDecodeError as e:
             logger.error(f"{k.memory_file_encoding(error=e)}")
             logger.warning(f"{k.consider_backup_memory()}")
+
         except Exception as e:
             logger.error(f"{k.error_reading_memory(error=e)}")
     except FileNotFoundError:

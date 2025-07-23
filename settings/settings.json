@@ -16,7 +16,6 @@
         },
         "active_memory": "memory.json",
         "enabled_cogs": [
-            "cogmanager"
         ]
     },
     "locale": "fi",

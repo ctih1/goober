@@ -27,7 +27,7 @@ RED = f"{ANSI}31m"
 GREEN = f"{ANSI}32m"
 YELLOW = f"{ANSI}33m"
 PURPLE = f"{ANSI}35m"
-DEBUG = f"{ANSI}1;30m"
+DEBUG = f"{ANSI}90m"
 RESET = f"{ANSI}0m"
 
 VERSION_URL = "https://raw.githubusercontent.com/gooberinc/version/main"
