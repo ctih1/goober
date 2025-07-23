@@ -3,9 +3,9 @@ from discord.ext import commands
 import discord.ext
 import discord.ext.commands
 from modules.permission import requires_admin
-from modules.settings import Settings as SettingsManager
+from modules.settings import instance as settings_manager
+from modules.globalvars import available_cogs
 
-settings_manager = SettingsManager()
 settings = settings_manager.settings
 
 
@@ -23,6 +23,15 @@ class CogManager(commands.Cog):
             await self.bot.load_extension(COG_PREFIX + cog_name)
             await ctx.send(f"Loaded cog `{cog_name}` successfully.")
             settings["bot"]["enabled_cogs"].append(cog_name)
+            settings_manager.add_admin_log_event(
+                {
+                    "action": "add",
+                    "author": ctx.author.id,
+                    "change": "enabled_cogs",
+                    "messageId": ctx.message.id,
+                    "target": cog_name,
+                }
+            )
             settings_manager.commit()
 
         except Exception as e:
@@ -69,6 +78,15 @@ class CogManager(commands.Cog):
             await self.bot.unload_extension(COG_PREFIX + cog_name)
             await ctx.send(f"Unloaded cog `{cog_name}` successfully.")
             settings["bot"]["enabled_cogs"].remove(cog_name)
+            settings_manager.add_admin_log_event(
+                {
+                    "action": "del",
+                    "author": ctx.author.id,
+                    "change": "enabled_cogs",
+                    "messageId": ctx.message.id,
+                    "target": cog_name,
+                }
+            )
             settings_manager.commit()
         except Exception as e:
             await ctx.send(f"Error unloading cog `{cog_name}`: {e}")
@@ -102,7 +120,8 @@ class CogManager(commands.Cog):
             title="Loaded Cogs",
             description="Here is a list of all currently loaded cogs:",
         )
-        embed.add_field(name="Cogs", value="\n".join(cogs), inline=False)
+        embed.add_field(name="Loaded cogs", value="\n".join(cogs), inline=False)
+        embed.add_field(name="Available cogs", value="\n".join(available_cogs()))
         await ctx.send(embed=embed)
 
 

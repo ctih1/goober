@@ -6,9 +6,8 @@ import json
 import asyncio
 from urllib.parse import urljoin
 from modules.permission import requires_admin
-from modules.settings import Settings as SettingsManager
+from modules.settings import instance as settings_manager
 
-settings_manager = SettingsManager()
 settings = settings_manager.settings
 
 

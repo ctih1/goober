@@ -3,6 +3,8 @@ from discord.ext import commands
 from modules.globalvars import RED, GREEN, RESET, LOCAL_VERSION_FILE
 import os
 
+from modules.permission import requires_admin
+
 
 class songchange(commands.Cog):
     def __init__(self, bot):
@@ -17,15 +19,10 @@ class songchange(commands.Cog):
     global local_version
     local_version = get_local_version()
 
+    @requires_admin()
     @commands.command()
-    async def changesong(self, ctx):
-        if LOCAL_VERSION_FILE > "0.11.8":
-            await ctx.send(
-                f"Goober is too old! you must have version 0.11.8 you have {local_version}"
-            )
-            return
-        await ctx.send("Check the terminal! (this does not persist across restarts)")
-        song = input("\nEnter a song:\n")
+    async def changesong(self, ctx, song: str):
+        await ctx.send(f"Changed song to {song}")
         try:
             await self.bot.change_presence(
                 activity=discord.Activity(

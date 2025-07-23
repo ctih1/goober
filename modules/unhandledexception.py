@@ -1,12 +1,11 @@
 import sys
 import traceback
 import os
-from modules.settings import Settings as SettingsManager
+from modules.settings import instance as settings_manager
 import logging
 from modules.globalvars import RED, RESET
 import modules.keys as k
 
-settings_manager = SettingsManager()
 settings = settings_manager.settings
 logger = logging.getLogger("goober")
 

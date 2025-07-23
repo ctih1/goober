@@ -11,9 +11,8 @@ from spacy.util import is_package
 import importlib.metadata
 import logging
 import modules.keys as k
-from modules.settings import Settings as SettingsManager
+from modules.settings import instance as settings_manager
 
-settings_manager = SettingsManager()
 settings = settings_manager.settings
 
 

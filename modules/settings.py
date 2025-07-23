@@ -1,6 +1,6 @@
 import json
 import os
-from typing import List, Mapping, Any, TypedDict
+from typing import List, Literal, Mapping, Any, NotRequired, TypedDict
 from modules.keys import Language
 import logging
 import copy
@@ -36,8 +36,19 @@ class SettingsType(TypedDict):
     splash_text_loc: str
 
 
+class AdminLogEvent(TypedDict):
+    messageId: int
+    author: int
+    target: str | int
+    action: Literal["del", "add", "set"]
+    change: Literal["owner_ids", "blacklisted_users", "enabled_cogs"]
+
+
 class Settings:
     def __init__(self) -> None:
+        global instance
+        instance = self
+
         self.path: str = os.path.join(".", "settings", "settings.json")
 
         if not os.path.exists(self.path):
@@ -52,11 +63,37 @@ class Settings:
         self.settings = SettingsType(self.__kv_store)  # type: ignore
         self.original_settings = copy.deepcopy(self.settings)
 
+        self.log_path: str = os.path.join(".", "settings", "admin_logs.json")
+
+    def reload_settings(self) -> None:
+        with open(self.path, "r") as f:
+            self.__kv_store: dict = json.load(f)
+
+        self.settings = SettingsType(self.__kv_store)  # type: ignore
+        self.original_settings = copy.deepcopy(self.settings)
+
     def commit(self) -> None:
         with open(self.path, "w") as f:
-            json.dump(self.settings, f, indent=4)
+            json.dump(self.settings, f, ensure_ascii=False, indent=4)
 
         self.original_settings = self.settings
 
     def discard(self) -> None:
         self.settings = self.original_settings
+
+    def add_admin_log_event(self, event: AdminLogEvent):
+        if not os.path.exists(self.log_path):
+            logger.warning("Admin log doesn't exist!")
+            with open(self.log_path, "w") as f:
+                json.dump([], f)
+
+        with open(self.log_path, "r") as f:
+            logs: List[AdminLogEvent] = json.load(f)
+
+        logs.append(event)
+
+        with open(self.log_path, "w") as f:
+            json.dump(logs, f, ensure_ascii=False, indent=4)
+
+
+instance: Settings = Settings()

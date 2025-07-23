@@ -7,10 +7,9 @@ import discord.ext.commands
 import modules.keys as k
 from modules.permission import requires_admin
 from modules.sentenceprocessing import send_message
-from modules.settings import Settings as SettingsManager
+from modules.settings import instance as settings_manager
 import requests
 
-settings_manager = SettingsManager()
 settings = settings_manager.settings
 
 
@@ -159,13 +158,11 @@ class BaseCommands(commands.Cog):
 
         response = requests.post(
             "https://litterbox.catbox.moe/resources/internals/api.php",
-            data={"reqtype": "fileupload", "time": "1h", "fileToUpload": data},
+            data={"reqtype": "fileupload", "time": "1h"},
+            files={"fileToUpload": data},
         )
 
-        print(response.text)
-        print(response.status_code)
-
-        # await send_message(ctx, memorylitter.stdout.strip())
+        await send_message(ctx, response.text)
 
 
 async def setup(bot: discord.ext.commands.Bot):
