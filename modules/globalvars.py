@@ -1,5 +1,6 @@
 import os
 import platform
+from typing import Callable, List
 from dotenv import load_dotenv
 import pathlib
 import subprocess
@@ -21,6 +22,10 @@ def get_git_branch():
 
 env_path = pathlib.Path(__file__).parent.parent / ".env"
 load_dotenv(dotenv_path=env_path)
+
+available_cogs: Callable[[], List[str]] = lambda: [
+    file[:-3] for file in os.listdir("assets/cogs") if file.endswith(".py")
+]
 
 ANSI = "\033["
 RED = f"{ANSI}31m"

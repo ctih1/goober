@@ -31,8 +31,9 @@ from modules import key_compiler
 import logging
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
-from modules.settings import Settings as SettingsManager
+from modules.settings import instance as settings_manager
 from modules.permission import requires_admin
+import threading
 
 
 def build_keys():
@@ -61,10 +62,10 @@ file_handler.setFormatter(GooberFormatter(colors=False))
 logger.addHandler(console_handler)
 logger.addHandler(file_handler)
 
-settings_manager = SettingsManager()
 settings = settings_manager.settings
 
 splash_text: str = ""
+
 
 with open(settings["splash_text_loc"], "r", encoding="UTF-8") as f:
     splash_text = "".join(f.readlines())
@@ -160,8 +161,8 @@ async def on_ready() -> None:
     if launched:
         return
 
-    await load_cogs_from_folder(bot)
     await load_cogs_from_folder(bot, "assets/cogs/internal")
+    await load_cogs_from_folder(bot)
     try:
         synced: List[discord.app_commands.AppCommand] = await bot.tree.sync()
 
@@ -281,7 +282,7 @@ async def on_message(message: discord.Message) -> None:
     if message.author.bot:
         return
 
-    if str(message.author.id) in settings["bot"]["blacklisted_users"]:
+    if message.author.id in settings["bot"]["blacklisted_users"]:
         return
 
     commands = [
@@ -404,6 +405,10 @@ class Handler(FileSystemEventHandler):
         elif event.event_type == "modified":
             build_keys()
 
+
+observer = Observer()
+observer.schedule(Handler(), "assets/locales")
+observer.start()
 
 # Start the bot
 if __name__ == "__main__":

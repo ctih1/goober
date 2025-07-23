@@ -1,0 +1,37 @@
+[
+    {
+        "action": "add",
+        "author": 642441889181728810,
+        "change": "enabled_cogs",
+        "messageId": 1397556082225844234,
+        "target": "whoami"
+    },
+    {
+        "action": "add",
+        "author": 642441889181728810,
+        "change": "owner_ids",
+        "messageId": 1397556184818384996,
+        "target": 1167661372809683048
+    },
+    {
+        "action": "del",
+        "author": 642441889181728810,
+        "change": "owner_ids",
+        "messageId": 1397556247313780829,
+        "target": 1167661372809683048
+    },
+    {
+        "action": "add",
+        "author": 642441889181728810,
+        "change": "enabled_cogs",
+        "messageId": 1397558663559909399,
+        "target": "fuckup"
+    },
+    {
+        "action": "add",
+        "author": 642441889181728810,
+        "change": "enabled_cogs",
+        "messageId": 1397558837644365935,
+        "target": "songchanger"
+    }
+]
