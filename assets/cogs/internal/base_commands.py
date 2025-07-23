@@ -148,6 +148,7 @@ class BaseCommands(commands.Cog):
 
         await send_message(ctx, embed=embed)
 
+    @requires_admin()
     @commands.command()
     async def mem(self, ctx: commands.Context) -> None:
         if not settings["bot"]["allow_show_mem_command"]:
