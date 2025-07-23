@@ -45,16 +45,19 @@ def save_memory(memory):
         json.dump(memory, f, indent=4)
 
 
-def train_markov_model(memory, additional_data=None):
+def train_markov_model(memory, additional_data=None) -> markovify.NewlineText | None:
     if not memory:
         return None
+
     filtered_memory = [line for line in memory if isinstance(line, str)]
     if additional_data:
         filtered_memory.extend(
             line for line in additional_data if isinstance(line, str)
         )
+
     if not filtered_memory:
         return None
+
     text = "\n".join(filtered_memory)
     model = markovify.NewlineText(text, state_size=2)
     return model
