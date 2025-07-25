@@ -54,7 +54,7 @@ class BaseCommands(commands.Cog):
                 name=f"{k.command_help_categories_custom()}",
                 value="\n".join(
                     [
-                        f"{settings["bot"]["prefix"]}{command}"
+                        f"{settings['bot']['prefix']}{command}"
                         for command in custom_commands
                     ]
                 ),
@@ -63,7 +63,7 @@ class BaseCommands(commands.Cog):
 
         for category, commands_list in command_categories.items():
             commands_in_category: str = "\n".join(
-                [f"{settings["bot"]["prefix"]}{command}" for command in commands_list]
+                [f"{settings['bot']['prefix']}{command}" for command in commands_list]
             )
             embed.add_field(name=category, value=commands_in_category, inline=False)
 
@@ -74,6 +74,10 @@ class BaseCommands(commands.Cog):
     async def setlanguage(self, ctx: commands.Context, locale: str) -> None:
         await ctx.defer()
         k.change_language(locale)
+
+        settings["locale"] = locale # type: ignore
+        settings_manager.commit()
+
         await ctx.send(":thumbsup:")
 
     @commands.command()
@@ -106,7 +110,7 @@ class BaseCommands(commands.Cog):
 
         embed.add_field(
             name=k.command_about_embed_field1(),
-            value=f"{settings["name"]}",
+            value=f"{settings['name']}",
             inline=False,
         )
 
@@ -137,12 +141,12 @@ class BaseCommands(commands.Cog):
 
         embed.add_field(
             name=f"{k.command_stats_embed_field3name()}",
-            value=f"{k.command_stats_embed_field3value(
+            value=f'{k.command_stats_embed_field3value(
             NAME=settings["name"], PREFIX=settings["bot"]["prefix"], ownerid=settings["bot"]["owner_ids"][0],
             PING_LINE=settings["bot"]["misc"]["ping_line"], showmemenabled=settings["bot"]["allow_show_mem_command"],
             USERTRAIN_ENABLED=settings["bot"]["user_training"], song=settings["bot"]["misc"]["active_song"],
             splashtext=splash_text
-        )}",
+        )}',
             inline=False,
         )
 
