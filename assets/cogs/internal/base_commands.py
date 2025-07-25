@@ -115,7 +115,7 @@ class BaseCommands(commands.Cog):
 
     @commands.command()
     async def stats(self, ctx: commands.Context) -> None:
-        memory_file: str = "memory.json"
+        memory_file: str = settings["bot"]["active_memory"]
         file_size: int = os.path.getsize(memory_file)
 
         with open(memory_file, "r") as file:
