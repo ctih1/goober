@@ -7,10 +7,17 @@ import copy
 
 logger = logging.getLogger("goober")
 
+ActivityType = Literal["listening", "playing", "streaming", "competing", "watching"]
+
+
+class Activity(TypedDict):
+    content: str
+    type: ActivityType
+
 
 class MiscBotOptions(TypedDict):
     ping_line: str
-    active_song: str
+    activity: Activity
     positive_gifs: List[str]
     block_profanity: bool
 
@@ -65,6 +72,25 @@ class Settings:
         self.original_settings = copy.deepcopy(self.settings)
 
         self.log_path: str = os.path.join(".", "settings", "admin_logs.json")
+
+        self.migrate()
+
+    def migrate(self):
+        active_song: str | None = (
+            self.settings.get("bot", {}).get("misc", {}).get("active_song")
+        )
+
+        if active_song:
+            logger.warning("Found deprecated active_song, migrating")
+
+            self.settings["bot"]["misc"]["activity"] = {
+                "content": active_song,
+                "type": "listening",
+            }
+
+            del self.settings["bot"]["misc"]["active_song"]  # type: ignore
+
+        self.commit()
 
     def reload_settings(self) -> None:
         with open(self.path, "r") as f:

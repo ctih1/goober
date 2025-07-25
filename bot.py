@@ -31,7 +31,7 @@ from modules import key_compiler
 import logging
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
-from modules.settings import instance as settings_manager
+from modules.settings import instance as settings_manager, ActivityType
 from modules.permission import requires_admin
 import threading
 
@@ -183,12 +183,28 @@ async def on_ready() -> None:
         traceback.print_exc()
         quit()
 
-    if not settings["bot"]["misc"]["active_song"]:
+    if not settings["bot"]["misc"]["activity"]["content"]:
         return
+
+    activity_type = discord.ActivityType.unknown
+
+    settings_activity = settings["bot"]["misc"]["activity"]["type"]
+
+    activities: Dict[ActivityType, discord.ActivityType] = {
+        "listening": discord.ActivityType.listening,
+        "playing": discord.ActivityType.playing,
+        "streaming": discord.ActivityType.streaming,
+        "competing": discord.ActivityType.competing,
+        "watching": discord.ActivityType.watching,
+    }
+
     await bot.change_presence(
         activity=discord.Activity(
-            type=discord.ActivityType.listening,
-            name=settings["bot"]["misc"]["active_song"],
+            type=activities.get(
+                settings["bot"]["misc"]["activity"]["type"],
+                discord.ActivityType.unknown,
+            ),
+            name=settings["bot"]["misc"]["activity"]["content"],
         )
     )
     launched = True

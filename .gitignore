@@ -14,3 +14,4 @@ translationcompleteness.py
 modules/volta
 log.txt
 settings/admin_logs.json
+settings/settings.json
