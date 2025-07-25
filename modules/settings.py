@@ -60,6 +60,9 @@ class Settings:
         self.path: str = os.path.join(".", "settings", "settings.json")
 
         if not os.path.exists(self.path):
+            logger.critical(
+                f"Missing settings file from {self.path}! Did you forget to copy settings.example.json?"
+            )
             raise ValueError("settings.json file does not exist!")
 
         self.settings: SettingsType
