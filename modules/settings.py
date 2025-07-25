@@ -1,6 +1,6 @@
 import json
 import os
-from typing import Dict, List, Literal, Mapping, Any, NotRequired, TypedDict
+from typing import Dict, List, Literal, Mapping, Any, TypedDict
 from modules.keys import Language
 import logging
 import copy

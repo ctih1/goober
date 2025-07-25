@@ -75,7 +75,10 @@ class Script:
         self.script: str = ""
 
     def add_line(self, content, indent: int = 0, newline: bool = True) -> None:
-        self.script += f"{'\t' * indent}{content}{'\n' if newline else ''}"
+        tabs = "\t" * indent
+        newline_content = "\n" if newline else ""
+
+        self.script += f"{tabs}{content}{newline_content}"
 
 
 def process_name(key: str) -> str:
@@ -170,7 +173,7 @@ class GenerateScript:
             args = find_args(self.primary_data[key])
 
             self.script.add_line(
-                f"def {process_name(key)}({convert_args(','.join([*args, "lang:str|None=None" if self.uses_typing else "lang"]), args, "none")}):"
+                f"def {process_name(key)}({convert_args(','.join([*args, 'lang:str|None=None' if self.uses_typing else 'lang']), args, 'none')}):"
             )
             if self.generate_comments:
                 self.script.add_line('"""', 1)
