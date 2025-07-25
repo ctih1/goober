@@ -32,7 +32,7 @@ settings = settings_manager.settings
 class Markov(commands.Cog):
     def __init__(self, bot):
         self.bot: discord.ext.commands.Bot = bot
-        self.markov_model: markovify.NewlineText
+        self.model: markovify.NewlineText
 
     @requires_admin()
     @commands.command()
@@ -92,7 +92,7 @@ class Markov(commands.Cog):
         response: str = ""
         if sentence_size == 1:
             response = (
-                self.model.make_short_sentence(max_chars=100, tries=100)
+                self.model.make_short_sentence(max_chars=100, tries=700)
                 or k.command_talk_generation_fail()
             )
 
