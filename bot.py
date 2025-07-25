@@ -48,6 +48,7 @@ def build_keys():
 
 build_keys()
 
+
 logger = logging.getLogger("goober")
 logger.setLevel(logging.DEBUG)
 
@@ -65,6 +66,8 @@ logger.addHandler(file_handler)
 settings = settings_manager.settings
 
 splash_text: str = ""
+
+k.change_language(settings["locale"])
 
 
 with open(settings["splash_text_loc"], "r", encoding="UTF-8") as f:
