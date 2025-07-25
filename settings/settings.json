@@ -19,12 +19,18 @@
         "enabled_cogs": [
             "fuckup",
             "songchanger",
-            "pulse"
+            "pulse",
+            "breaking_news"
         ]
     },
     "locale": "fi",
     "name": "gubert",
     "auto_update": true,
     "disable_checks": false,
-    "splash_text_loc": "settings/splash.txt"
+    "splash_text_loc": "settings/splash.txt",
+    "cog_settings": {
+        "breaking_news": {
+            "create_from_message_content": true
+        }
+    }
 }

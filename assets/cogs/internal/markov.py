@@ -7,7 +7,11 @@ from discord.ext import commands
 import discord.ext
 import discord.ext.commands
 
-from modules.markovmemory import save_markov_model, train_markov_model
+from modules.markovmemory import (
+    load_markov_model,
+    save_markov_model,
+    train_markov_model,
+)
 from modules.permission import requires_admin
 from modules.sentenceprocessing import (
     improve_sentence_coherence,
@@ -32,7 +36,8 @@ settings = settings_manager.settings
 class Markov(commands.Cog):
     def __init__(self, bot):
         self.bot: discord.ext.commands.Bot = bot
-        self.model: markovify.NewlineText
+
+        self.model: markovify.NewlineText | None = load_markov_model()
 
     @requires_admin()
     @commands.command()
@@ -92,7 +97,7 @@ class Markov(commands.Cog):
         response: str = ""
         if sentence_size == 1:
             response = (
-                self.model.make_short_sentence(max_chars=100, tries=700)
+                self.model.make_short_sentence(max_chars=200, tries=700)
                 or k.command_talk_generation_fail()
             )
 
