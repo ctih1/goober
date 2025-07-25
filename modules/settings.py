@@ -1,6 +1,6 @@
 import json
 import os
-from typing import List, Literal, Mapping, Any, NotRequired, TypedDict
+from typing import Dict, List, Literal, Mapping, Any, NotRequired, TypedDict
 from modules.keys import Language
 import logging
 import copy
@@ -34,6 +34,7 @@ class SettingsType(TypedDict):
     auto_update: bool
     disable_checks: bool
     splash_text_loc: str
+    cog_settings: Dict[str, Mapping[Any, Any]]
 
 
 class AdminLogEvent(TypedDict):
@@ -80,6 +81,19 @@ class Settings:
 
     def discard(self) -> None:
         self.settings = self.original_settings
+
+    def get_plugin_settings(
+        self, plugin_name: str, default: Mapping[Any, Any]
+    ) -> Mapping[Any, Any]:
+        return self.settings["cog_settings"].get(plugin_name, default)
+
+    def set_plugin_setting(
+        self, plugin_name: str, new_settings: Mapping[Any, Any]
+    ) -> None:
+        """Changes a plugin setting. Commits changes"""
+        self.settings["cog_settings"][plugin_name] = new_settings
+
+        self.commit()
 
     def add_admin_log_event(self, event: AdminLogEvent):
         if not os.path.exists(self.log_path):
