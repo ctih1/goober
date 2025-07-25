@@ -75,7 +75,7 @@ class BaseCommands(commands.Cog):
         await ctx.defer()
         k.change_language(locale)
 
-        settings["locale"] = locale # type: ignore
+        settings["locale"] = locale  # type: ignore
         settings_manager.commit()
 
         await ctx.send(":thumbsup:")
@@ -141,12 +141,12 @@ class BaseCommands(commands.Cog):
 
         embed.add_field(
             name=f"{k.command_stats_embed_field3name()}",
-            value=f'{k.command_stats_embed_field3value(
-            NAME=settings["name"], PREFIX=settings["bot"]["prefix"], ownerid=settings["bot"]["owner_ids"][0],
-            PING_LINE=settings["bot"]["misc"]["ping_line"], showmemenabled=settings["bot"]["allow_show_mem_command"],
-            USERTRAIN_ENABLED=settings["bot"]["user_training"], song=settings["bot"]["misc"]["active_song"],
-            splashtext=splash_text
-        )}',
+            value=f"""{k.command_stats_embed_field3value(
+                NAME=settings["name"], PREFIX=settings["bot"]["prefix"], ownerid=settings["bot"]["owner_ids"][0],
+                PING_LINE=settings["bot"]["misc"]["ping_line"], showmemenabled=settings["bot"]["allow_show_mem_command"],
+                USERTRAIN_ENABLED=settings["bot"]["user_training"], song=settings["bot"]["misc"]["active_song"],
+                splashtext=splash_text
+            )}""",
             inline=False,
         )
 
