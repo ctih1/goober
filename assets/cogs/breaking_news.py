@@ -9,6 +9,7 @@ from textwrap import wrap
 import logging
 from modules.settings import instance as settings_manager
 import re
+import time
 
 logger = logging.getLogger("goober")
 
@@ -88,6 +89,7 @@ class BreakingNews(commands.Cog):
             await ctx.send(content="Breaking news!", file=discord.File(f))
 
     def __insert_text(self, text):
+        start = time.time()
         base_image_data: Image.ImageFile.ImageFile = Image.open(
             os.path.join("assets", "images", "breaking_news.png")
         )
@@ -129,6 +131,8 @@ class BreakingNews(commands.Cog):
 
         with open(path, "wb") as f:
             base_image_data.save(f)
+
+        logger.info(f"Generation took {time.time() - start}s")
 
         return path
 
