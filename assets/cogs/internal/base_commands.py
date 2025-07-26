@@ -13,7 +13,7 @@ import psutil
 import cpuinfo
 import sys
 import subprocess
-
+import updater
 
 settings = settings_manager.settings
 
@@ -183,7 +183,7 @@ class BaseCommands(commands.Cog):
     @commands.command()
     async def force_update(self, ctx: commands.Context):
         await ctx.send("Forcefully updating...")
-        subprocess.run([sys.executable, sys.executable, "updater.py"])
+        updater.force_update()
         os.execv(sys.executable, [sys.executable] + sys.argv)
         
 

@@ -14,5 +14,3 @@ def force_update() -> None:
     pull = subprocess.run(["git", "pull", "origin", "main"], check=True, capture_output=True)
     logger.info(pull)
 
-
-force_update()
