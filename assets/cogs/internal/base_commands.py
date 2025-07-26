@@ -11,6 +11,9 @@ from modules.settings import instance as settings_manager
 import requests
 import psutil
 import cpuinfo
+import sys
+import subprocess
+
 
 settings = settings_manager.settings
 
@@ -169,6 +172,19 @@ class BaseCommands(commands.Cog):
         )
 
         await send_message(ctx, embed=embed)
+
+    @requires_admin()
+    @commands.command()
+    async def restart(self, ctx: commands.Context):
+        await ctx.send("Restarting...")
+        os.execv(sys.executable, [sys.executable] + sys.argv)
+
+    @requires_admin()
+    @commands.command()
+    async def force_update(self, ctx: commands.Context):
+        await ctx.send("Forcefully updating...")
+        subprocess.run([sys.executable, sys.executable, "updater.py"])
+        sys.exit()
 
     @requires_admin()
     @commands.command()
