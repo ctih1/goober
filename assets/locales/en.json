@@ -137,6 +137,7 @@
     "markov_model_not_found": "Markov model not found!",
     "blacklisted": "blacklisted",
     "blacklisted_user": "Blacklisted user",
-    "edit_fail": "Failed to edit message"
+    "edit_fail": "Failed to edit message",
+    "memory_embed_field": "RAM details"
 }
   

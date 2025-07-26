@@ -122,6 +122,12 @@ class BaseCommands(commands.Cog):
         memory_file: str = settings["bot"]["active_memory"]
         file_size: int = os.path.getsize(memory_file)
 
+        memory_info = psutil.virtual_memory()  # type: ignore
+        total_memory = memory_info.total / (1024**3)
+        used_memory = memory_info.used / (1024**3)
+        free_memory = memory_info.available / (1024**3)
+
+
         with open(memory_file, "r") as file:
             line_count: int = sum(1 for _ in file)
 
@@ -134,6 +140,11 @@ class BaseCommands(commands.Cog):
             name=f"{k.command_stats_embed_field1name()}",
             value=f"{k.command_stats_embed_field1value(file_size=file_size, line_count=line_count)}",
             inline=False,
+        )
+
+        embed.add_field(
+            name=k.memory_embed_field(),
+            value=k.memory_usage(used=used_memory, total=total_memory, percent=round(used_memory/total_memory * 100))
         )
 
         with open(settings["splash_text_loc"], "r") as f:
