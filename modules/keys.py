@@ -2306,3 +2306,19 @@ def edit_fail(lang:str|None=None):
 	if lang == 'fr': return "Failed to edit message"
 	if lang == 'it': return "Failed to edit message"
 	else: raise ValueError(f'Invalid language {lang}')
+def memory_embed_field(lang:str|None=None):
+	"""
+	### Locales
+	- En: **RAM details**
+	- Es: **RAM details**
+	- Fi: **RAM details**
+	- Fr: **RAM details**
+	- It: **RAM details**
+	"""
+	if not lang: lang=default_lang
+	if lang == 'en': return "RAM details"
+	if lang == 'es': return "RAM details"
+	if lang == 'fi': return "RAM details"
+	if lang == 'fr': return "RAM details"
+	if lang == 'it': return "RAM details"
+	else: raise ValueError(f'Invalid language {lang}')
