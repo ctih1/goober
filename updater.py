@@ -2,15 +2,19 @@ import subprocess
 import time
 import sys
 import os
+import logging
+
+
+logger = logging.getLogger("goober")
 
 def force_update() -> None:
-    print("Forcefully updating...")
+    logger.info("Forcefully updating...")
     stash = subprocess.run(["git", "stash"], capture_output=True)
-    print(stash)
+    logger.info(stash)
     pull = subprocess.run(["git", "pull", "origin", "main"], check=True, capture_output=True)
-    print(pull)
+    logger.info(pull)
 
-    print("Starting bot")
+    logger.info("Starting bot")
     os.execv(sys.executable, [sys.executable, "bot.py"])
 
 force_update()
