@@ -9,6 +9,8 @@ from modules.permission import requires_admin
 from modules.sentenceprocessing import send_message
 from modules.settings import instance as settings_manager
 import requests
+import psutil
+import cpuinfo
 
 settings = settings_manager.settings
 
@@ -125,7 +127,9 @@ class BaseCommands(commands.Cog):
         memory_info = psutil.virtual_memory()  # type: ignore
         total_memory = memory_info.total / (1024**3)
         used_memory = memory_info.used / (1024**3)
-        free_memory = memory_info.available / (1024**3)
+
+
+        cpu_name = cpuinfo.get_cpu_info()["brand"]
 
 
         with open(memory_file, "r") as file:
@@ -143,8 +147,11 @@ class BaseCommands(commands.Cog):
         )
 
         embed.add_field(
-            name=k.memory_embed_field(),
-            value=k.memory_usage(used=used_memory, total=total_memory, percent=round(used_memory/total_memory * 100))
+            name=k.system_info(),
+            value=f"""
+                    {k.memory_usage(used=used_memory, total=total_memory, percent=round(used_memory/total_memory * 100))}
+                    {k.cpu_info(cpu_name)}
+                """
         )
 
         with open(settings["splash_text_loc"], "r") as f:

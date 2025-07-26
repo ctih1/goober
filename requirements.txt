@@ -9,3 +9,4 @@ python-dotenv
 dotenv
 pillow
 watchdog
+py-cpuinfo
