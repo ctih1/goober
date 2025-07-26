@@ -2306,19 +2306,35 @@ def edit_fail(lang:str|None=None):
 	if lang == 'fr': return "Failed to edit message"
 	if lang == 'it': return "Failed to edit message"
 	else: raise ValueError(f'Invalid language {lang}')
-def memory_embed_field(lang:str|None=None):
+def system_info(lang:str|None=None):
 	"""
 	### Locales
-	- En: **RAM details**
-	- Es: **RAM details**
-	- Fi: **RAM details**
-	- Fr: **RAM details**
-	- It: **RAM details**
+	- En: **System information**
+	- Es: **System information**
+	- Fi: **System information**
+	- Fr: **System information**
+	- It: **System information**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "RAM details"
-	if lang == 'es': return "RAM details"
-	if lang == 'fi': return "RAM details"
-	if lang == 'fr': return "RAM details"
-	if lang == 'it': return "RAM details"
+	if lang == 'en': return "System information"
+	if lang == 'es': return "System information"
+	if lang == 'fi': return "System information"
+	if lang == 'fr': return "System information"
+	if lang == 'it': return "System information"
+	else: raise ValueError(f'Invalid language {lang}')
+def cpu_info(cpu,lang:str|None=None):
+	"""
+	### Locales
+	- En: **CPU: {cpu}**
+	- Es: **CPU: {cpu}**
+	- Fi: **CPU: {cpu}**
+	- Fr: **CPU: {cpu}**
+	- It: **CPU: {cpu}**
+	"""
+	if not lang: lang=default_lang
+	if lang == 'en': return "CPU: {cpu}".format_map({"cpu": cpu})
+	if lang == 'es': return "CPU: {cpu}".format_map({"cpu": cpu})
+	if lang == 'fi': return "CPU: {cpu}".format_map({"cpu": cpu})
+	if lang == 'fr': return "CPU: {cpu}".format_map({"cpu": cpu})
+	if lang == 'it': return "CPU: {cpu}".format_map({"cpu": cpu})
 	else: raise ValueError(f'Invalid language {lang}')

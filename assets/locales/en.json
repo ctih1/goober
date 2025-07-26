@@ -138,6 +138,7 @@
     "blacklisted": "blacklisted",
     "blacklisted_user": "Blacklisted user",
     "edit_fail": "Failed to edit message",
-    "memory_embed_field": "RAM details"
+    "system_info": "System information",
+    "cpu_info": "CPU: {cpu}"
 }
   
