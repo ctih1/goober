@@ -177,7 +177,7 @@ def check_memory():
         logger.info(k.used_memory(used=used_memory))
         if free_memory < 1:
             logger.warning(f"{k.low_free_memory(free=free_memory)}")
-            sys.exit(1)
+
     except ImportError:
         logger.error(
             k.psutil_not_installed()
