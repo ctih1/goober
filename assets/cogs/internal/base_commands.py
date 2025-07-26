@@ -129,7 +129,7 @@ class BaseCommands(commands.Cog):
         used_memory = memory_info.used / (1024**3)
 
 
-        cpu_name = cpuinfo.get_cpu_info()["brand"]
+        cpu_name = cpuinfo.get_cpu_info()["brand_raw"]
 
 
         with open(memory_file, "r") as file:
@@ -149,7 +149,7 @@ class BaseCommands(commands.Cog):
         embed.add_field(
             name=k.system_info(),
             value=f"""
-                    {k.memory_usage(used=used_memory, total=total_memory, percent=round(used_memory/total_memory * 100))}
+                    {k.memory_usage(used=round(used_memory,2), total=round(total_memory,2), percent=round(used_memory/total_memory * 100))}
                     {k.cpu_info(cpu_name)}
                 """
         )
