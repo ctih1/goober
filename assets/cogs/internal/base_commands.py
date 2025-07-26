@@ -184,7 +184,8 @@ class BaseCommands(commands.Cog):
     async def force_update(self, ctx: commands.Context):
         await ctx.send("Forcefully updating...")
         subprocess.run([sys.executable, sys.executable, "updater.py"])
-        exit()
+        os.execv(sys.executable, [sys.executable] + sys.argv)
+        
 
     @requires_admin()
     @commands.command()
