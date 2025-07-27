@@ -121,7 +121,9 @@ class Example(commands.Cog):
         settings["intro"]["message"] = "brand new message!"
 
         settings_manager.set_plugin_setting(COG_NAME, settings)
-        
+
+        new_message = settings["intro"]["message"]
+        await send_message(ctx, message=f"New message: {new_message}")
 
 
 

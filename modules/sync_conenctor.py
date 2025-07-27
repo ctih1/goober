@@ -91,4 +91,4 @@ class SyncConnector:
     
 
 
-instance = SyncConnector("ws://localhost:80")
+instance = SyncConnector(settings["bot"]["sync_hub"]["url"])
