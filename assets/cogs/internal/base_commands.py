@@ -14,9 +14,12 @@ import cpuinfo
 import sys
 import subprocess
 import updater
+import platform
 from modules.sync_conenctor import instance as sync_connector
 
 settings = settings_manager.settings
+
+OS_STRING = f"{platform.system() if platform.system() != 'Darwin' else 'macOS'} {platform.release() if platform.system() != 'Darwin' else platform.mac_ver()[0]}"
 
 
 class BaseCommands(commands.Cog):
@@ -112,6 +115,11 @@ class BaseCommands(commands.Cog):
             title=k.command_about_embed_title(),
             description="",
             color=discord.Colour(0x000000),
+        )
+
+        embed.add_field(
+            name=k.system_info(),
+            value=k.os_info(OS_STRING)
         )
 
         embed.add_field(

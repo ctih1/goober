@@ -26,18 +26,12 @@ def build_keys():
         generate_comments=True,
     )
 
-
 build_keys()
 
-
-
 import os
-import re
-import json
 import time
 import random
 import traceback
-import subprocess
 import tempfile
 import shutil
 import sys
@@ -47,14 +41,7 @@ from typing import (
     Literal,
     Set,
     Optional,
-    Tuple,
-    Any,
-    TypedDict,
-    Union,
-    Callable,
-    Coroutine,
-    TypeVar,
-    Type,
+    TypedDict
 )
 import logging
 from modules.prestartchecks import start_checks
@@ -66,15 +53,10 @@ from modules.settings import instance as settings_manager, ActivityType
 from modules.permission import requires_admin
 from modules.sync_conenctor import instance as sync_connector
 
-import threading
-
-
 settings = settings_manager.settings
-
-splash_text: str = ""
-
 k.change_language(settings["locale"])
 
+splash_text: str = ""
 
 with open(settings["splash_text_loc"], "r", encoding="UTF-8") as f:
     splash_text = "".join(f.readlines())
@@ -96,7 +78,6 @@ from modules.unhandledexception import handle_exception
 from modules.image import gen_demotivator
 
 sys.excepthook = handle_exception
-
 
 class MessageMetadata(TypedDict):
     user_id: str
@@ -130,7 +111,7 @@ bot: commands.Bot = commands.Bot(
 
 # Load memory and Markov model for text generation
 memory: List[str | Dict[Literal["_meta"], MessageMetadata]] = load_memory()
-markov_model: Optional[markovify.Text] = load_markov_model()
+markov_model: markovify.Text | None = load_markov_model()
 if not markov_model:
     logger.error(k.markov_model_not_found())
     memory = load_memory()
@@ -192,9 +173,6 @@ async def on_ready() -> None:
     if not settings["bot"]["misc"]["activity"]["content"]:
         return
 
-    activity_type = discord.ActivityType.unknown
-
-    settings_activity = settings["bot"]["misc"]["activity"]["type"]
 
     activities: Dict[ActivityType, discord.ActivityType] = {
         "listening": discord.ActivityType.listening,
@@ -325,51 +303,54 @@ async def on_message(message: discord.Message) -> None:
     ):
         return
 
-    if message.content:
-        if not settings["bot"]["user_training"]:
+    if not message.content:
+        return
+    
+
+    if not settings["bot"]["user_training"]:
+        return
+
+    formatted_message: str = append_mentions_to_18digit_integer(message.content)
+    cleaned_message: str = preprocess_message(formatted_message)
+    if cleaned_message:
+        memory.append(cleaned_message)
+
+        message_metadata: MessageMetadata = {
+            "user_id": str(message.author.id),
+            "user_name": str(message.author),
+            "guild_id": str(message.guild.id) if message.guild else "DM",
+            "guild_name": str(message.guild.name) if message.guild else "DM",
+            "channel_id": str(message.channel.id),
+            "channel_name": str(message.channel),
+            "message": message.content,
+            "timestamp": time.time(),
+        }
+        try:
+            if isinstance(memory, list):
+                memory.append({"_meta": message_metadata})
+            else:
+                logger.warning("Memory is not a list; can't append metadata")
+        except Exception as e:
+            logger.warning(f"Failed to append metadata to memory: {e}")
+
+        save_memory(memory)
+
+    sentiment_score = is_positive(
+        message.content
+    )  # doesnt work but im scared to change the logic now please ignore
+    if sentiment_score > 0.8:
+        if not settings["bot"]["react_to_messages"]:
             return
+        if not sync_connector.can_react(message.id):
+            logger.info("Sync hub determined that this instance cannot react")
+            return
+        
 
-        formatted_message: str = append_mentions_to_18digit_integer(message.content)
-        cleaned_message: str = preprocess_message(formatted_message)
-        if cleaned_message:
-            memory.append(cleaned_message)
-
-            message_metadata: MessageMetadata = {
-                "user_id": str(message.author.id),
-                "user_name": str(message.author),
-                "guild_id": str(message.guild.id) if message.guild else "DM",
-                "guild_name": str(message.guild.name) if message.guild else "DM",
-                "channel_id": str(message.channel.id),
-                "channel_name": str(message.channel),
-                "message": message.content,
-                "timestamp": time.time(),
-            }
-            try:
-                if isinstance(memory, list):
-                    memory.append({"_meta": message_metadata})
-                else:
-                    logger.warning("Memory is not a list; can't append metadata")
-            except Exception as e:
-                logger.warning(f"Failed to append metadata to memory: {e}")
-
-            save_memory(memory)
-
-        sentiment_score = is_positive(
-            message.content
-        )  # doesnt work but im scared to change the logic now please ignore
-        if sentiment_score > 0.8:
-            if not settings["bot"]["react_to_messages"]:
-                return
-            if not sync_connector.can_react(message.id):
-                logger.info("Sync hub determined that this instance cannot react")
-                return
-            
-
-            emoji = random.choice(EMOJIS)
-            try:
-                await message.add_reaction(emoji)
-            except Exception as e:
-                logger.info(f"Failed to react with emoji: {e}")
+        emoji = random.choice(EMOJIS)
+        try:
+            await message.add_reaction(emoji)
+        except Exception as e:
+            logger.info(f"Failed to react with emoji: {e}")
 
     await bot.process_commands(message)
 

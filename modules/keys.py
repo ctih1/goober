@@ -2370,3 +2370,19 @@ def sync_hub_description(connected,url,lang:str|None=None):
 	if lang == 'fr': return "Connected: {connected}, URL: {url}".format_map({"connected": connected,"url": url})
 	if lang == 'it': return "Connected: {connected}, URL: {url}".format_map({"connected": connected,"url": url})
 	else: raise ValueError(f'Invalid language {lang}')
+def os_info(os,lang:str|None=None):
+	"""
+	### Locales
+	- En: **OS: {os}**
+	- Es: **OS: {os}**
+	- Fi: **OS: {os}**
+	- Fr: **OS: {os}**
+	- It: **OS: {os}**
+	"""
+	if not lang: lang=default_lang
+	if lang == 'en': return "OS: {os}".format_map({"os": os})
+	if lang == 'es': return "OS: {os}".format_map({"os": os})
+	if lang == 'fi': return "OS: {os}".format_map({"os": os})
+	if lang == 'fr': return "OS: {os}".format_map({"os": os})
+	if lang == 'it': return "OS: {os}".format_map({"os": os})
+	else: raise ValueError(f'Invalid language {lang}')
