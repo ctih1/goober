@@ -207,16 +207,16 @@ class BaseCommands(commands.Cog):
 
     @requires_admin()
     @commands.command()
-    async def test_synchub(self, ctx: commands.Context, message_id: str | None) -> None:
+    async def synchub_test(self, ctx: commands.Context, message_id: str | None) -> None:
         message_id = message_id or "0"
         status = sync_connector.can_react(int(message_id))
 
-        await send_message(ctx, f"Is allowed to react to message id {message_id}? {status} (connection active? {sync_connector.connected})")
+        await send_message(ctx, f"Allowed to reac to message {message_id}? {'yes' if status else 'no'} (connection to {settings['bot']['sync_hub']['url']} active? {'yes' if sync_connector.connected else 'no'})")
 
 
     @requires_admin()
     @commands.command()
-    async def connect_synchub(self, ctx: commands.Context) -> None:
+    async def synchub_connect(self, ctx: commands.Context) -> None:
         await send_message(ctx, "Trying to connect...")
         
         connected = sync_connector.try_to_connect()

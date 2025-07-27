@@ -75,7 +75,7 @@ class SyncConnector:
             return False
         
         try:
-            self.client.send(f"event={event};ref={message_id}")
+            self.client.send(f"event={event};ref={message_id};name={settings['name']}")
             return self.client.recv() == "unhandled"
         except ConnectionResetError:
             logger.error("Connection to sync hub reset! Retrying...")
