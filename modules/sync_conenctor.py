@@ -19,6 +19,7 @@ class SyncConnector:
             self.client = websocket.create_connection(self.url)
         except OSError as e:
             logger.debug(e)
+            logger.debug(e.strerror)
             return False
         
         return True

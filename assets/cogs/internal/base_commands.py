@@ -109,14 +109,14 @@ class BaseCommands(commands.Cog):
     @commands.command()
     async def about(self, ctx: commands.Context) -> None:
         embed: discord.Embed = discord.Embed(
-            title=f"{k.command_about_embed_title()}",
+            title=k.command_about_embed_title(),
             description="",
             color=discord.Colour(0x000000),
         )
 
         embed.add_field(
             name=k.command_about_embed_field1(),
-            value=f"{settings['name']}",
+            value=settings['name'],
             inline=False,
         )
 
