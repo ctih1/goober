@@ -9,6 +9,9 @@ logger = logging.getLogger("goober")
 
 ActivityType = Literal["listening", "playing", "streaming", "competing", "watching"]
 
+class SyncHub(TypedDict):
+    url: str
+    enabled: bool
 
 class Activity(TypedDict):
     content: str
@@ -32,6 +35,7 @@ class BotSettings(TypedDict):
     misc: MiscBotOptions
     enabled_cogs: List[str]
     active_memory: str
+    sync_hub: SyncHub
 
 
 class SettingsType(TypedDict):
@@ -92,6 +96,15 @@ class Settings:
             }
 
             del self.settings["bot"]["misc"]["active_song"]  # type: ignore
+
+        sync_hub: SyncHub | None = self.settings.get("bot", {}).get("sync_hub")
+
+        if not sync_hub:
+            logger.warning("Adding sync hub settings")
+            self.settings["bot"]["sync_hub"] = {
+                "enabled": True,
+                "url": "ws://goober.frii.site"
+            } 
 
         self.commit()
 

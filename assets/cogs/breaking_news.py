@@ -10,6 +10,7 @@ import logging
 from modules.settings import instance as settings_manager
 import re
 import time
+from modules.sync_conenctor import instance as sync_hub
 
 logger = logging.getLogger("goober")
 
@@ -54,6 +55,11 @@ class BreakingNews(commands.Cog):
         if not message.content.lower().startswith("breaking news:"):
             logger.debug("Ignoring message - doesnt start with breaking news:")
             return
+        
+        if not sync_hub.can_breaking_news(message.id):
+            logger.debug("Sync hub denied breaking news request")
+            return
+            
 
         texts = re.split("breaking news:", message.content, flags=re.IGNORECASE)
 

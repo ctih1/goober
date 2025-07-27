@@ -1,0 +1,93 @@
+import websocket
+from modules.settings import instance as settings_manager
+import logging
+
+
+logger = logging.getLogger("goober")
+settings = settings_manager.settings
+
+class SyncConnector:
+    def __init__(self, url: str):
+        self.connected: bool = True
+        self.url = url
+        self.client: websocket.WebSocket | None = None
+
+        self.try_to_connect()
+
+    def __connect(self) -> bool:
+        try:
+            self.client = websocket.create_connection(self.url)
+        except OSError as e:
+            logger.debug(e)
+            return False
+        
+        return True
+    
+    def try_to_connect(self) -> bool:
+        if self.__connect():
+            logger.info("Connected to sync hub!")
+            self.connected = True
+        else:
+            logger.error("Failed to connect to sync hub.. Disabling for the time being")
+            self.connected = False
+
+        return self.connected
+
+
+    def can_react(self, message_id: int) -> bool:
+        """
+        Checks if goober can react to a messsage
+        """
+
+        return self.can_event(message_id, "react")
+
+    
+    def can_breaking_news(self, message_id: int) -> bool:
+        """
+        Checks if goober can send a breaking news alert
+        """
+
+        return self.can_event(message_id, "breaking_news")
+    
+        
+    def can_event(self, message_id: int, event: str, retry_depth: int = 0) -> bool:
+        """
+        Checks if goober can send a breaking news alert
+        """
+
+        logger.debug(f"Checking {event} for message {message_id}")
+
+        if not settings["bot"]["sync_hub"]["enabled"]:
+            logger.info("Skipping sync hub check")
+            return True
+        
+        if retry_depth > 2:
+            logger.error("Too many retries. Returning false")
+            return False
+        
+        if not self.client:
+            logger.error("Client no connected")
+            return False
+        
+        if not self.connected:
+            logger.warning("Not connected to sync hub.. Returning False to avoid conflicts")
+            return False
+        
+        try:
+            self.client.send(f"event={event};ref={message_id}")
+            return self.client.recv() == "unhandled"
+        except ConnectionResetError:
+            logger.error("Connection to sync hub reset! Retrying...")
+
+            if not self.__connect():
+                logger.error("Failed to reconnect to sync hub... Disabling")
+                self.connected = False
+                return False
+
+            logger.info("Managed to reconnect to sync hub! Retrying requests")
+            self.connected = True
+            return self.can_event(message_id, event, retry_depth+1)
+    
+
+
+instance = SyncConnector("ws://localhost:80")

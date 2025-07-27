@@ -1,6 +1,6 @@
 {
     "bot": {
-        "prefix": "p.",
+        "prefix": "o.",
         "owner_ids": [
             642441889181728810
         ],
@@ -25,7 +25,11 @@
         "enabled_cogs": [
             "pulse",
             "breaking_news"
-        ]
+        ],
+        "sync_hub": {
+            "url": "ws://goober.frii.site",
+            "enabled": true
+        }
     },
     "locale": "en",
     "name": "gubert",

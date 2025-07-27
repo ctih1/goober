@@ -14,6 +14,7 @@ import cpuinfo
 import sys
 import subprocess
 import updater
+from modules.sync_conenctor import instance as sync_connector
 
 settings = settings_manager.settings
 
@@ -204,6 +205,25 @@ class BaseCommands(commands.Cog):
 
         await send_message(ctx, response.text)
 
+    @requires_admin()
+    @commands.command()
+    async def test_synchub(self, ctx: commands.Context, message_id: str | None) -> None:
+        message_id = message_id or "0"
+        status = sync_connector.can_react(int(message_id))
+
+        await send_message(ctx, f"Is allowed to react to message id {message_id}? {status} (connection active? {sync_connector.connected})")
+
+
+    @requires_admin()
+    @commands.command()
+    async def connect_synchub(self, ctx: commands.Context) -> None:
+        await send_message(ctx, "Trying to connect...")
+        
+        connected = sync_connector.try_to_connect()
+        if connected:
+            await send_message(ctx, "Succesfully connected to sync hub!")
+        else:
+            await send_message(ctx, "Failed to connect to sync hub")
 
 async def setup(bot: discord.ext.commands.Bot):
     print("Setting up base_commands")
