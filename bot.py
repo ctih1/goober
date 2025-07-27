@@ -1,3 +1,20 @@
+import logging
+from modules.logger import GooberFormatter
+
+logger = logging.getLogger("goober")
+logger.setLevel(logging.DEBUG)
+
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.DEBUG)
+console_handler.setFormatter(GooberFormatter())
+
+file_handler = logging.FileHandler("log.txt", mode="w+", encoding="UTF-8")
+file_handler.setLevel(logging.DEBUG)
+file_handler.setFormatter(GooberFormatter(colors=False))
+
+logger.addHandler(console_handler)
+logger.addHandler(file_handler)
+
 import os
 import re
 import json
@@ -25,7 +42,6 @@ from typing import (
 )
 import logging
 from modules.prestartchecks import start_checks
-from modules.logger import GooberFormatter
 import modules.keys as k
 from modules import key_compiler
 import logging
@@ -33,6 +49,8 @@ from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 from modules.settings import instance as settings_manager, ActivityType
 from modules.permission import requires_admin
+from modules.sync_conenctor import instance as sync_connector
+
 import threading
 
 
@@ -48,20 +66,6 @@ def build_keys():
 
 build_keys()
 
-
-logger = logging.getLogger("goober")
-logger.setLevel(logging.DEBUG)
-
-console_handler = logging.StreamHandler()
-console_handler.setLevel(logging.DEBUG)
-console_handler.setFormatter(GooberFormatter())
-
-file_handler = logging.FileHandler("log.txt", mode="w+", encoding="UTF-8")
-file_handler.setLevel(logging.DEBUG)
-file_handler.setFormatter(GooberFormatter(colors=False))
-
-logger.addHandler(console_handler)
-logger.addHandler(file_handler)
 
 settings = settings_manager.settings
 
@@ -272,7 +276,7 @@ async def demotivator(ctx: commands.Context) -> None:
         shutil.copy(fallback_image, temp_input)
         input_path = temp_input
 
-    output_path: Optional[str] = await gen_demotivator(input_path)
+    output_path: Optional[str] = await gen_demotivator(input_path) # type: ignore
 
     if output_path is None or not os.path.isfile(output_path):
         if temp_input and os.path.exists(temp_input):
@@ -354,6 +358,11 @@ async def on_message(message: discord.Message) -> None:
         if sentiment_score > 0.8:
             if not settings["bot"]["react_to_messages"]:
                 return
+            if not sync_connector.can_react(message.id):
+                logger.info("Sync hub determined that this instance cannot react")
+                return
+            
+
             emoji = random.choice(EMOJIS)
             try:
                 await message.add_reaction(emoji)

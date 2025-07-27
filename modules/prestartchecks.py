@@ -12,6 +12,7 @@ import importlib.metadata
 import logging
 import modules.keys as k
 from modules.settings import instance as settings_manager
+from modules.sync_conenctor import instance as sync_hub
 
 settings = settings_manager.settings
 
@@ -68,6 +69,7 @@ def check_requirements():
         "better_profanity": "better-profanity",
         "dotenv": "python-dotenv",
         "pil": "pillow",
+        "websocket": "websocket-client"
     }
 
     parent_dir = os.path.dirname(os.path.abspath(__file__))
@@ -260,6 +262,11 @@ def presskey2skip(timeout):
         finally:
             termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
 
+def check_synchub():
+    if not sync_hub.connected:
+        logger.warning("Sync hub not connected properly! The bot will not be able to react to messages, or create breaking news unless you disable synchub in settings")
+    else:
+        logger.info("Sync hub is conencted")
 
 beta = beta
 
@@ -277,6 +284,7 @@ def start_checks():
     check_memory()
     check_memoryjson()
     check_cpu()
+    check_synchub()
     if os.path.exists(".env"):
         pass
     else:

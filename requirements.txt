@@ -10,3 +10,4 @@ dotenv
 pillow
 watchdog
 py-cpuinfo
+websocket-client
