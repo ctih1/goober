@@ -67,12 +67,15 @@ class SyncConnector:
             return False
         
         if not self.client:
-            logger.error("Client no connected")
+            logger.error("Client not connected")
             return False
         
         if not self.connected:
-            logger.warning("Not connected to sync hub.. Returning False to avoid conflicts")
-            return False
+            logger.warning("Not connected to sync hub.. Trying to reconnect")
+            if self.try_to_connect():
+                logger.info("Succesfully reconnected!")
+            else:
+                return False
         
         try:
             self.client.send(f"event={event};ref={message_id};name={settings['name']}")

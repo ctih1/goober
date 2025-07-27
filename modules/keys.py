@@ -2338,3 +2338,35 @@ def cpu_info(cpu,lang:str|None=None):
 	if lang == 'fr': return "CPU: {cpu}".format_map({"cpu": cpu})
 	if lang == 'it': return "CPU: {cpu}".format_map({"cpu": cpu})
 	else: raise ValueError(f'Invalid language {lang}')
+def sync_hub_info(lang:str|None=None):
+	"""
+	### Locales
+	- En: **Sync hub**
+	- Es: **Sync hub**
+	- Fi: **Sync hub**
+	- Fr: **Sync hub**
+	- It: **Sync hub**
+	"""
+	if not lang: lang=default_lang
+	if lang == 'en': return "Sync hub"
+	if lang == 'es': return "Sync hub"
+	if lang == 'fi': return "Sync hub"
+	if lang == 'fr': return "Sync hub"
+	if lang == 'it': return "Sync hub"
+	else: raise ValueError(f'Invalid language {lang}')
+def sync_hub_description(connected,url,lang:str|None=None):
+	"""
+	### Locales
+	- En: **Connected: {connected}, URL: {url}**
+	- Es: **Connected: {connected}, URL: {url}**
+	- Fi: **Connected: {connected}, URL: {url}**
+	- Fr: **Connected: {connected}, URL: {url}**
+	- It: **Connected: {connected}, URL: {url}**
+	"""
+	if not lang: lang=default_lang
+	if lang == 'en': return "Connected: {connected}, URL: {url}".format_map({"connected": connected,"url": url})
+	if lang == 'es': return "Connected: {connected}, URL: {url}".format_map({"connected": connected,"url": url})
+	if lang == 'fi': return "Connected: {connected}, URL: {url}".format_map({"connected": connected,"url": url})
+	if lang == 'fr': return "Connected: {connected}, URL: {url}".format_map({"connected": connected,"url": url})
+	if lang == 'it': return "Connected: {connected}, URL: {url}".format_map({"connected": connected,"url": url})
+	else: raise ValueError(f'Invalid language {lang}')

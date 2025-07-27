@@ -157,6 +157,12 @@ class BaseCommands(commands.Cog):
                     {k.cpu_info(cpu_name)}
                 """
         )
+        
+        embed.add_field(
+            name=k.sync_hub_info(),
+            value=k.sync_hub_description(sync_connector.connected, sync_connector.url),
+            inline=False,
+        )
 
         with open(settings["splash_text_loc"], "r") as f:
             splash_text = "".join(f.readlines())
@@ -171,6 +177,7 @@ class BaseCommands(commands.Cog):
             )}""",
             inline=False,
         )
+
 
         await send_message(ctx, embed=embed)
 
