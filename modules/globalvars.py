@@ -65,7 +65,6 @@ LOCAL_VERSION_FILE = "current_version.txt"
 arch = platform.machine()
 slash_commands_enabled = True  # 100% broken, its a newer enough version so its probably enabled by default.... fix this at somepoint or hard code it in goober central code
 launched = False
-latest_version = "0.0.0"
-local_version = "2.3.3"
-os.environ["gooberlocal_version"] = local_version
+
+local_version = "2.5.0b"
 beta = get_git_branch() == "dev"
