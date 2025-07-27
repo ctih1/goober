@@ -1,5 +1,6 @@
 import logging
 from modules.logger import GooberFormatter
+from modules import key_compiler
 
 logger = logging.getLogger("goober")
 logger.setLevel(logging.DEBUG)
@@ -14,6 +15,21 @@ file_handler.setFormatter(GooberFormatter(colors=False))
 
 logger.addHandler(console_handler)
 logger.addHandler(file_handler)
+
+
+def build_keys():
+    key_compiler.build_result(
+        "en",
+        "assets/locales",
+        types=True,
+        output_path="modules/keys.py",
+        generate_comments=True,
+    )
+
+
+build_keys()
+
+
 
 import os
 import re
@@ -43,7 +59,6 @@ from typing import (
 import logging
 from modules.prestartchecks import start_checks
 import modules.keys as k
-from modules import key_compiler
 import logging
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
@@ -52,19 +67,6 @@ from modules.permission import requires_admin
 from modules.sync_conenctor import instance as sync_connector
 
 import threading
-
-
-def build_keys():
-    key_compiler.build_result(
-        "en",
-        "assets/locales",
-        types=True,
-        output_path="modules/keys.py",
-        generate_comments=True,
-    )
-
-
-build_keys()
 
 
 settings = settings_manager.settings
