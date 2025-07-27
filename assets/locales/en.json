@@ -139,6 +139,8 @@
     "blacklisted_user": "Blacklisted user",
     "edit_fail": "Failed to edit message",
     "system_info": "System information",
-    "cpu_info": "CPU: {cpu}"
+    "cpu_info": "CPU: {cpu}",
+    "sync_hub_info": "Sync hub",
+    "sync_hub_description": "Connected: {connected}, URL: {url}"
 }
   
