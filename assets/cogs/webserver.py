@@ -1,3 +1,4 @@
+import aiohttp.web_response
 import discord
 from discord.ext import commands, tasks
 import asyncio
@@ -375,7 +376,7 @@ class GooberWeb(commands.Cog):
             with open("config.py", "w") as f:
                 f.write(config_text.strip() + "\n")
 
-        return aiohttp.web.Response(text="Settings updated successfully!")
+        return web.Response(text="Settings updated successfully!")
 
     async def handle_index(self, request):
         stats = await self.get_bot_stats()
