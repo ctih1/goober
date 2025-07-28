@@ -218,6 +218,11 @@ class BaseCommands(commands.Cog):
             files={"fileToUpload": data},
         )
 
+        if response.status_code != 200:
+            with open(settings["bot"]["active_memory"], "rb") as f:
+                await send_message(ctx, file=discord.File(f))
+                return
+
         await send_message(ctx, response.text)
 
     @requires_admin()
