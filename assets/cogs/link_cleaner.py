@@ -39,8 +39,6 @@ class LinkCleaner(commands.Cog):
 
         settings: LinkCleanerSettings = settings_manager.get_plugin_settings("link_cleaner", DEFAULT) # type: ignore
         settings["automatic"] = new_mode
-
-        settings_manager.commit()
         
         if new_mode == True:
             await ctx.send("Enabled automatic link cleaning!")
@@ -58,6 +56,9 @@ class LinkCleaner(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
+        if message.author.bot:
+            return
+
         if "http" not in message.content:
             logger.debug("Skipping message, does not contain a link")
             return
