@@ -9,6 +9,7 @@ from modules.settings import instance as settings_manager
 
 settings = settings_manager.settings
 
+model: markovify.NewlineText | None = None
 
 logger = logging.getLogger("goober")
 
@@ -71,11 +72,14 @@ def save_markov_model(model, filename="markov_model.pkl"):
 
 # Load the Markov model from a pickle file
 def load_markov_model(filename="markov_model.pkl"):
-    try:
-        with open(filename, "rb") as f:
-            model = pickle.load(f)
-        logger.info(f"{k.model_loaded()} {filename}.{RESET}")
-        return model
-    except FileNotFoundError:
-        logger.error(f"{filename} {k.not_found()}{RESET}")
-        return None
+    global model
+    if not model:
+        try:
+            with open(filename, "rb") as f:
+                model = pickle.load(f)
+            logger.info(f"{k.model_loaded()} {filename}.{RESET}")
+        except FileNotFoundError:
+            logger.error(f"{filename} {k.not_found()}{RESET}")
+            return None
+
+    return model

@@ -15,12 +15,14 @@ import sys
 import subprocess
 import updater
 import platform
-from modules.sync_conenctor import instance as sync_connector
+import logging
+from modules.sync_connector import instance as sync_connector
 
 settings = settings_manager.settings
 
 OS_STRING = f"{platform.system() if platform.system() != 'Darwin' else 'macOS'} {platform.release() if platform.system() != 'Darwin' else platform.mac_ver()[0]}"
 
+logger = logging.getLogger("goober")
 
 class BaseCommands(commands.Cog):
     def __init__(self, bot):
@@ -165,7 +167,7 @@ class BaseCommands(commands.Cog):
                     {k.cpu_info(cpu_name)}
                 """
         )
-        
+
         embed.add_field(
             name=k.sync_hub_info(),
             value=k.sync_hub_description(sync_connector.connected, sync_connector.url),

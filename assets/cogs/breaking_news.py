@@ -10,7 +10,7 @@ import logging
 from modules.settings import instance as settings_manager
 import re
 import time
-from modules.sync_conenctor import instance as sync_hub
+from modules.sync_connector import instance as sync_hub
 
 logger = logging.getLogger("goober")
 

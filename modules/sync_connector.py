@@ -1,6 +1,7 @@
 import websocket
 from modules.settings import instance as settings_manager
 import logging
+import threading
 
 
 logger = logging.getLogger("goober")
@@ -12,11 +13,12 @@ class SyncConnector:
         self.url = url
         self.client: websocket.WebSocket | None = None
 
-        self.try_to_connect()
+        self.connection_thread: threading.Thread = threading.Thread(target=self.try_to_connect)
+        self.connection_thread.start()
 
     def __connect(self) -> bool:
         try:
-            self.client = websocket.create_connection(self.url)
+            self.client = websocket.create_connection(self.url, timeout=3)
         except OSError as e:
             logger.debug(e)
             logger.debug(e.strerror)
@@ -92,6 +94,5 @@ class SyncConnector:
             self.connected = True
             return self.can_event(message_id, event, retry_depth+1)
     
-
 
 instance = SyncConnector(settings["bot"]["sync_hub"]["url"])
