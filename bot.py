@@ -1,6 +1,7 @@
 import logging
 from modules.logger import GooberFormatter
 from modules import key_compiler
+import tracemalloc
 
 logger = logging.getLogger("goober")
 logger.setLevel(logging.DEBUG)
@@ -16,8 +17,9 @@ file_handler.setFormatter(GooberFormatter(colors=False))
 logger.addHandler(console_handler)
 logger.addHandler(file_handler)
 
-
+logger.info("Starting...")
 def build_keys():
+    logger.info("Building keys")
     key_compiler.build_result(
         "en",
         "assets/locales",
@@ -25,6 +27,8 @@ def build_keys():
         output_path="modules/keys.py",
         generate_comments=True,
     )
+    logger.info("Built keys!")
+
 
 build_keys()
 
@@ -50,8 +54,9 @@ import logging
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 from modules.settings import instance as settings_manager, ActivityType
-from modules.permission import requires_admin
-from modules.sync_conenctor import instance as sync_connector
+from modules.sync_connector import instance as sync_connector
+import threading
+
 
 settings = settings_manager.settings
 k.change_language(settings["locale"])
@@ -66,8 +71,6 @@ start_checks()
 
 import discord
 from discord.ext import commands
-from discord import app_commands
-from discord import Colour, Message
 
 from better_profanity import profanity
 from discord.ext import commands
@@ -78,7 +81,7 @@ from modules.unhandledexception import handle_exception
 from modules.image import gen_demotivator
 
 sys.excepthook = handle_exception
-
+tracemalloc.start()
 class MessageMetadata(TypedDict):
     user_id: str
     user_name: str
@@ -341,6 +344,7 @@ async def on_message(message: discord.Message) -> None:
     if sentiment_score > 0.8:
         if not settings["bot"]["react_to_messages"]:
             return
+
         if not sync_connector.can_react(message.id):
             logger.info("Sync hub determined that this instance cannot react")
             return

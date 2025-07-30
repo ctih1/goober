@@ -11,8 +11,6 @@ logger = logging.getLogger("goober")
 
 
 def handle_exception(exc_type, exc_value, exc_traceback, *, context=None):
-    os.system("cls" if os.name == "nt" else "clear")
-
     if issubclass(exc_type, KeyboardInterrupt):
         sys.__excepthook__(exc_type, exc_value, exc_traceback)
         return

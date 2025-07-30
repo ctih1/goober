@@ -1,19 +1,22 @@
 import re
 import discord.ext
 import discord.ext.commands
+import spacy.lang
 from modules.globalvars import *
 import spacy
 from spacy.tokens import Doc
 from spacytextblob.spacytextblob import SpacyTextBlob
 import discord
 import modules.keys as k
+import threading
 
 import logging
 
 logger = logging.getLogger("goober")
-
+nlp: spacy.language.Language | None = None
 
 def check_resources():
+    global nlp
     try:
         nlp = spacy.load("en_core_web_sm")
     except OSError:
@@ -25,14 +28,19 @@ def check_resources():
     logger.info(k.spacy_initialized())
 
 
-check_resources()
+nlp_thread = threading.Thread(target=check_resources)
+nlp_thread.start()
 
-nlp = spacy.load("en_core_web_sm")
-nlp.add_pipe("spacytextblob")
 Doc.set_extension("polarity", getter=lambda doc: doc._.blob.polarity)
 
 
 def is_positive(sentence):
+    nlp_thread.join()
+
+    if nlp is None:
+        logger.error("NLP Not loaded! Defaulting to positivity 0")
+        return 0
+    
     doc = nlp(sentence)
     sentiment_score = doc._.polarity  # from spacytextblob
 
@@ -79,7 +87,12 @@ def append_mentions_to_18digit_integer(message):
 
 
 def preprocess_message(message):
+    nlp_thread.join()
     message = append_mentions_to_18digit_integer(message)
+    if nlp is None:
+        logger.error("NLP Not loaded! Quitting")
+        quit(1)
+    
     doc = nlp(message)
     tokens = [token.text for token in doc if token.is_alpha or token.is_digit]
     return " ".join(tokens)

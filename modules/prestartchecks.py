@@ -12,7 +12,8 @@ import importlib.metadata
 import logging
 import modules.keys as k
 from modules.settings import instance as settings_manager
-from modules.sync_conenctor import instance as sync_hub
+from modules.sync_connector import instance as sync_hub
+import threading
 
 settings = settings_manager.settings
 
@@ -263,6 +264,7 @@ def presskey2skip(timeout):
             termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
 
 def check_synchub():
+    sync_hub.connection_thread.join()
     if not sync_hub.connected:
         logger.warning("Sync hub not connected properly! The bot will not be able to react to messages, or create breaking news unless you disable synchub in settings")
     else:
@@ -277,14 +279,25 @@ def start_checks():
         return
 
     logger.info(k.running_prestart_checks())
-    check_for_model()
-    iscloned()
-    check_requirements()
-    check_latency()
-    check_memory()
-    check_memoryjson()
-    check_cpu()
-    check_synchub()
+
+    checks = [
+        check_for_model,
+        iscloned,
+        check_requirements,
+        check_latency,
+        check_memory,
+        check_memoryjson,
+        check_cpu,
+        check_synchub
+    ]
+    threads: List[threading.Thread] = []
+
+    for check in checks:
+        t = threading.Thread(target=check)
+        t.start()
+        threads.append(t)
+
+
     if os.path.exists(".env"):
         pass
     else:
@@ -296,9 +309,12 @@ def start_checks():
         )
     else:
         pass
+
+    for thread in threads:
+        thread.join()
+
     logger.info(k.continuing_in_seconds(seconds=5))
     presskey2skip(timeout=5)
-    os.system("cls" if os.name == "nt" else "clear")
 
     with open(settings["splash_text_loc"], "r") as f:
         print("".join(f.readlines()))
