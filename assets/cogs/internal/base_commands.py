@@ -160,6 +160,10 @@ class BaseCommands(commands.Cog):
             inline=False,
         )
 
+        mem_used_by_process = psutil.Process().memory_info().rss / 1024 **2
+
+        embed.add_field(name="Instance", value=f"Memory usage: {round(mem_used_by_process)}mb")
+
         embed.add_field(
             name=k.system_info(),
             value=f"""
