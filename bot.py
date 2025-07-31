@@ -29,7 +29,6 @@ def build_keys():
     )
     logger.info("Built keys!")
 
-
 build_keys()
 
 import os
@@ -167,11 +166,9 @@ async def on_ready() -> None:
         logger.error(
             "Make sure the bot has the 'applications.commands' scope and is invited with the correct permissions."
         )
-        quit()
     except Exception as e:
         logger.error(f"{k.fail_commands_sync()} {e}")
         traceback.print_exc()
-        quit()
 
     if not settings["bot"]["misc"]["activity"]["content"]:
         return

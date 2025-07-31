@@ -5,21 +5,6 @@ from dotenv import load_dotenv
 import pathlib
 import subprocess
 
-
-def get_git_branch():
-    try:
-        branch = (
-            subprocess.check_output(
-                ["git", "rev-parse", "--abbrev-ref", "HEAD"], stderr=subprocess.DEVNULL
-            )
-            .decode("utf-8")
-            .strip()
-        )
-        return branch
-    except subprocess.CalledProcessError:
-        return None
-
-
 env_path = pathlib.Path(__file__).parent.parent / ".env"
 load_dotenv(dotenv_path=env_path)
 
@@ -67,4 +52,4 @@ slash_commands_enabled = True  # 100% broken, its a newer enough version so its 
 launched = False
 
 local_version = "2.5.0b"
-beta = get_git_branch() == "dev"
+beta = False
