@@ -56,6 +56,8 @@ from modules.settings import instance as settings_manager, ActivityType
 from modules.sync_connector import instance as sync_connector
 import threading
 
+messages_recieved = 0
+
 
 settings = settings_manager.settings
 k.change_language(settings["locale"])
@@ -273,7 +275,9 @@ async def demotivator(ctx: commands.Context) -> None:
 # Event: Called on every message
 @bot.event
 async def on_message(message: discord.Message) -> None:
-    global memory, markov_model
+    global memory, markov_model, messages_recieved
+
+    messages_recieved += 1
     EMOJIS = [
         "\U0001f604",
         "\U0001f44d",
@@ -297,18 +301,19 @@ async def on_message(message: discord.Message) -> None:
         await bot.process_commands(message)
         return
 
-    if (
-        profanity.contains_profanity(message.content)
-        and settings["bot"]["misc"]["block_profanity"]
-    ):
-        return
-
     if not message.content:
         return
-    
 
     if not settings["bot"]["user_training"]:
         return
+
+    
+    if (
+        settings["bot"]["misc"]["block_profanity"] and 
+        profanity.contains_profanity(message.content)
+    ):
+        return
+
 
     formatted_message: str = append_mentions_to_18digit_integer(message.content)
     cleaned_message: str = preprocess_message(formatted_message)
@@ -333,7 +338,13 @@ async def on_message(message: discord.Message) -> None:
         except Exception as e:
             logger.warning(f"Failed to append metadata to memory: {e}")
 
-        save_memory(memory)
+        if messages_recieved % 10 == 0:
+            logger.info("Saving memory")
+            save_memory(memory)
+
+    if len(message.content.strip().split()) < 1:
+        logger.info("Skipping positivty checks due to message being too short")
+        return
 
     sentiment_score = is_positive(
         message.content
@@ -352,8 +363,6 @@ async def on_message(message: discord.Message) -> None:
             await message.add_reaction(emoji)
         except Exception as e:
             logger.info(f"Failed to react with emoji: {e}")
-
-    await bot.process_commands(message)
 
 
 # Event: Called on every interaction (slash command, etc.)
