@@ -21,7 +21,8 @@
                 "type": "listening"
             }
         },
-        "active_memory": "memory.json",
+        "active_memory": "data/memory.json",
+        "active_model": "data/markov_model.pkl",
         "enabled_cogs": [
             "pulse",
             "breaking_news"

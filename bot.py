@@ -93,6 +93,7 @@ class MessageMetadata(TypedDict):
     message: str
     timestamp: float
 
+os.makedirs("data", exist_ok=True)
 
 # Constants with type hints
 positive_gifs: List[str] = settings["bot"]["misc"]["positive_gifs"]

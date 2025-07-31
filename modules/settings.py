@@ -35,6 +35,7 @@ class BotSettings(TypedDict):
     misc: MiscBotOptions
     enabled_cogs: List[str]
     active_memory: str
+    active_model: str
     sync_hub: SyncHub
 
 
@@ -105,6 +106,10 @@ class Settings:
                 "enabled": True,
                 "url": "ws://goober.frii.site"
             } 
+
+        if not self.settings.get("bot", {}).get("active_model"):
+            logger.warning("active_model missing! Replacing with backwards compatible one")
+            self.settings["bot"]["active_model"] = "markov_model.pkl"
 
         self.commit()
 
