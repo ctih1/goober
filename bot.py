@@ -196,6 +196,8 @@ async def on_ready() -> None:
     )
     launched = True
 
+    logger.info(f"Running as {bot.user}")
+
 
 @bot.event
 async def on_command_error(ctx: commands.Context, error: commands.CommandError) -> None:

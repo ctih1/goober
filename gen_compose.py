@@ -7,6 +7,7 @@ with open("docker-compose.yml", "w") as f:
     environment:
       - DISCORD_BOT_TOKEN=${{TOKEN_{i}}}
       - BOT_INDEX={i}
-    entrypoint: ["sh", "-c", "sleep {delay} && python bot.py"]
+    volumes:
+      - ./data/bot{i}:/app/datas
     restart: unless-stopped
 """)
