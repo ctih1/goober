@@ -3,120 +3,120 @@ services:
   bot1:
     build: .
     environment:
-      - DISCORD_TOKEN=${TOKEN_1}
+      - DISCORD_BOT_TOKEN=${TOKEN_1}
       - BOT_INDEX=1
     restart: unless-stopped
   bot2:
     build: .
     environment:
-      - DISCORD_TOKEN=${TOKEN_2}
+      - DISCORD_BOT_TOKEN=${TOKEN_2}
       - BOT_INDEX=2
     restart: unless-stopped
   bot3:
     build: .
     environment:
-      - DISCORD_TOKEN=${TOKEN_3}
+      - DISCORD_BOT_TOKEN=${TOKEN_3}
       - BOT_INDEX=3
     restart: unless-stopped
   bot4:
     build: .
     environment:
-      - DISCORD_TOKEN=${TOKEN_4}
+      - DISCORD_BOT_TOKEN=${TOKEN_4}
       - BOT_INDEX=4
     restart: unless-stopped
   bot5:
     build: .
     environment:
-      - DISCORD_TOKEN=${TOKEN_5}
+      - DISCORD_BOT_TOKEN=${TOKEN_5}
       - BOT_INDEX=5
     restart: unless-stopped
   bot6:
     build: .
     environment:
-      - DISCORD_TOKEN=${TOKEN_6}
+      - DISCORD_BOT_TOKEN=${TOKEN_6}
       - BOT_INDEX=6
     restart: unless-stopped
   bot7:
     build: .
     environment:
-      - DISCORD_TOKEN=${TOKEN_7}
+      - DISCORD_BOT_TOKEN=${TOKEN_7}
       - BOT_INDEX=7
     restart: unless-stopped
   bot8:
     build: .
     environment:
-      - DISCORD_TOKEN=${TOKEN_8}
+      - DISCORD_BOT_TOKEN=${TOKEN_8}
       - BOT_INDEX=8
     restart: unless-stopped
   bot9:
     build: .
     environment:
-      - DISCORD_TOKEN=${TOKEN_9}
+      - DISCORD_BOT_TOKEN=${TOKEN_9}
       - BOT_INDEX=9
     restart: unless-stopped
   bot10:
     build: .
     environment:
-      - DISCORD_TOKEN=${TOKEN_10}
+      - DISCORD_BOT_TOKEN=${TOKEN_10}
       - BOT_INDEX=10
     restart: unless-stopped
   bot11:
-    build: ./bot
+    build: .
     environment:
-      - DISCORD_TOKEN=${TOKEN_11}
+      - DISCORD_BOT_TOKEN=${TOKEN_11}
       - BOT_INDEX=11
     restart: unless-stopped
   bot12:
-    build: ./bot
+    build: .
     environment:
-      - DISCORD_TOKEN=${TOKEN_12}
+      - DISCORD_BOT_TOKEN=${TOKEN_12}
       - BOT_INDEX=12
     restart: unless-stopped
   bot13:
-    build: ./bot
+    build: .
     environment:
-      - DISCORD_TOKEN=${TOKEN_13}
+      - DISCORD_BOT_TOKEN=${TOKEN_13}
       - BOT_INDEX=13
     restart: unless-stopped
   bot14:
-    build: ./bot
+    build: .
     environment:
-      - DISCORD_TOKEN=${TOKEN_14}
+      - DISCORD_BOT_TOKEN=${TOKEN_14}
       - BOT_INDEX=14
     restart: unless-stopped
   bot15:
-    build: ./bot
+    build: .
     environment:
-      - DISCORD_TOKEN=${TOKEN_15}
+      - DISCORD_BOT_TOKEN=${TOKEN_15}
       - BOT_INDEX=15
     restart: unless-stopped
   bot16:
-    build: ./bot
+    build: .
     environment:
-      - DISCORD_TOKEN=${TOKEN_16}
+      - DISCORD_BOT_TOKEN=${TOKEN_16}
       - BOT_INDEX=16
     restart: unless-stopped
   bot17:
-    build: ./bot
+    build: .
     environment:
-      - DISCORD_TOKEN=${TOKEN_17}
+      - DISCORD_BOT_TOKEN=${TOKEN_17}
       - BOT_INDEX=17
     restart: unless-stopped
   bot18:
-    build: ./bot
+    build: .
     environment:
-      - DISCORD_TOKEN=${TOKEN_18}
+      - DISCORD_BOT_TOKEN=${TOKEN_18}
       - BOT_INDEX=18
     restart: unless-stopped
   bot19:
-    build: ./bot
+    build: .
     environment:
-      - DISCORD_TOKEN=${TOKEN_19}
+      - DISCORD_BOT_TOKEN=${TOKEN_19}
       - BOT_INDEX=19
     restart: unless-stopped
   bot20:
-    build: ./bot
+    build: .
     environment:
-      - DISCORD_TOKEN=${TOKEN_20}
+      - DISCORD_BOT_TOKEN=${TOKEN_20}
       - BOT_INDEX=20
     restart: unless-stopped
