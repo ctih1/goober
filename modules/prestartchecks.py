@@ -42,8 +42,6 @@ def iscloned():
         return True
     else:
         logger.error(f"{k.not_cloned()}")
-        sys.exit(1)
-
 
 def get_stdlib_modules():
     stdlib_path = pathlib.Path(sysconfig.get_paths()["stdlib"])
@@ -200,7 +198,6 @@ def check_cpu():
 
     if total_cpu > 95:
         logger.error(k.really_high_cpu())
-        sys.exit(1)
 
 
 def check_memoryjson():

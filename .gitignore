@@ -16,3 +16,4 @@ log.txt
 settings/admin_logs.json
 settings/settings.json
 assets/images/cached/*
+tokens.env
