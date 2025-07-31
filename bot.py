@@ -292,14 +292,7 @@ async def on_message(message: discord.Message) -> None:
     if message.author.id in settings["bot"]["blacklisted_users"]:
         return
 
-    commands = [
-        settings["bot"]["prefix"] + command.name for command in bot.tree.get_commands()
-    ]
-
-    if message.content.startswith(tuple(commands)):
-        logger.info(f"{k.command_ran(message.author.name, message.content)}")
-        await bot.process_commands(message)
-        return
+    await bot.process_commands(message)
 
     if not message.content:
         return
