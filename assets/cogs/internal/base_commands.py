@@ -251,6 +251,13 @@ class BaseCommands(commands.Cog):
         else:
             await send_message(ctx, "Failed to connect to sync hub")
 
+    
+    @requires_admin()
+    @commands.command()
+    async def synchub_stats(self, ctx: commands.Context) -> None:
+        connected = sync_connector.get_connected()
+        await ctx.send(connected)
+
 async def setup(bot: discord.ext.commands.Bot):
     print("Setting up base_commands")
     bot.remove_command("help")

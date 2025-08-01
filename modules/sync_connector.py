@@ -36,6 +36,41 @@ class SyncConnector:
 
         return self.connected
 
+    def get_connected(self, retry_depth: int = 0) -> str:
+        if not settings["bot"]["sync_hub"]["enabled"]:
+            logger.info("Skipping sync hub check")
+            return "not enabled"
+        
+        if not self.client:
+            logger.error("Client not connected")
+            return "not connected"
+        
+        if retry_depth > 2:
+            return "too many attempts1"
+
+        if not self.connected:
+            logger.warning("Not connected to sync hub.. Trying to reconnect")
+            if self.try_to_connect():
+                logger.info("Succesfully reconnected!")
+            else:
+                return "reconnect failed"
+        
+        try:
+            self.client.send(f"event=get;ref=stats;name={settings['name']}")
+            return str(self.client.recv())
+        except ConnectionResetError:
+            logger.error("Connection to sync hub reset! Retrying...")
+
+            if not self.__connect():
+                logger.error("Failed to reconnect to sync hub... Disabling")
+                self.connected = False
+                return "reconnection failed"
+
+            logger.info("Managed to reconnect to sync hub! Retrying requests")
+            self.connected = True
+            return self.get_connected(retry_depth=retry_depth+1)
+    
+
 
     def can_react(self, message_id: int) -> bool:
         """
