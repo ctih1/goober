@@ -66,11 +66,11 @@ class BreakingNews(commands.Cog):
         logger.debug(texts)
         try:
             text = texts[1].strip()
-            if not self.model:
+            if not text and self.model is None:
                 await message.reply("No news specified and model not found!")
                 return False
 
-            text = text or self.model.make_sentence(max_chars=50, tries=50)            
+            text = text or self.model.make_sentence(max_chars=50, tries=50) #type: ignore
             path = self.__insert_text(text)
         except IndexError:
             if self.model is None:
