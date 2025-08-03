@@ -349,7 +349,7 @@ async def on_message(message: discord.Message) -> None:
         if not settings["bot"]["react_to_messages"]:
             return
 
-        if not sync_connector.can_react(message.id):
+        if not sync_connector.can_react(message.id, message.channel.id):
             logger.info("Sync hub determined that this instance cannot react")
             return
         

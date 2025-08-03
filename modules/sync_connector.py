@@ -72,23 +72,23 @@ class SyncConnector:
     
 
 
-    def can_react(self, message_id: int) -> bool:
+    def can_react(self, message_id: int, channel_id: int) -> bool:
         """
         Checks if goober can react to a messsage
         """
 
-        return self.can_event(message_id, "react")
+        return self.can_event(message_id, channel_id, "react")
 
     
-    def can_breaking_news(self, message_id: int) -> bool:
+    def can_breaking_news(self, message_id: int, channel_id: int) -> bool:
         """
         Checks if goober can send a breaking news alert
         """
 
-        return self.can_event(message_id, "breaking_news")
+        return self.can_event(message_id, channel_id, "breaking_news")
     
         
-    def can_event(self, message_id: int, event: str, retry_depth: int = 0) -> bool:
+    def can_event(self, message_id: int, channel_id: int, event: str, retry_depth: int = 0) -> bool:
         """
         Checks if goober can send a breaking news alert
         """
@@ -115,7 +115,7 @@ class SyncConnector:
                 return False
         
         try:
-            self.client.send(f"event={event};ref={message_id};name={settings['name']}")
+            self.client.send(f"event={event};ref={message_id};channel={channel_id};name={settings['name']}")
             return self.client.recv() == "unhandled"
         except ConnectionResetError:
             logger.error("Connection to sync hub reset! Retrying...")
@@ -127,7 +127,7 @@ class SyncConnector:
 
             logger.info("Managed to reconnect to sync hub! Retrying requests")
             self.connected = True
-            return self.can_event(message_id, event, retry_depth+1)
+            return self.can_event(message_id, channel_id, event, retry_depth+1)
     
 
 instance = SyncConnector(settings["bot"]["sync_hub"]["url"])

@@ -235,7 +235,7 @@ class BaseCommands(commands.Cog):
     @commands.command()
     async def synchub_test(self, ctx: commands.Context, message_id: str | None) -> None:
         message_id = message_id or "0"
-        status = sync_connector.can_react(int(message_id))
+        status = sync_connector.can_react(int(message_id), 0)
 
         await send_message(ctx, f"Allowed to reac to message {message_id}? {'yes' if status else 'no'} (connection to {settings['bot']['sync_hub']['url']} active? {'yes' if sync_connector.connected else 'no'})")
 
