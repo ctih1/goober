@@ -56,7 +56,7 @@ class BreakingNews(commands.Cog):
             logger.debug("Ignoring message - doesnt start with breaking news:")
             return
         
-        if not sync_hub.can_breaking_news(message.id):
+        if not sync_hub.can_breaking_news(message.id, message.channel.id):
             logger.debug("Sync hub denied breaking news request")
             return
             
