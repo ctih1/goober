@@ -58,7 +58,8 @@ class SyncConnector:
         try:
             self.client.send(f"event=get;ref=stats;channel=0;name={settings['name']}")
             return str(self.client.recv())
-        except ConnectionResetError:
+        except Exception as e:
+            logger.debug(e)
             logger.error("Connection to sync hub reset! Retrying...")
 
             if not self.__connect():
@@ -117,7 +118,8 @@ class SyncConnector:
         try:
             self.client.send(f"event={event};ref={message_id};channel={channel_id};name={settings['name']}")
             return self.client.recv() == "unhandled"
-        except ConnectionResetError:
+        except Exception as e:
+            logger.debug(e)
             logger.error("Connection to sync hub reset! Retrying...")
 
             if not self.__connect():
