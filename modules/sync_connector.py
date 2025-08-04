@@ -56,7 +56,7 @@ class SyncConnector:
                 return "reconnect failed"
         
         try:
-            self.client.send(f"event=get;ref=stats;name={settings['name']}")
+            self.client.send(f"event=get;ref=stats;channel=0;name={settings['name']}")
             return str(self.client.recv())
         except ConnectionResetError:
             logger.error("Connection to sync hub reset! Retrying...")
