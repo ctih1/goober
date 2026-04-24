@@ -7,3 +7,5 @@ services:
       - "host.docker.internal:host-gateway"
     volumes:
       - /sys/class/thermal:/sys/class/thermal:ro
+      - ./settings:/app/settings
+      - ./assets/images:/app/assets/images
