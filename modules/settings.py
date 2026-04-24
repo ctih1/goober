@@ -73,7 +73,7 @@ class Settings:
         self.settings: SettingsType
         self.original_settings: SettingsType
 
-        with open(self.path, "r") as f:
+        with open(self.path, "r", encoding="utf-8") as f:
             self.__kv_store: dict = json.load(f)
 
         self.settings = SettingsType(self.__kv_store)  # type: ignore
@@ -114,14 +114,14 @@ class Settings:
         self.commit()
 
     def reload_settings(self) -> None:
-        with open(self.path, "r") as f:
+        with open(self.path, "r", encoding="utf-8") as f:
             self.__kv_store: dict = json.load(f)
 
         self.settings = SettingsType(self.__kv_store)  # type: ignore
         self.original_settings = copy.deepcopy(self.settings)
 
     def commit(self) -> None:
-        with open(self.path, "w") as f:
+        with open(self.path, "w", encoding="utf-8") as f:
             json.dump(self.settings, f, ensure_ascii=False, indent=4)
 
         self.original_settings = self.settings

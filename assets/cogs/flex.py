@@ -14,14 +14,17 @@ class Flex(commands.Cog):
         cpu_name = cpu["brand_raw"]
         threads = int(cpu["count"])
 
-        with open("/sys/class/thermal/thermal_zone0/temp") as f:
-            temp = int(f.read())/1000
+        temp = -99.99
+        if platform.system() == "Linux":
+            with open("/sys/class/thermal/thermal_zone0/temp") as f:
+                temp = int(f.read())/1000
 
         embed = discord.Embed(
             title="Flex",
             description="Some useful information about the device",
             color=discord.Color.blue() 
         )
+        
         embed.add_field(name="Network", value=f"`{platform.node()}`")
         embed.add_field(name="CPU", value=f"`{cpu_name}` with {threads} threads")
         embed.add_field(name="CPU utilization", value=f"{round(psutil.cpu_percent(), 2)}%")

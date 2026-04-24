@@ -13,4 +13,4 @@ py-cpuinfo
 websocket-client
 unalix==0.9
 psutil
-reqests
+requests

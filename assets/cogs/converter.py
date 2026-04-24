@@ -3,9 +3,23 @@ from discord.ext import commands
 import re
 from collections.abc import Callable, Iterator
 from typing import Dict, TypedDict, Any, List
+from modules.settings import instance as settings_manager
+from modules.permission import requires_admin
+from modules.sentenceprocessing import send_message
 import random
 from copy import copy
+import logging
 
+
+logger = logging.getLogger("goober")
+settings = settings_manager.settings
+
+class SettingsType(TypedDict):
+    blacklisted_words: List[str]
+
+default_settings: SettingsType = {
+    "blacklisted_words": []
+}
 
 class Unit(TypedDict):
     shorthand: str
@@ -308,7 +322,7 @@ class Converter(commands.Cog):
 
 
     def __format_response(self, converted_values: List[ConvertedValue]) -> str:
-        print(f"Values: {converted_values}")
+        logger.debug(f"Values: {converted_values}")
         message: str = "-# That's "
         
         for i, converted in enumerate(converted_values):
@@ -324,7 +338,7 @@ class Converter(commands.Cog):
 
 
                 data_line += f"{' or ' if data_line else ''}**{round(value,2)}{shorthand}**"
-                print(temp_line)
+                logger.debug(temp_line)
             
             temp_line += data_line
             
@@ -336,6 +350,8 @@ class Converter(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
+        settings: SettingsType = settings_manager.get_plugin_settings("converter", default_settings) #type: ignore[assignment]
+
         if message.author.bot:
             return
         
@@ -346,6 +362,14 @@ class Converter(commands.Cog):
             
             if not matches: continue
             for match in matches:
+                logger.info(match.groups())
+                match_string: str = "".join(match.groups()).strip()
+                
+                logger.debug(match.groups())
+                if match_string in settings.get("blacklisted_words"):
+                    logger.info(f"Skipping match {match_string} due to it being blacklisted")
+                    continue
+
                 value: ConvertedValue | None = None
 
                 if conversion_func == Converters.from_feet:
@@ -365,6 +389,44 @@ class Converter(commands.Cog):
         if len(sorted_units) > 0:
             await message.reply(self.__format_response(sorted_units))
 
+    @requires_admin()
+    @commands.command()
+    async def blacklist_word(self, ctx: commands.Context, word: str | None) -> None:
+        settings: SettingsType = settings_manager.get_plugin_settings("converter", default_settings) #type: ignore[assignment]
+
+        if not word:
+            await send_message(ctx, "Please specify a word!")
+            return
+        
+        if word in settings["blacklisted_words"]:
+            await send_message(ctx, "Word is already blacklisted!")
+            return
+        
+        
+        settings["blacklisted_words"].append(word or "")
+
+        settings_manager.set_plugin_setting("converter", settings)
+        await send_message(ctx, f"Blacklisted {word}!")
+
+        
+    @requires_admin()
+    @commands.command()
+    async def whitelist_word(self, ctx: commands.Context, word: str | None) -> None:
+        settings: SettingsType = settings_manager.get_plugin_settings("converter", default_settings) #type: ignore[assignment]
+
+        if not word:
+            await send_message(ctx, "Please specify a word!")
+            return
+        
+        if word not in settings["blacklisted_words"]:
+            await send_message(ctx, "Word has not been blacklisted!")
+            return
+        
+        
+        settings["blacklisted_words"].remove(word)
+
+        settings_manager.set_plugin_setting("converter", settings)
+        await send_message(ctx, f"Whitelisted {word}!")
 
 async def setup(bot):
     await bot.add_cog(Converter(bot))
