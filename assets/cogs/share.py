@@ -15,10 +15,12 @@ from typing import TypedDict, List
 class SettingsType(TypedDict):
     medias: List[str]
     reacts: bool
+    chance: int
 
 default_settings: SettingsType = {
     "medias": [],
-    "reacts": True
+    "reacts": True,
+    "chance": 4000
 }
 
 class Share(commands.Cog): 
@@ -89,7 +91,7 @@ class Share(commands.Cog):
 
         if not settings["reacts"]: return
 
-        if len(message.content) > 10 and random.randint(0, 30) == 15:
+        if len(message.content) > 10 and random.randint(0, settings["chance"]) == 1:
             await message.reply(random.choice(settings["medias"]))
 
 

@@ -34,7 +34,9 @@ def load_memory():
         with open(settings["bot"]["active_memory"], "r") as f:
             data = json.load(f)
     except FileNotFoundError:
-        pass
+        with open(settings["bot"]["active_memory"], "w") as f:
+            json.dump([], f)
+            data = []
 
     return data
 
