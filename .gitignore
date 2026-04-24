@@ -18,3 +18,4 @@ settings/settings.json
 assets/images/cached/*
 tokens.env
 data/*
+.venv
