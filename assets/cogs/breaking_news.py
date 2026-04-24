@@ -100,7 +100,7 @@ class BreakingNews(commands.Cog):
         with open(self.__insert_text(message), "rb") as f:
             await ctx.send(content="Breaking news!", file=discord.File(f))
 
-    def __insert_text(self, text):
+    def __insert_text(self, text: str):
         start = time.time()
         base_image_data: Image.ImageFile.ImageFile = Image.open(
             os.path.join("assets", "images", "breaking_news.png")
