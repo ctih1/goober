@@ -19,3 +19,4 @@ assets/images/cached/*
 tokens.env
 data/*
 .venv
+assets/images/cache
