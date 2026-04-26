@@ -218,15 +218,16 @@ class Translator(commands.Cog):
     @requires_admin()  # from modules.permission import requires_admin
     @commands.command()
     async def translate(self, ctx: commands.Context):
+        SIZE = 600
         await send_message(ctx, "Downloading your attachment")
         attachment = ctx.message.attachments[0]
         aspect_ratio = (attachment.width or 1) / (attachment.height or 1)
 
         if aspect_ratio < 1.0: # vertical
-            height = min(1200, attachment.width or 1200)
+            height = min(SIZE, attachment.width or SIZE)
             width = round(height*aspect_ratio)
         else:
-            width = min(1200, attachment.width or 1200)
+            width = min(SIZE, attachment.width or SIZE)
             height = round(width/aspect_ratio)
 
         image_url = attachment.proxy_url+f"{'' if attachment.proxy_url.endswith('&') else '&'}width={width}&height={height}"
