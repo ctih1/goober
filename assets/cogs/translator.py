@@ -217,7 +217,7 @@ class Translator(commands.Cog):
     # A command which requires the executor to be an admin, and takes a discord user as an argument
     @requires_admin()  # from modules.permission import requires_admin
     @commands.command()
-    async def test_translation(self, ctx: commands.Context):
+    async def translate(self, ctx: commands.Context):
         await send_message(ctx, "Downloading your attachment")
         attachment = ctx.message.attachments[0]
         aspect_ratio = (attachment.width or 1) / (attachment.height or 1)
