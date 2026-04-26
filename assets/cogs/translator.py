@@ -218,7 +218,7 @@ class Translator(commands.Cog):
     @requires_admin()  # from modules.permission import requires_admin
     @commands.command()
     async def translate(self, ctx: commands.Context):
-        SIZE = 600
+        SIZE = 1200
         await send_message(ctx, "Downloading your attachment")
         attachment = ctx.message.attachments[0]
         aspect_ratio = (attachment.width or 1) / (attachment.height or 1)
