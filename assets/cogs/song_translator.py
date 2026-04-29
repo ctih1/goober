@@ -143,7 +143,7 @@ class SongTranslator(commands.Cog):
             with open(path+"_sub.mp4", "rb") as f:
                 await message.reply(file=discord.File(f))
         else:
-            shutil.move(path+"_sub.mp4", f"data/youtube/cdn/{video_id}_sub.mp4")
+            shutil.move(path+"_sub.mp4", f"data/cdn/{video_id}_sub.mp4")
             await message.reply(content=f"https://homecdn.frii.site/vids/{video_id}_sub.mp4")
 
 
