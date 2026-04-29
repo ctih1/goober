@@ -10,3 +10,4 @@ services:
       - ./settings:/app/settings
       - ./assets/images:/app/assets/images
       - ./data:/app/data
+      - /usr/lib/jellyfin-ffmpeg:/ffmpeg

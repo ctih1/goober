@@ -14,5 +14,5 @@ unalix==0.9
 psutil
 requests
 easyocr
-pytube
+pytubefix
 python-slugify

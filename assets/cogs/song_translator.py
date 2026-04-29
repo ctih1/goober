@@ -17,6 +17,7 @@ import requests
 import logging
 import math
 import os
+import shutil
 
 logger = logging.getLogger("goober")
 
@@ -101,12 +102,23 @@ class SongTranslator(commands.Cog):
         path = os.path.abspath(f"data/youtube/{video_id}").replace("\\", "/")
         logger.info(path)
 
-        command = f'ffmpeg -i {path}.mp4 {os.environ.get("FFMPEG_ARGS", "")} -vf "subtitles=\"{path}.srt\"" {path}_sub.mp4'
+        command = f'{os.environ.get("FFMPEG_PATH", "ffmpeg")} -i {path}.mp4 {os.environ.get("FFMPEG_ARGS", "")} -vf "subtitles=filemame={path}.srt" {path}_sub.mp4'
+        logger.info(command)
         code = os.system(command)
-        if code == 0:
-            logger.info("Done")
-        else:
+        if code != 0:
             logger.error(f"ffmpeg exited with {code}")
+            return
+    
+        logger.info("Done")
+
+        if os.path.getsize(path+"_sub.mp4") < 9.5*1024*1024:
+            await message.edit(content="Sending...")
+            with open(path+"_sub.mp4", "rb") as f:
+                await message.reply(file=discord.File(f))
+        else:
+            shutil.move(path+"_sub.mp4", f"data/youtube/cdn/{video_id}_sub.mp4")
+            await message.reply(content=f"https://homecdn.frii.site/vids/{video_id}_sub.mp4")
+
 
     def get_first_lyric_time(self, lyrics: str) -> str:
         return lyrics.split("\n")[0].split("]", 1)[0].replace("[", "")

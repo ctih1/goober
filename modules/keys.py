@@ -5,2179 +5,2163 @@
 #fmt: off
 
 from typing import Literal, List
-Language=Literal['en', 'es', 'fi', 'fr', 'it']
-languages: List[Language] = ['en', 'es', 'fi', 'fr', 'it']
+Language=Literal['fi', 'en', 'it', 'fr', 'es']
+languages: List[Language] = ['fi', 'en', 'it', 'fr', 'es']
 default_lang: Language | str='en'
 def change_language(new_lang: Language | str) -> None: global default_lang; default_lang = new_lang
 def memory_file_valid(lang:str|None=None):
 	"""
 	### Locales
-	- En: **The memory.json file is valid!**
-	- Es: **The memory.json file is valid!**
 	- Fi: **memory.json on toimiva!**
-	- Fr: **The memory.json file is valid!**
+	- En: **The memory.json file is valid!**
 	- It: **Il file JSON è valido!**
+	- Fr: **The memory.json file is valid!**
+	- Es: **The memory.json file is valid!**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "The memory.json file is valid!"
-	if lang == 'es': return "The memory.json file is valid!"
 	if lang == 'fi': return "memory.json on toimiva!"
-	if lang == 'fr': return "The memory.json file is valid!"
+	if lang == 'en': return "The memory.json file is valid!"
 	if lang == 'it': return "Il file JSON è valido!"
+	if lang == 'fr': return "The memory.json file is valid!"
+	if lang == 'es': return "The memory.json file is valid!"
 	else: raise ValueError(f'Invalid language {lang}')
 def file_aint_uft8(lang:str|None=None):
 	"""
 	### Locales
-	- En: **File is not valid UTF-8 text. Might be binary or corrupted.**
-	- Es: **File is not valid UTF-8 text. Might be binary or corrupted.**
 	- Fi: **Tiedosto ei ole UTF-8 tekstiä. Saattaa olla binääriä tai korruptoitunut.**
-	- Fr: **File is not valid UTF-8 text. Might be binary or corrupted.**
+	- En: **File is not valid UTF-8 text. Might be binary or corrupted.**
 	- It: **File is not valid UTF-8 text. Might be binary or corrupted.**
+	- Fr: **File is not valid UTF-8 text. Might be binary or corrupted.**
+	- Es: **File is not valid UTF-8 text. Might be binary or corrupted.**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "File is not valid UTF-8 text. Might be binary or corrupted."
-	if lang == 'es': return "File is not valid UTF-8 text. Might be binary or corrupted."
 	if lang == 'fi': return "Tiedosto ei ole UTF-8 tekstiä. Saattaa olla binääriä tai korruptoitunut."
-	if lang == 'fr': return "File is not valid UTF-8 text. Might be binary or corrupted."
+	if lang == 'en': return "File is not valid UTF-8 text. Might be binary or corrupted."
 	if lang == 'it': return "File is not valid UTF-8 text. Might be binary or corrupted."
+	if lang == 'fr': return "File is not valid UTF-8 text. Might be binary or corrupted."
+	if lang == 'es': return "File is not valid UTF-8 text. Might be binary or corrupted."
 	else: raise ValueError(f'Invalid language {lang}')
 def psutil_not_installed(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Memory check skipped.**
-	- Es: **Memory check skipped.**
 	- Fi: **Memory check skipped.**
-	- Fr: **Memory check skipped.**
+	- En: **Memory check skipped.**
 	- It: **Controllo memoria saltato.**
+	- Fr: **Memory check skipped.**
+	- Es: **Memory check skipped.**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Memory check skipped."
-	if lang == 'es': return "Memory check skipped."
 	if lang == 'fi': return "Memory check skipped."
-	if lang == 'fr': return "Memory check skipped."
+	if lang == 'en': return "Memory check skipped."
 	if lang == 'it': return "Controllo memoria saltato."
+	if lang == 'fr': return "Memory check skipped."
+	if lang == 'es': return "Memory check skipped."
 	else: raise ValueError(f'Invalid language {lang}')
 def not_cloned(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Goober is not cloned! Please clone it from GitHub.**
-	- Es: **Goober is not cloned! Please clone it from GitHub.**
 	- Fi: **Goober is not cloned! Please clone it from GitHub.**
-	- Fr: **Goober is not cloned! Please clone it from GitHub.**
+	- En: **Goober is not cloned! Please clone it from GitHub.**
 	- It: **Goober non è stato clonato! Clonalo da GitHub.**
+	- Fr: **Goober is not cloned! Please clone it from GitHub.**
+	- Es: **Goober is not cloned! Please clone it from GitHub.**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Goober is not cloned! Please clone it from GitHub."
-	if lang == 'es': return "Goober is not cloned! Please clone it from GitHub."
 	if lang == 'fi': return "Goober is not cloned! Please clone it from GitHub."
-	if lang == 'fr': return "Goober is not cloned! Please clone it from GitHub."
+	if lang == 'en': return "Goober is not cloned! Please clone it from GitHub."
 	if lang == 'it': return "Goober non è stato clonato! Clonalo da GitHub."
+	if lang == 'fr': return "Goober is not cloned! Please clone it from GitHub."
+	if lang == 'es': return "Goober is not cloned! Please clone it from GitHub."
 	else: raise ValueError(f'Invalid language {lang}')
 def checks_disabled(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Checks are disabled!**
-	- Es: **Checks are disabled!**
 	- Fi: **Tarkistukset on poistettu käytöstä!**
-	- Fr: **Les vérifications sont désactivées !**
+	- En: **Checks are disabled!**
 	- It: **I controlli sono disabilitati!**
+	- Fr: **Les vérifications sont désactivées !**
+	- Es: **Checks are disabled!**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Checks are disabled!"
-	if lang == 'es': return "Checks are disabled!"
 	if lang == 'fi': return "Tarkistukset on poistettu käytöstä!"
-	if lang == 'fr': return "Les vérifications sont désactivées !"
+	if lang == 'en': return "Checks are disabled!"
 	if lang == 'it': return "I controlli sono disabilitati!"
+	if lang == 'fr': return "Les vérifications sont désactivées !"
+	if lang == 'es': return "Checks are disabled!"
 	else: raise ValueError(f'Invalid language {lang}')
 def unhandled_exception(lang:str|None=None):
 	"""
 	### Locales
-	- En: **An unhandled exception occurred. Please report this issue on GitHub.**
-	- Es: **An unhandled exception occurred. Please report this issue on GitHub.**
 	- Fi: **Käsittelemätön virhe tapahtui. Ilmoita tästä GitHubissa.**
-	- Fr: **Une exception non gérée est survenue. Merci de rapporter ce problème sur GitHub.**
+	- En: **An unhandled exception occurred. Please report this issue on GitHub.**
 	- It: **Si è verificata un'eccezione non gestita. Segnala questo problema su GitHub, per favore.**
+	- Fr: **Une exception non gérée est survenue. Merci de rapporter ce problème sur GitHub.**
+	- Es: **An unhandled exception occurred. Please report this issue on GitHub.**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "An unhandled exception occurred. Please report this issue on GitHub."
-	if lang == 'es': return "An unhandled exception occurred. Please report this issue on GitHub."
 	if lang == 'fi': return "Käsittelemätön virhe tapahtui. Ilmoita tästä GitHubissa."
-	if lang == 'fr': return "Une exception non gérée est survenue. Merci de rapporter ce problème sur GitHub."
+	if lang == 'en': return "An unhandled exception occurred. Please report this issue on GitHub."
 	if lang == 'it': return "Si è verificata un'eccezione non gestita. Segnala questo problema su GitHub, per favore."
+	if lang == 'fr': return "Une exception non gérée est survenue. Merci de rapporter ce problème sur GitHub."
+	if lang == 'es': return "An unhandled exception occurred. Please report this issue on GitHub."
 	else: raise ValueError(f'Invalid language {lang}')
 def active_users(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Active users:**
-	- Es: **Active users:**
 	- Fi: **Aktiiviset käyttäjät:**
-	- Fr: **Utilisateurs actifs :**
+	- En: **Active users:**
 	- It: **Utenti attivi:**
+	- Fr: **Utilisateurs actifs :**
+	- Es: **Active users:**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Active users:"
-	if lang == 'es': return "Active users:"
 	if lang == 'fi': return "Aktiiviset käyttäjät:"
-	if lang == 'fr': return "Utilisateurs actifs :"
+	if lang == 'en': return "Active users:"
 	if lang == 'it': return "Utenti attivi:"
+	if lang == 'fr': return "Utilisateurs actifs :"
+	if lang == 'es': return "Active users:"
 	else: raise ValueError(f'Invalid language {lang}')
 def spacy_initialized(lang:str|None=None):
 	"""
 	### Locales
-	- En: **spaCy and spacytextblob are ready.**
-	- Es: **spaCy and spacytextblob are ready.**
 	- Fi: **spaCy ja spacytextblob ovat valmiita.**
-	- Fr: **spaCy et spacytextblob sont prêts.**
+	- En: **spaCy and spacytextblob are ready.**
 	- It: **spaCy e spacytextblob sono pronti.**
+	- Fr: **spaCy et spacytextblob sont prêts.**
+	- Es: **spaCy and spacytextblob are ready.**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "spaCy and spacytextblob are ready."
-	if lang == 'es': return "spaCy and spacytextblob are ready."
 	if lang == 'fi': return "spaCy ja spacytextblob ovat valmiita."
-	if lang == 'fr': return "spaCy et spacytextblob sont prêts."
+	if lang == 'en': return "spaCy and spacytextblob are ready."
 	if lang == 'it': return "spaCy e spacytextblob sono pronti."
+	if lang == 'fr': return "spaCy et spacytextblob sont prêts."
+	if lang == 'es': return "spaCy and spacytextblob are ready."
 	else: raise ValueError(f'Invalid language {lang}')
 def spacy_model_not_found(lang:str|None=None):
 	"""
 	### Locales
-	- En: **The spaCy model was not found! Downloading it....`**
-	- Es: **The spaCy model was not found! Downloading it....`**
 	- Fi: **spaCy mallia ei löytynyt! Ladataan se....`**
-	- Fr: **Le modèle spaCy est introuvable ! Téléchargement en cours...**
+	- En: **The spaCy model was not found! Downloading it....`**
 	- It: **Il modello spaCy non è stato trovato! Lo sto scaricando...**
+	- Fr: **Le modèle spaCy est introuvable ! Téléchargement en cours...**
+	- Es: **The spaCy model was not found! Downloading it....`**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "The spaCy model was not found! Downloading it....`"
-	if lang == 'es': return "The spaCy model was not found! Downloading it....`"
 	if lang == 'fi': return "spaCy mallia ei löytynyt! Ladataan se....`"
-	if lang == 'fr': return "Le modèle spaCy est introuvable ! Téléchargement en cours..."
+	if lang == 'en': return "The spaCy model was not found! Downloading it....`"
 	if lang == 'it': return "Il modello spaCy non è stato trovato! Lo sto scaricando..."
+	if lang == 'fr': return "Le modèle spaCy est introuvable ! Téléchargement en cours..."
+	if lang == 'es': return "The spaCy model was not found! Downloading it....`"
 	else: raise ValueError(f'Invalid language {lang}')
 def env_file_not_found(lang:str|None=None):
 	"""
 	### Locales
-	- En: **The .env file was not found! Please create one with the required variables.**
-	- Es: **The .env file was not found! Please create one with the required variables.**
 	- Fi: **.env-tiedostoa ei löytnyt! Luo tiedosto jossa on tarvittavat muuttujat**
-	- Fr: **Le fichier .env est introuvable ! Créez-en un avec les variables nécessaires.**
+	- En: **The .env file was not found! Please create one with the required variables.**
 	- It: **Il file .env non è stato trovato! Crea un file con le variabili richieste.**
+	- Fr: **Le fichier .env est introuvable ! Créez-en un avec les variables nécessaires.**
+	- Es: **The .env file was not found! Please create one with the required variables.**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "The .env file was not found! Please create one with the required variables."
-	if lang == 'es': return "The .env file was not found! Please create one with the required variables."
 	if lang == 'fi': return ".env-tiedostoa ei löytnyt! Luo tiedosto jossa on tarvittavat muuttujat"
-	if lang == 'fr': return "Le fichier .env est introuvable ! Créez-en un avec les variables nécessaires."
+	if lang == 'en': return "The .env file was not found! Please create one with the required variables."
 	if lang == 'it': return "Il file .env non è stato trovato! Crea un file con le variabili richieste."
+	if lang == 'fr': return "Le fichier .env est introuvable ! Créez-en un avec les variables nécessaires."
+	if lang == 'es': return "The .env file was not found! Please create one with the required variables."
 	else: raise ValueError(f'Invalid language {lang}')
 def error_fetching_active_users(error,lang:str|None=None):
 	"""
 	### Locales
-	- En: **Error fetching active users: {error}**
-	- Es: **Error fetching active users: {error}**
 	- Fi: **Aktiivisten käyttäjien hankkimisessa tapahtui ongelma: {error}**
-	- Fr: **Erreur lors de la récupération des utilisateurs actifs : {error}**
+	- En: **Error fetching active users: {error}**
 	- It: **Errore nel recupero degli utenti attivi: {error}**
+	- Fr: **Erreur lors de la récupération des utilisateurs actifs : {error}**
+	- Es: **Error fetching active users: {error}**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Error fetching active users: {error}".format_map({"error": error})
-	if lang == 'es': return "Error fetching active users: {error}".format_map({"error": error})
 	if lang == 'fi': return "Aktiivisten käyttäjien hankkimisessa tapahtui ongelma: {error}".format_map({"error": error})
-	if lang == 'fr': return "Erreur lors de la récupération des utilisateurs actifs : {error}".format_map({"error": error})
+	if lang == 'en': return "Error fetching active users: {error}".format_map({"error": error})
 	if lang == 'it': return "Errore nel recupero degli utenti attivi: {error}".format_map({"error": error})
+	if lang == 'fr': return "Erreur lors de la récupération des utilisateurs actifs : {error}".format_map({"error": error})
+	if lang == 'es': return "Error fetching active users: {error}".format_map({"error": error})
 	else: raise ValueError(f'Invalid language {lang}')
 def error_sending_alive_ping(error,lang:str|None=None):
 	"""
 	### Locales
-	- En: **Error sending alive ping: {error}**
-	- Es: **Error sending alive ping: {error}**
 	- Fi: **Pingin lähettäminen goober centraliin epäonnistui: {error}**
-	- Fr: **Erreur lors de l’envoi du ping actif : {error}**
+	- En: **Error sending alive ping: {error}**
 	- It: **Errore nell'invio di aliveping:**
+	- Fr: **Erreur lors de l’envoi du ping actif : {error}**
+	- Es: **Error sending alive ping: {error}**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Error sending alive ping: {error}".format_map({"error": error})
-	if lang == 'es': return "Error sending alive ping: {error}".format_map({"error": error})
 	if lang == 'fi': return "Pingin lähettäminen goober centraliin epäonnistui: {error}".format_map({"error": error})
-	if lang == 'fr': return "Erreur lors de l’envoi du ping actif : {error}".format_map({"error": error})
+	if lang == 'en': return "Error sending alive ping: {error}".format_map({"error": error})
 	if lang == 'it': return "Errore nell'invio di aliveping:".format_map({"error": error})
+	if lang == 'fr': return "Erreur lors de l’envoi du ping actif : {error}".format_map({"error": error})
+	if lang == 'es': return "Error sending alive ping: {error}".format_map({"error": error})
 	else: raise ValueError(f'Invalid language {lang}')
 def already_started(lang:str|None=None):
 	"""
 	### Locales
-	- En: **I've already started! I'm not updating...**
-	- Es: **I've already started! I'm not updating...**
 	- Fi: **Olen jo käynnistynyt! Ei päivitetä...**
-	- Fr: **J’ai déjà démarré ! Je ne me mets pas à jour...**
+	- En: **I've already started! I'm not updating...**
 	- It: **Sono già avviato! Non aggiorno...**
+	- Fr: **J’ai déjà démarré ! Je ne me mets pas à jour...**
+	- Es: **I've already started! I'm not updating...**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "I've already started! I'm not updating..."
-	if lang == 'es': return "I've already started! I'm not updating..."
 	if lang == 'fi': return "Olen jo käynnistynyt! Ei päivitetä..."
-	if lang == 'fr': return "J’ai déjà démarré ! Je ne me mets pas à jour..."
+	if lang == 'en': return "I've already started! I'm not updating..."
 	if lang == 'it': return "Sono già avviato! Non aggiorno..."
+	if lang == 'fr': return "J’ai déjà démarré ! Je ne me mets pas à jour..."
+	if lang == 'es': return "I've already started! I'm not updating..."
 	else: raise ValueError(f'Invalid language {lang}')
 def please_restart(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Please Restart goober!**
-	- Es: **Please Restart goober!**
 	- Fi: **Käynnistä uudelleen, hölmö!**
-	- Fr: **Redémarre, stp !**
+	- En: **Please Restart goober!**
 	- It: **Riavvia goober!**
+	- Fr: **Redémarre, stp !**
+	- Es: **Please Restart goober!**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Please Restart goober!"
-	if lang == 'es': return "Please Restart goober!"
 	if lang == 'fi': return "Käynnistä uudelleen, hölmö!"
-	if lang == 'fr': return "Redémarre, stp !"
+	if lang == 'en': return "Please Restart goober!"
 	if lang == 'it': return "Riavvia goober!"
+	if lang == 'fr': return "Redémarre, stp !"
+	if lang == 'es': return "Please Restart goober!"
 	else: raise ValueError(f'Invalid language {lang}')
 def local_ahead(remote,branch,lang:str|None=None):
 	"""
 	### Locales
-	- En: **Local {remote}/{branch} is ahead and/or up to par. Not Updating...**
-	- Es: **Local {remote}/{branch} is ahead and/or up to par. Not Updating...**
 	- Fi: **Paikallinen {remote}/{branch} on edellä ja/tai ajan tasalla. Ohitetaan päivitys...**
-	- Fr: **Local {remote}/{branch} est en avance ou à jour. Pas de mise à jour...**
+	- En: **Local {remote}/{branch} is ahead and/or up to par. Not Updating...**
 	- It: **Il ramo locale {remote}/{branch} è aggiornato o avanti. Nessun aggiornamento...**
+	- Fr: **Local {remote}/{branch} est en avance ou à jour. Pas de mise à jour...**
+	- Es: **Local {remote}/{branch} is ahead and/or up to par. Not Updating...**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Local {remote}/{branch} is ahead and/or up to par. Not Updating...".format_map({"remote": remote,"branch": branch})
-	if lang == 'es': return "Local {remote}/{branch} is ahead and/or up to par. Not Updating...".format_map({"remote": remote,"branch": branch})
 	if lang == 'fi': return "Paikallinen {remote}/{branch} on edellä ja/tai ajan tasalla. Ohitetaan päivitys...".format_map({"remote": remote,"branch": branch})
-	if lang == 'fr': return "Local {remote}/{branch} est en avance ou à jour. Pas de mise à jour...".format_map({"remote": remote,"branch": branch})
+	if lang == 'en': return "Local {remote}/{branch} is ahead and/or up to par. Not Updating...".format_map({"remote": remote,"branch": branch})
 	if lang == 'it': return "Il ramo locale {remote}/{branch} è aggiornato o avanti. Nessun aggiornamento...".format_map({"remote": remote,"branch": branch})
+	if lang == 'fr': return "Local {remote}/{branch} est en avance ou à jour. Pas de mise à jour...".format_map({"remote": remote,"branch": branch})
+	if lang == 'es': return "Local {remote}/{branch} is ahead and/or up to par. Not Updating...".format_map({"remote": remote,"branch": branch})
 	else: raise ValueError(f'Invalid language {lang}')
 def remote_ahead(remote,branch,lang:str|None=None):
 	"""
 	### Locales
-	- En: **Remote {remote}/{branch} is ahead. Updating...**
-	- Es: **Remote {remote}/{branch} is ahead. Updating...**
 	- Fi: **Etärepositorio {remote}/{branch} on edellä. Päivitetään...**
-	- Fr: **Remote {remote}/{branch} est en avance. Mise à jour en cours...**
+	- En: **Remote {remote}/{branch} is ahead. Updating...**
 	- It: **Il ramo remoto {remote}/{branch} è avanti. Aggiornamento in corso...**
+	- Fr: **Remote {remote}/{branch} est en avance. Mise à jour en cours...**
+	- Es: **Remote {remote}/{branch} is ahead. Updating...**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Remote {remote}/{branch} is ahead. Updating...".format_map({"remote": remote,"branch": branch})
-	if lang == 'es': return "Remote {remote}/{branch} is ahead. Updating...".format_map({"remote": remote,"branch": branch})
 	if lang == 'fi': return "Etärepositorio {remote}/{branch} on edellä. Päivitetään...".format_map({"remote": remote,"branch": branch})
-	if lang == 'fr': return "Remote {remote}/{branch} est en avance. Mise à jour en cours...".format_map({"remote": remote,"branch": branch})
+	if lang == 'en': return "Remote {remote}/{branch} is ahead. Updating...".format_map({"remote": remote,"branch": branch})
 	if lang == 'it': return "Il ramo remoto {remote}/{branch} è avanti. Aggiornamento in corso...".format_map({"remote": remote,"branch": branch})
+	if lang == 'fr': return "Remote {remote}/{branch} est en avance. Mise à jour en cours...".format_map({"remote": remote,"branch": branch})
+	if lang == 'es': return "Remote {remote}/{branch} is ahead. Updating...".format_map({"remote": remote,"branch": branch})
 	else: raise ValueError(f'Invalid language {lang}')
 def cant_find_local_version(lang:str|None=None):
 	"""
 	### Locales
-	- En: **I can't find the local_version variable! Or it's been tampered with and it's not an integer!**
-	- Es: **I can't find the local_version variable! Or it's been tampered with and it's not an integer!**
 	- Fi: **Muuttujaa local_version ei löytynyt, tai sitä on muokattu eikä ole kokonaisluku!**
-	- Fr: **Je ne trouve pas la variable local_version ! Ou elle a été modifiée et ce n’est pas un entier !**
+	- En: **I can't find the local_version variable! Or it's been tampered with and it's not an integer!**
 	- It: **Impossibile trovare la variabile local_version! O è stata manomessa e non è un intero!**
+	- Fr: **Je ne trouve pas la variable local_version ! Ou elle a été modifiée et ce n’est pas un entier !**
+	- Es: **I can't find the local_version variable! Or it's been tampered with and it's not an integer!**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "I can't find the local_version variable! Or it's been tampered with and it's not an integer!"
-	if lang == 'es': return "I can't find the local_version variable! Or it's been tampered with and it's not an integer!"
 	if lang == 'fi': return "Muuttujaa local_version ei löytynyt, tai sitä on muokattu eikä ole kokonaisluku!"
-	if lang == 'fr': return "Je ne trouve pas la variable local_version ! Ou elle a été modifiée et ce n’est pas un entier !"
+	if lang == 'en': return "I can't find the local_version variable! Or it's been tampered with and it's not an integer!"
 	if lang == 'it': return "Impossibile trovare la variabile local_version! O è stata manomessa e non è un intero!"
+	if lang == 'fr': return "Je ne trouve pas la variable local_version ! Ou elle a été modifiée et ce n’est pas un entier !"
+	if lang == 'es': return "I can't find the local_version variable! Or it's been tampered with and it's not an integer!"
 	else: raise ValueError(f'Invalid language {lang}')
 def running_prestart_checks(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Running pre-start checks...**
-	- Es: **Running pre-start checks...**
 	- Fi: **Suoritetaan esikäynnistystarkistuksia...**
-	- Fr: **Exécution des vérifications préalables au démarrage...**
+	- En: **Running pre-start checks...**
 	- It: **Esecuzione dei controlli pre-avvio...**
+	- Fr: **Exécution des vérifications préalables au démarrage...**
+	- Es: **Running pre-start checks...**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Running pre-start checks..."
-	if lang == 'es': return "Running pre-start checks..."
 	if lang == 'fi': return "Suoritetaan esikäynnistystarkistuksia..."
-	if lang == 'fr': return "Exécution des vérifications préalables au démarrage..."
+	if lang == 'en': return "Running pre-start checks..."
 	if lang == 'it': return "Esecuzione dei controlli pre-avvio..."
+	if lang == 'fr': return "Exécution des vérifications préalables au démarrage..."
+	if lang == 'es': return "Running pre-start checks..."
 	else: raise ValueError(f'Invalid language {lang}')
 def continuing_in_seconds(seconds,lang:str|None=None):
 	"""
 	### Locales
-	- En: **Continuing in {seconds} seconds... Press any key to skip.**
-	- Es: **Continuing in {seconds} seconds... Press any key to skip.**
 	- Fi: **Jatketaan {seconds} sekunnin kuluttua... Paina mitä tahansa näppäintä ohittaaksesi.**
-	- Fr: **Reprise dans {seconds} secondes... Appuie sur une touche pour passer.**
+	- En: **Continuing in {seconds} seconds... Press any key to skip.**
 	- It: **Continuo tra {seconds} secondi... Premi un tasto per saltare.**
+	- Fr: **Reprise dans {seconds} secondes... Appuie sur une touche pour passer.**
+	- Es: **Continuing in {seconds} seconds... Press any key to skip.**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Continuing in {seconds} seconds... Press any key to skip.".format_map({"seconds": seconds})
-	if lang == 'es': return "Continuing in {seconds} seconds... Press any key to skip.".format_map({"seconds": seconds})
 	if lang == 'fi': return "Jatketaan {seconds} sekunnin kuluttua... Paina mitä tahansa näppäintä ohittaaksesi.".format_map({"seconds": seconds})
-	if lang == 'fr': return "Reprise dans {seconds} secondes... Appuie sur une touche pour passer.".format_map({"seconds": seconds})
+	if lang == 'en': return "Continuing in {seconds} seconds... Press any key to skip.".format_map({"seconds": seconds})
 	if lang == 'it': return "Continuo tra {seconds} secondi... Premi un tasto per saltare.".format_map({"seconds": seconds})
+	if lang == 'fr': return "Reprise dans {seconds} secondes... Appuie sur une touche pour passer.".format_map({"seconds": seconds})
+	if lang == 'es': return "Continuing in {seconds} seconds... Press any key to skip.".format_map({"seconds": seconds})
 	else: raise ValueError(f'Invalid language {lang}')
 def missing_requests_psutil(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Missing requests and psutil! Please install them using pip: `pip install requests psutil`**
-	- Es: **Missing requests and psutil! Please install them using pip: `pip install requests psutil`**
 	- Fi: **Kirjastot requests ja psutil puuttuvat! Asenna ne komennolla: `pip install requests psutil`**
-	- Fr: **requests et psutil manquants ! Installe-les avec pip : `pip install requests psutil`**
+	- En: **Missing requests and psutil! Please install them using pip: `pip install requests psutil`**
 	- It: **Mancano requests e psutil! Installali con pip: `pip install requests psutil`**
+	- Fr: **requests et psutil manquants ! Installe-les avec pip : `pip install requests psutil`**
+	- Es: **Missing requests and psutil! Please install them using pip: `pip install requests psutil`**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Missing requests and psutil! Please install them using pip: `pip install requests psutil`"
-	if lang == 'es': return "Missing requests and psutil! Please install them using pip: `pip install requests psutil`"
 	if lang == 'fi': return "Kirjastot requests ja psutil puuttuvat! Asenna ne komennolla: `pip install requests psutil`"
-	if lang == 'fr': return "requests et psutil manquants ! Installe-les avec pip : `pip install requests psutil`"
+	if lang == 'en': return "Missing requests and psutil! Please install them using pip: `pip install requests psutil`"
 	if lang == 'it': return "Mancano requests e psutil! Installali con pip: `pip install requests psutil`"
+	if lang == 'fr': return "requests et psutil manquants ! Installe-les avec pip : `pip install requests psutil`"
+	if lang == 'es': return "Missing requests and psutil! Please install them using pip: `pip install requests psutil`"
 	else: raise ValueError(f'Invalid language {lang}')
 def requirements_not_found(path,lang:str|None=None):
 	"""
 	### Locales
-	- En: **requirements.txt not found at {path} was it tampered with?**
-	- Es: **requirements.txt not found at {path} was it tampered with?**
 	- Fi: **Tiedostoa requirements.txt ei löytynyt polusta {path} – onko sitä muokattu?**
-	- Fr: **requirements.txt introuvable à {path}, a-t-il été modifié ?**
+	- En: **requirements.txt not found at {path} was it tampered with?**
 	- It: **requirements.txt non trovato in {path} è stato manomesso?**
+	- Fr: **requirements.txt introuvable à {path}, a-t-il été modifié ?**
+	- Es: **requirements.txt not found at {path} was it tampered with?**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "requirements.txt not found at {path} was it tampered with?".format_map({"path": path})
-	if lang == 'es': return "requirements.txt not found at {path} was it tampered with?".format_map({"path": path})
 	if lang == 'fi': return "Tiedostoa requirements.txt ei löytynyt polusta {path} – onko sitä muokattu?".format_map({"path": path})
-	if lang == 'fr': return "requirements.txt introuvable à {path}, a-t-il été modifié ?".format_map({"path": path})
+	if lang == 'en': return "requirements.txt not found at {path} was it tampered with?".format_map({"path": path})
 	if lang == 'it': return "requirements.txt non trovato in {path} è stato manomesso?".format_map({"path": path})
+	if lang == 'fr': return "requirements.txt introuvable à {path}, a-t-il été modifié ?".format_map({"path": path})
+	if lang == 'es': return "requirements.txt not found at {path} was it tampered with?".format_map({"path": path})
 	else: raise ValueError(f'Invalid language {lang}')
 def warning_failed_parse_imports(filename,error,lang:str|None=None):
 	"""
 	### Locales
-	- En: **Warning: Failed to parse imports from {filename}: {error}**
-	- Es: **Warning: Failed to parse imports from {filename}: {error}**
 	- Fi: **Varoitus: tuontien jäsentäminen epäonnistui tiedostossa {filename}: {error}**
-	- Fr: **Avertissement : Échec du parsing des imports depuis {filename} : {error}**
+	- En: **Warning: Failed to parse imports from {filename}: {error}**
 	- It: **Attenzione: impossibile analizzare le importazioni da {filename}: {error}**
+	- Fr: **Avertissement : Échec du parsing des imports depuis {filename} : {error}**
+	- Es: **Warning: Failed to parse imports from {filename}: {error}**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Warning: Failed to parse imports from {filename}: {error}".format_map({"filename": filename,"error": error})
-	if lang == 'es': return "Warning: Failed to parse imports from {filename}: {error}".format_map({"filename": filename,"error": error})
 	if lang == 'fi': return "Varoitus: tuontien jäsentäminen epäonnistui tiedostossa {filename}: {error}".format_map({"filename": filename,"error": error})
-	if lang == 'fr': return "Avertissement : Échec du parsing des imports depuis {filename} : {error}".format_map({"filename": filename,"error": error})
+	if lang == 'en': return "Warning: Failed to parse imports from {filename}: {error}".format_map({"filename": filename,"error": error})
 	if lang == 'it': return "Attenzione: impossibile analizzare le importazioni da {filename}: {error}".format_map({"filename": filename,"error": error})
+	if lang == 'fr': return "Avertissement : Échec du parsing des imports depuis {filename} : {error}".format_map({"filename": filename,"error": error})
+	if lang == 'es': return "Warning: Failed to parse imports from {filename}: {error}".format_map({"filename": filename,"error": error})
 	else: raise ValueError(f'Invalid language {lang}')
 def cogs_dir_not_found(path,lang:str|None=None):
 	"""
 	### Locales
-	- En: **Cogs directory not found at {path}, skipping scan.**
-	- Es: **Cogs directory not found at {path}, skipping scan.**
 	- Fi: **Cogs-kansiota ei löytynyt polusta {path}, ohitetaan tarkistus.**
-	- Fr: **Répertoire des cogs introuvable à {path}, scan ignoré.**
+	- En: **Cogs directory not found at {path}, skipping scan.**
 	- It: **Cartella cogs non trovata in {path}, scansione saltata.**
+	- Fr: **Répertoire des cogs introuvable à {path}, scan ignoré.**
+	- Es: **Cogs directory not found at {path}, skipping scan.**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Cogs directory not found at {path}, skipping scan.".format_map({"path": path})
-	if lang == 'es': return "Cogs directory not found at {path}, skipping scan.".format_map({"path": path})
 	if lang == 'fi': return "Cogs-kansiota ei löytynyt polusta {path}, ohitetaan tarkistus.".format_map({"path": path})
-	if lang == 'fr': return "Répertoire des cogs introuvable à {path}, scan ignoré.".format_map({"path": path})
+	if lang == 'en': return "Cogs directory not found at {path}, skipping scan.".format_map({"path": path})
 	if lang == 'it': return "Cartella cogs non trovata in {path}, scansione saltata.".format_map({"path": path})
+	if lang == 'fr': return "Répertoire des cogs introuvable à {path}, scan ignoré.".format_map({"path": path})
+	if lang == 'es': return "Cogs directory not found at {path}, skipping scan.".format_map({"path": path})
 	else: raise ValueError(f'Invalid language {lang}')
 def std_lib_local_skipped(package,lang:str|None=None):
 	"""
 	### Locales
-	- En: **STD LIB / LOCAL {package} (skipped check)**
-	- Es: **STD LIB / LOCAL {package} (skipped check)**
 	- Fi: **STD LIB / PAIKALLINEN {package} (tarkistus ohitettu)**
-	- Fr: **LIB STD / LOCAL {package} (vérification sautée)**
+	- En: **STD LIB / LOCAL {package} (skipped check)**
 	- It: **LIB STD / LOCALE {package} (controllo saltato)**
+	- Fr: **LIB STD / LOCAL {package} (vérification sautée)**
+	- Es: **STD LIB / LOCAL {package} (skipped check)**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "STD LIB / LOCAL {package} (skipped check)".format_map({"package": package})
-	if lang == 'es': return "STD LIB / LOCAL {package} (skipped check)".format_map({"package": package})
 	if lang == 'fi': return "STD LIB / PAIKALLINEN {package} (tarkistus ohitettu)".format_map({"package": package})
-	if lang == 'fr': return "LIB STD / LOCAL {package} (vérification sautée)".format_map({"package": package})
+	if lang == 'en': return "STD LIB / LOCAL {package} (skipped check)".format_map({"package": package})
 	if lang == 'it': return "LIB STD / LOCALE {package} (controllo saltato)".format_map({"package": package})
+	if lang == 'fr': return "LIB STD / LOCAL {package} (vérification sautée)".format_map({"package": package})
+	if lang == 'es': return "STD LIB / LOCAL {package} (skipped check)".format_map({"package": package})
 	else: raise ValueError(f'Invalid language {lang}')
 def ok_installed(lang:str|None=None):
 	"""
 	### Locales
-	- En: **OK**
-	- Es: **OK**
 	- Fi: **OK**
-	- Fr: **OK**
+	- En: **OK**
 	- It: **OK**
+	- Fr: **OK**
+	- Es: **OK**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "OK"
-	if lang == 'es': return "OK"
 	if lang == 'fi': return "OK"
-	if lang == 'fr': return "OK"
+	if lang == 'en': return "OK"
 	if lang == 'it': return "OK"
+	if lang == 'fr': return "OK"
+	if lang == 'es': return "OK"
 	else: raise ValueError(f'Invalid language {lang}')
 def missing_package(lang:str|None=None):
 	"""
 	### Locales
-	- En: **MISSING**
-	- Es: **MISSING**
 	- Fi: **PUUTTUU**
-	- Fr: **MANQUANT**
+	- En: **MISSING**
 	- It: **REQUISITO MANCANTE**
+	- Fr: **MANQUANT**
+	- Es: **MISSING**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "MISSING"
-	if lang == 'es': return "MISSING"
 	if lang == 'fi': return "PUUTTUU"
-	if lang == 'fr': return "MANQUANT"
+	if lang == 'en': return "MISSING"
 	if lang == 'it': return "REQUISITO MANCANTE"
+	if lang == 'fr': return "MANQUANT"
+	if lang == 'es': return "MISSING"
 	else: raise ValueError(f'Invalid language {lang}')
 def missing_package2(lang:str|None=None):
 	"""
 	### Locales
-	- En: **is not installed**
-	- Es: **is not installed**
 	- Fi: **ei ole asennettu**
-	- Fr: **n’est pas installé**
+	- En: **is not installed**
 	- It: **non è installato**
+	- Fr: **n’est pas installé**
+	- Es: **is not installed**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "is not installed"
-	if lang == 'es': return "is not installed"
 	if lang == 'fi': return "ei ole asennettu"
-	if lang == 'fr': return "n’est pas installé"
+	if lang == 'en': return "is not installed"
 	if lang == 'it': return "non è installato"
+	if lang == 'fr': return "n’est pas installé"
+	if lang == 'es': return "is not installed"
 	else: raise ValueError(f'Invalid language {lang}')
 def missing_packages_detected(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Missing packages detected:**
-	- Es: **Missing packages detected:**
 	- Fi: **Puuttuvia kirjastoja havaittu:**
-	- Fr: **Packages manquants détectés :**
+	- En: **Missing packages detected:**
 	- It: **Pacchetti mancanti rilevati:**
+	- Fr: **Packages manquants détectés :**
+	- Es: **Missing packages detected:**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Missing packages detected:"
-	if lang == 'es': return "Missing packages detected:"
 	if lang == 'fi': return "Puuttuvia kirjastoja havaittu:"
-	if lang == 'fr': return "Packages manquants détectés :"
+	if lang == 'en': return "Missing packages detected:"
 	if lang == 'it': return "Pacchetti mancanti rilevati:"
+	if lang == 'fr': return "Packages manquants détectés :"
+	if lang == 'es': return "Missing packages detected:"
 	else: raise ValueError(f'Invalid language {lang}')
 def telling_goober_central(url,lang:str|None=None):
 	"""
 	### Locales
-	- En: **Telling goober central at {url}**
-	- Es: **Telling goober central at {url}**
 	- Fi: **Ilmoitetaan goober-centralille osoitteessa {url}**
-	- Fr: **Envoi à goober central à {url}**
+	- En: **Telling goober central at {url}**
 	- It: **Segnalazione a goober central su {url}**
+	- Fr: **Envoi à goober central à {url}**
+	- Es: **Telling goober central at {url}**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Telling goober central at {url}".format_map({"url": url})
-	if lang == 'es': return "Telling goober central at {url}".format_map({"url": url})
 	if lang == 'fi': return "Ilmoitetaan goober-centralille osoitteessa {url}".format_map({"url": url})
-	if lang == 'fr': return "Envoi à goober central à {url}".format_map({"url": url})
+	if lang == 'en': return "Telling goober central at {url}".format_map({"url": url})
 	if lang == 'it': return "Segnalazione a goober central su {url}".format_map({"url": url})
+	if lang == 'fr': return "Envoi à goober central à {url}".format_map({"url": url})
+	if lang == 'es': return "Telling goober central at {url}".format_map({"url": url})
 	else: raise ValueError(f'Invalid language {lang}')
 def failed_to_contact(url,error,lang:str|None=None):
 	"""
 	### Locales
-	- En: **Failed to contact {url}: {error}**
-	- Es: **Failed to contact {url}: {error}**
 	- Fi: **Yhteyden muodostus epäonnistui osoitteeseen {url}: {error}**
-	- Fr: **Impossible de contacter {url} : {error}**
+	- En: **Failed to contact {url}: {error}**
 	- It: **Impossibile contattare {url}: {error}**
+	- Fr: **Impossible de contacter {url} : {error}**
+	- Es: **Failed to contact {url}: {error}**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Failed to contact {url}: {error}".format_map({"url": url,"error": error})
-	if lang == 'es': return "Failed to contact {url}: {error}".format_map({"url": url,"error": error})
 	if lang == 'fi': return "Yhteyden muodostus epäonnistui osoitteeseen {url}: {error}".format_map({"url": url,"error": error})
-	if lang == 'fr': return "Impossible de contacter {url} : {error}".format_map({"url": url,"error": error})
+	if lang == 'en': return "Failed to contact {url}: {error}".format_map({"url": url,"error": error})
 	if lang == 'it': return "Impossibile contattare {url}: {error}".format_map({"url": url,"error": error})
+	if lang == 'fr': return "Impossible de contacter {url} : {error}".format_map({"url": url,"error": error})
+	if lang == 'es': return "Failed to contact {url}: {error}".format_map({"url": url,"error": error})
 	else: raise ValueError(f'Invalid language {lang}')
 def all_requirements_satisfied(lang:str|None=None):
 	"""
 	### Locales
-	- En: **All requirements are satisfied.**
-	- Es: **All requirements are satisfied.**
 	- Fi: **Kaikki vaatimukset täyttyvät.**
-	- Fr: **Toutes les dépendances sont satisfaites.**
+	- En: **All requirements are satisfied.**
 	- It: **Tutti i requisiti sono soddisfatti.**
+	- Fr: **Toutes les dépendances sont satisfaites.**
+	- Es: **All requirements are satisfied.**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "All requirements are satisfied."
-	if lang == 'es': return "All requirements are satisfied."
 	if lang == 'fi': return "Kaikki vaatimukset täyttyvät."
-	if lang == 'fr': return "Toutes les dépendances sont satisfaites."
+	if lang == 'en': return "All requirements are satisfied."
 	if lang == 'it': return "Tutti i requisiti sono soddisfatti."
+	if lang == 'fr': return "Toutes les dépendances sont satisfaites."
+	if lang == 'es': return "All requirements are satisfied."
 	else: raise ValueError(f'Invalid language {lang}')
 def ping_to(host,latency,lang:str|None=None):
 	"""
 	### Locales
-	- En: **Ping to {host}: {latency} ms**
-	- Es: **Ping to {host}: {latency} ms**
 	- Fi: **Ping osoitteeseen {host}: {latency} ms**
-	- Fr: **Ping vers {host} : {latency} ms**
+	- En: **Ping to {host}: {latency} ms**
 	- It: **Ping a {host}: {latency} ms**
+	- Fr: **Ping vers {host} : {latency} ms**
+	- Es: **Ping to {host}: {latency} ms**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Ping to {host}: {latency} ms".format_map({"host": host,"latency": latency})
-	if lang == 'es': return "Ping to {host}: {latency} ms".format_map({"host": host,"latency": latency})
 	if lang == 'fi': return "Ping osoitteeseen {host}: {latency} ms".format_map({"host": host,"latency": latency})
-	if lang == 'fr': return "Ping vers {host} : {latency} ms".format_map({"host": host,"latency": latency})
+	if lang == 'en': return "Ping to {host}: {latency} ms".format_map({"host": host,"latency": latency})
 	if lang == 'it': return "Ping a {host}: {latency} ms".format_map({"host": host,"latency": latency})
+	if lang == 'fr': return "Ping vers {host} : {latency} ms".format_map({"host": host,"latency": latency})
+	if lang == 'es': return "Ping to {host}: {latency} ms".format_map({"host": host,"latency": latency})
 	else: raise ValueError(f'Invalid language {lang}')
 def high_latency(lang:str|None=None):
 	"""
 	### Locales
-	- En: **High latency detected! You may experience delays in response times.**
-	- Es: **High latency detected! You may experience delays in response times.**
 	- Fi: **Korkea viive havaittu! Vastaukset saattavat hidastua.**
-	- Fr: **Latence élevée détectée ! Tu pourrais avoir des délais de réponse.**
+	- En: **High latency detected! You may experience delays in response times.**
 	- It: **Latenza elevata rilevata! Potresti riscontrare ritardi nelle risposte.**
+	- Fr: **Latence élevée détectée ! Tu pourrais avoir des délais de réponse.**
+	- Es: **High latency detected! You may experience delays in response times.**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "High latency detected! You may experience delays in response times."
-	if lang == 'es': return "High latency detected! You may experience delays in response times."
 	if lang == 'fi': return "Korkea viive havaittu! Vastaukset saattavat hidastua."
-	if lang == 'fr': return "Latence élevée détectée ! Tu pourrais avoir des délais de réponse."
+	if lang == 'en': return "High latency detected! You may experience delays in response times."
 	if lang == 'it': return "Latenza elevata rilevata! Potresti riscontrare ritardi nelle risposte."
+	if lang == 'fr': return "Latence élevée détectée ! Tu pourrais avoir des délais de réponse."
+	if lang == 'es': return "High latency detected! You may experience delays in response times."
 	else: raise ValueError(f'Invalid language {lang}')
 def could_not_parse_latency(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Could not parse latency.**
-	- Es: **Could not parse latency.**
 	- Fi: **Viivettä ei voitu tulkita.**
-	- Fr: **Impossible d’analyser la latence.**
+	- En: **Could not parse latency.**
 	- It: **Impossibile analizzare la latenza.**
+	- Fr: **Impossible d’analyser la latence.**
+	- Es: **Could not parse latency.**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Could not parse latency."
-	if lang == 'es': return "Could not parse latency."
 	if lang == 'fi': return "Viivettä ei voitu tulkita."
-	if lang == 'fr': return "Impossible d’analyser la latence."
+	if lang == 'en': return "Could not parse latency."
 	if lang == 'it': return "Impossibile analizzare la latenza."
+	if lang == 'fr': return "Impossible d’analyser la latence."
+	if lang == 'es': return "Could not parse latency."
 	else: raise ValueError(f'Invalid language {lang}')
 def ping_failed(host,lang:str|None=None):
 	"""
 	### Locales
-	- En: **Ping to {host} failed.**
-	- Es: **Ping to {host} failed.**
 	- Fi: **Ping osoitteeseen {host} epäonnistui.**
-	- Fr: **Ping vers {host} échoué.**
+	- En: **Ping to {host} failed.**
 	- It: **Ping a {host} fallito.**
+	- Fr: **Ping vers {host} échoué.**
+	- Es: **Ping to {host} failed.**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Ping to {host} failed.".format_map({"host": host})
-	if lang == 'es': return "Ping to {host} failed.".format_map({"host": host})
 	if lang == 'fi': return "Ping osoitteeseen {host} epäonnistui.".format_map({"host": host})
-	if lang == 'fr': return "Ping vers {host} échoué.".format_map({"host": host})
+	if lang == 'en': return "Ping to {host} failed.".format_map({"host": host})
 	if lang == 'it': return "Ping a {host} fallito.".format_map({"host": host})
+	if lang == 'fr': return "Ping vers {host} échoué.".format_map({"host": host})
+	if lang == 'es': return "Ping to {host} failed.".format_map({"host": host})
 	else: raise ValueError(f'Invalid language {lang}')
 def error_running_ping(error,lang:str|None=None):
 	"""
 	### Locales
-	- En: **Error running ping: {error}**
-	- Es: **Error running ping: {error}**
 	- Fi: **Virhe ping-komennon suorittamisessa: {error}**
-	- Fr: **Erreur lors du ping : {error}**
+	- En: **Error running ping: {error}**
 	- It: **Errore durante l'esecuzione del ping: {error}**
+	- Fr: **Erreur lors du ping : {error}**
+	- Es: **Error running ping: {error}**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Error running ping: {error}".format_map({"error": error})
-	if lang == 'es': return "Error running ping: {error}".format_map({"error": error})
 	if lang == 'fi': return "Virhe ping-komennon suorittamisessa: {error}".format_map({"error": error})
-	if lang == 'fr': return "Erreur lors du ping : {error}".format_map({"error": error})
+	if lang == 'en': return "Error running ping: {error}".format_map({"error": error})
 	if lang == 'it': return "Errore durante l'esecuzione del ping: {error}".format_map({"error": error})
+	if lang == 'fr': return "Erreur lors du ping : {error}".format_map({"error": error})
+	if lang == 'es': return "Error running ping: {error}".format_map({"error": error})
 	else: raise ValueError(f'Invalid language {lang}')
 def memory_usage(used,total,percent,lang:str|None=None):
 	"""
 	### Locales
-	- En: **Memory Usage: {used} GB / {total} GB ({percent}%)**
-	- Es: **Memory Usage: {used} GB / {total} GB ({percent}%)**
 	- Fi: **Muistin käyttö: {used} Gt / {total} Gt ({percent}%)**
-	- Fr: **Utilisation mémoire : {used} Go / {total} Go ({percent}%)**
+	- En: **Memory Usage: {used} GB / {total} GB ({percent}%)**
 	- It: **Utilizzo memoria: {used} GB / {total} GB ({percent}%)**
+	- Fr: **Utilisation mémoire : {used} Go / {total} Go ({percent}%)**
+	- Es: **Memory Usage: {used} GB / {total} GB ({percent}%)**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Memory Usage: {used} GB / {total} GB ({percent}%)".format_map({"used": used,"total": total,"percent": percent})
-	if lang == 'es': return "Memory Usage: {used} GB / {total} GB ({percent}%)".format_map({"used": used,"total": total,"percent": percent})
 	if lang == 'fi': return "Muistin käyttö: {used} Gt / {total} Gt ({percent}%)".format_map({"used": used,"total": total,"percent": percent})
-	if lang == 'fr': return "Utilisation mémoire : {used} Go / {total} Go ({percent}%)".format_map({"used": used,"total": total,"percent": percent})
+	if lang == 'en': return "Memory Usage: {used} GB / {total} GB ({percent}%)".format_map({"used": used,"total": total,"percent": percent})
 	if lang == 'it': return "Utilizzo memoria: {used} GB / {total} GB ({percent}%)".format_map({"used": used,"total": total,"percent": percent})
+	if lang == 'fr': return "Utilisation mémoire : {used} Go / {total} Go ({percent}%)".format_map({"used": used,"total": total,"percent": percent})
+	if lang == 'es': return "Memory Usage: {used} GB / {total} GB ({percent}%)".format_map({"used": used,"total": total,"percent": percent})
 	else: raise ValueError(f'Invalid language {lang}')
 def memory_above_90(percent,lang:str|None=None):
 	"""
 	### Locales
-	- En: **Memory usage is above 90% ({percent}%). Consider freeing up memory.**
-	- Es: **Memory usage is above 90% ({percent}%). Consider freeing up memory.**
 	- Fi: **Muistin käyttö ylittää 90 % ({percent}%). Harkitse muistin vapauttamista.**
-	- Fr: **Usage mémoire au-dessus de 90% ({percent}%). Pense à libérer de la mémoire.**
+	- En: **Memory usage is above 90% ({percent}%). Consider freeing up memory.**
 	- It: **Utilizzo memoria sopra il 90% ({percent}%). Considera di liberare memoria.**
+	- Fr: **Usage mémoire au-dessus de 90% ({percent}%). Pense à libérer de la mémoire.**
+	- Es: **Memory usage is above 90% ({percent}%). Consider freeing up memory.**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Memory usage is above 90% ({percent}%). Consider freeing up memory.".format_map({"percent": percent})
-	if lang == 'es': return "Memory usage is above 90% ({percent}%). Consider freeing up memory.".format_map({"percent": percent})
 	if lang == 'fi': return "Muistin käyttö ylittää 90 % ({percent}%). Harkitse muistin vapauttamista.".format_map({"percent": percent})
-	if lang == 'fr': return "Usage mémoire au-dessus de 90% ({percent}%). Pense à libérer de la mémoire.".format_map({"percent": percent})
+	if lang == 'en': return "Memory usage is above 90% ({percent}%). Consider freeing up memory.".format_map({"percent": percent})
 	if lang == 'it': return "Utilizzo memoria sopra il 90% ({percent}%). Considera di liberare memoria.".format_map({"percent": percent})
+	if lang == 'fr': return "Usage mémoire au-dessus de 90% ({percent}%). Pense à libérer de la mémoire.".format_map({"percent": percent})
+	if lang == 'es': return "Memory usage is above 90% ({percent}%). Consider freeing up memory.".format_map({"percent": percent})
 	else: raise ValueError(f'Invalid language {lang}')
 def total_memory(total,lang:str|None=None):
 	"""
 	### Locales
-	- En: **Total Memory: {total} GB**
-	- Es: **Total Memory: {total} GB**
 	- Fi: **Kokonaismuisti: {total} Gt**
-	- Fr: **Mémoire totale : {total} Go**
+	- En: **Total Memory: {total} GB**
 	- It: **Memoria totale: {total} GB**
+	- Fr: **Mémoire totale : {total} Go**
+	- Es: **Total Memory: {total} GB**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Total Memory: {total} GB".format_map({"total": total})
-	if lang == 'es': return "Total Memory: {total} GB".format_map({"total": total})
 	if lang == 'fi': return "Kokonaismuisti: {total} Gt".format_map({"total": total})
-	if lang == 'fr': return "Mémoire totale : {total} Go".format_map({"total": total})
+	if lang == 'en': return "Total Memory: {total} GB".format_map({"total": total})
 	if lang == 'it': return "Memoria totale: {total} GB".format_map({"total": total})
+	if lang == 'fr': return "Mémoire totale : {total} Go".format_map({"total": total})
+	if lang == 'es': return "Total Memory: {total} GB".format_map({"total": total})
 	else: raise ValueError(f'Invalid language {lang}')
 def used_memory(used,lang:str|None=None):
 	"""
 	### Locales
-	- En: **Used Memory: {used} GB**
-	- Es: **Used Memory: {used} GB**
 	- Fi: **Käytetty muisti: {used} Gt**
-	- Fr: **Mémoire utilisée : {used} Go**
+	- En: **Used Memory: {used} GB**
 	- It: **Memoria usata: {used} GB**
+	- Fr: **Mémoire utilisée : {used} Go**
+	- Es: **Used Memory: {used} GB**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Used Memory: {used} GB".format_map({"used": used})
-	if lang == 'es': return "Used Memory: {used} GB".format_map({"used": used})
 	if lang == 'fi': return "Käytetty muisti: {used} Gt".format_map({"used": used})
-	if lang == 'fr': return "Mémoire utilisée : {used} Go".format_map({"used": used})
+	if lang == 'en': return "Used Memory: {used} GB".format_map({"used": used})
 	if lang == 'it': return "Memoria usata: {used} GB".format_map({"used": used})
+	if lang == 'fr': return "Mémoire utilisée : {used} Go".format_map({"used": used})
+	if lang == 'es': return "Used Memory: {used} GB".format_map({"used": used})
 	else: raise ValueError(f'Invalid language {lang}')
 def low_free_memory(free,lang:str|None=None):
 	"""
 	### Locales
-	- En: **Low free memory detected! Only {free} GB available.**
-	- Es: **Low free memory detected! Only {free} GB available.**
 	- Fi: **Vapaa muisti vähissä! Vain {free} Gt jäljellä.**
-	- Fr: **Mémoire libre faible détectée ! Seulement {free} Go disponibles.**
+	- En: **Low free memory detected! Only {free} GB available.**
 	- It: **Poca memoria libera! Solo {free} GB disponibili.**
+	- Fr: **Mémoire libre faible détectée ! Seulement {free} Go disponibles.**
+	- Es: **Low free memory detected! Only {free} GB available.**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Low free memory detected! Only {free} GB available.".format_map({"free": free})
-	if lang == 'es': return "Low free memory detected! Only {free} GB available.".format_map({"free": free})
 	if lang == 'fi': return "Vapaa muisti vähissä! Vain {free} Gt jäljellä.".format_map({"free": free})
-	if lang == 'fr': return "Mémoire libre faible détectée ! Seulement {free} Go disponibles.".format_map({"free": free})
+	if lang == 'en': return "Low free memory detected! Only {free} GB available.".format_map({"free": free})
 	if lang == 'it': return "Poca memoria libera! Solo {free} GB disponibili.".format_map({"free": free})
+	if lang == 'fr': return "Mémoire libre faible détectée ! Seulement {free} Go disponibles.".format_map({"free": free})
+	if lang == 'es': return "Low free memory detected! Only {free} GB available.".format_map({"free": free})
 	else: raise ValueError(f'Invalid language {lang}')
 def measuring_cpu(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Measuring CPU usage per core...**
-	- Es: **Measuring CPU usage per core...**
 	- Fi: **Mitataan suorittimen käyttöä ytimittäin...**
-	- Fr: **Mesure de l’usage CPU par cœur...**
+	- En: **Measuring CPU usage per core...**
 	- It: **Misurazione utilizzo CPU per core...**
+	- Fr: **Mesure de l’usage CPU par cœur...**
+	- Es: **Measuring CPU usage per core...**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Measuring CPU usage per core..."
-	if lang == 'es': return "Measuring CPU usage per core..."
 	if lang == 'fi': return "Mitataan suorittimen käyttöä ytimittäin..."
-	if lang == 'fr': return "Mesure de l’usage CPU par cœur..."
+	if lang == 'en': return "Measuring CPU usage per core..."
 	if lang == 'it': return "Misurazione utilizzo CPU per core..."
+	if lang == 'fr': return "Mesure de l’usage CPU par cœur..."
+	if lang == 'es': return "Measuring CPU usage per core..."
 	else: raise ValueError(f'Invalid language {lang}')
 def core_usage(idx,bar,usage,lang:str|None=None):
 	"""
 	### Locales
-	- En: **Core {idx}: [{bar}] {usage}%**
-	- Es: **Core {idx}: [{bar}] {usage}%**
 	- Fi: **Ydin {idx}: [{bar}] {usage}%**
-	- Fr: **Cœur {idx} : [{bar}] {usage}%**
+	- En: **Core {idx}: [{bar}] {usage}%**
 	- It: **Core {idx}: [{bar}] {usage}%**
+	- Fr: **Cœur {idx} : [{bar}] {usage}%**
+	- Es: **Core {idx}: [{bar}] {usage}%**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Core {idx}: [{bar}] {usage}%".format_map({"idx": idx,"bar": bar,"usage": usage})
-	if lang == 'es': return "Core {idx}: [{bar}] {usage}%".format_map({"idx": idx,"bar": bar,"usage": usage})
 	if lang == 'fi': return "Ydin {idx}: [{bar}] {usage}%".format_map({"idx": idx,"bar": bar,"usage": usage})
-	if lang == 'fr': return "Cœur {idx} : [{bar}] {usage}%".format_map({"idx": idx,"bar": bar,"usage": usage})
+	if lang == 'en': return "Core {idx}: [{bar}] {usage}%".format_map({"idx": idx,"bar": bar,"usage": usage})
 	if lang == 'it': return "Core {idx}: [{bar}] {usage}%".format_map({"idx": idx,"bar": bar,"usage": usage})
+	if lang == 'fr': return "Cœur {idx} : [{bar}] {usage}%".format_map({"idx": idx,"bar": bar,"usage": usage})
+	if lang == 'es': return "Core {idx}: [{bar}] {usage}%".format_map({"idx": idx,"bar": bar,"usage": usage})
 	else: raise ValueError(f'Invalid language {lang}')
 def total_cpu_usage(usage,lang:str|None=None):
 	"""
 	### Locales
-	- En: **Total CPU Usage: {usage}%**
-	- Es: **Total CPU Usage: {usage}%**
 	- Fi: **Kokonaisprosessorin käyttö: {usage}%**
-	- Fr: **Usage total CPU : {usage}%**
+	- En: **Total CPU Usage: {usage}%**
 	- It: **Utilizzo totale CPU: {usage}%**
+	- Fr: **Usage total CPU : {usage}%**
+	- Es: **Total CPU Usage: {usage}%**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Total CPU Usage: {usage}%".format_map({"usage": usage})
-	if lang == 'es': return "Total CPU Usage: {usage}%".format_map({"usage": usage})
 	if lang == 'fi': return "Kokonaisprosessorin käyttö: {usage}%".format_map({"usage": usage})
-	if lang == 'fr': return "Usage total CPU : {usage}%".format_map({"usage": usage})
+	if lang == 'en': return "Total CPU Usage: {usage}%".format_map({"usage": usage})
 	if lang == 'it': return "Utilizzo totale CPU: {usage}%".format_map({"usage": usage})
+	if lang == 'fr': return "Usage total CPU : {usage}%".format_map({"usage": usage})
+	if lang == 'es': return "Total CPU Usage: {usage}%".format_map({"usage": usage})
 	else: raise ValueError(f'Invalid language {lang}')
 def high_avg_cpu(usage,lang:str|None=None):
 	"""
 	### Locales
-	- En: **High average CPU usage: {usage}%**
-	- Es: **High average CPU usage: {usage}%**
 	- Fi: **Korkea keskimääräinen prosessorin käyttö: {usage}%**
-	- Fr: **Moyenne CPU élevée : {usage}%**
+	- En: **High average CPU usage: {usage}%**
 	- It: **Utilizzo medio CPU elevato: {usage}%**
+	- Fr: **Moyenne CPU élevée : {usage}%**
+	- Es: **High average CPU usage: {usage}%**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "High average CPU usage: {usage}%".format_map({"usage": usage})
-	if lang == 'es': return "High average CPU usage: {usage}%".format_map({"usage": usage})
 	if lang == 'fi': return "Korkea keskimääräinen prosessorin käyttö: {usage}%".format_map({"usage": usage})
-	if lang == 'fr': return "Moyenne CPU élevée : {usage}%".format_map({"usage": usage})
+	if lang == 'en': return "High average CPU usage: {usage}%".format_map({"usage": usage})
 	if lang == 'it': return "Utilizzo medio CPU elevato: {usage}%".format_map({"usage": usage})
+	if lang == 'fr': return "Moyenne CPU élevée : {usage}%".format_map({"usage": usage})
+	if lang == 'es': return "High average CPU usage: {usage}%".format_map({"usage": usage})
 	else: raise ValueError(f'Invalid language {lang}')
 def really_high_cpu(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Really high CPU load! System may throttle or hang.**
-	- Es: **Really high CPU load! System may throttle or hang.**
 	- Fi: **Erittäin korkea prosessorikuorma! Järjestelmä saattaa hidastua tai jumittua.**
-	- Fr: **Charge CPU vraiment élevée ! Le système pourrait ralentir ou planter.**
+	- En: **Really high CPU load! System may throttle or hang.**
 	- It: **Carico CPU molto alto! Il sistema potrebbe rallentare o bloccarsi.**
+	- Fr: **Charge CPU vraiment élevée ! Le système pourrait ralentir ou planter.**
+	- Es: **Really high CPU load! System may throttle or hang.**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Really high CPU load! System may throttle or hang."
-	if lang == 'es': return "Really high CPU load! System may throttle or hang."
 	if lang == 'fi': return "Erittäin korkea prosessorikuorma! Järjestelmä saattaa hidastua tai jumittua."
-	if lang == 'fr': return "Charge CPU vraiment élevée ! Le système pourrait ralentir ou planter."
+	if lang == 'en': return "Really high CPU load! System may throttle or hang."
 	if lang == 'it': return "Carico CPU molto alto! Il sistema potrebbe rallentare o bloccarsi."
+	if lang == 'fr': return "Charge CPU vraiment élevée ! Le système pourrait ralentir ou planter."
+	if lang == 'es': return "Really high CPU load! System may throttle or hang."
 	else: raise ValueError(f'Invalid language {lang}')
 def memory_file(size,lang:str|None=None):
 	"""
 	### Locales
-	- En: **Memory file: {size} MB**
-	- Es: **Memory file: {size} MB**
 	- Fi: **Muistitiedosto: {size} Mt**
-	- Fr: **Fichier mémoire : {size} Mo**
+	- En: **Memory file: {size} MB**
 	- It: **File memoria: {size} MB**
+	- Fr: **Fichier mémoire : {size} Mo**
+	- Es: **Memory file: {size} MB**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Memory file: {size} MB".format_map({"size": size})
-	if lang == 'es': return "Memory file: {size} MB".format_map({"size": size})
 	if lang == 'fi': return "Muistitiedosto: {size} Mt".format_map({"size": size})
-	if lang == 'fr': return "Fichier mémoire : {size} Mo".format_map({"size": size})
+	if lang == 'en': return "Memory file: {size} MB".format_map({"size": size})
 	if lang == 'it': return "File memoria: {size} MB".format_map({"size": size})
+	if lang == 'fr': return "Fichier mémoire : {size} Mo".format_map({"size": size})
+	if lang == 'es': return "Memory file: {size} MB".format_map({"size": size})
 	else: raise ValueError(f'Invalid language {lang}')
 def memory_file_large(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Memory file is 1GB or higher, consider clearing it to free up space.**
-	- Es: **Memory file is 1GB or higher, consider clearing it to free up space.**
 	- Fi: **Muistitiedosto on enemmän kuin 1 Gt – harkitse sen tyhjentämistä tilan vapauttamiseksi.**
-	- Fr: **Fichier mémoire de 1 Go ou plus, pense à le nettoyer pour libérer de l’espace.**
+	- En: **Memory file is 1GB or higher, consider clearing it to free up space.**
 	- It: **Il file di memoria è 1GB o più, valuta di svuotarlo.**
+	- Fr: **Fichier mémoire de 1 Go ou plus, pense à le nettoyer pour libérer de l’espace.**
+	- Es: **Memory file is 1GB or higher, consider clearing it to free up space.**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Memory file is 1GB or higher, consider clearing it to free up space."
-	if lang == 'es': return "Memory file is 1GB or higher, consider clearing it to free up space."
 	if lang == 'fi': return "Muistitiedosto on enemmän kuin 1 Gt – harkitse sen tyhjentämistä tilan vapauttamiseksi."
-	if lang == 'fr': return "Fichier mémoire de 1 Go ou plus, pense à le nettoyer pour libérer de l’espace."
+	if lang == 'en': return "Memory file is 1GB or higher, consider clearing it to free up space."
 	if lang == 'it': return "Il file di memoria è 1GB o più, valuta di svuotarlo."
+	if lang == 'fr': return "Fichier mémoire de 1 Go ou plus, pense à le nettoyer pour libérer de l’espace."
+	if lang == 'es': return "Memory file is 1GB or higher, consider clearing it to free up space."
 	else: raise ValueError(f'Invalid language {lang}')
 def memory_file_corrupted(error,lang:str|None=None):
 	"""
 	### Locales
-	- En: **Memory file is corrupted! JSON decode error: {error}**
-	- Es: **Memory file is corrupted! JSON decode error: {error}**
 	- Fi: **Muistitiedosto on vioittunut! JSON purkuvirhe: {error}**
-	- Fr: **Fichier mémoire corrompu ! Erreur JSON : {error}**
+	- En: **Memory file is corrupted! JSON decode error: {error}**
 	- It: **File memoria corrotto! Errore JSON decode: {error}**
+	- Fr: **Fichier mémoire corrompu ! Erreur JSON : {error}**
+	- Es: **Memory file is corrupted! JSON decode error: {error}**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Memory file is corrupted! JSON decode error: {error}".format_map({"error": error})
-	if lang == 'es': return "Memory file is corrupted! JSON decode error: {error}".format_map({"error": error})
 	if lang == 'fi': return "Muistitiedosto on vioittunut! JSON purkuvirhe: {error}".format_map({"error": error})
-	if lang == 'fr': return "Fichier mémoire corrompu ! Erreur JSON : {error}".format_map({"error": error})
+	if lang == 'en': return "Memory file is corrupted! JSON decode error: {error}".format_map({"error": error})
 	if lang == 'it': return "File memoria corrotto! Errore JSON decode: {error}".format_map({"error": error})
+	if lang == 'fr': return "Fichier mémoire corrompu ! Erreur JSON : {error}".format_map({"error": error})
+	if lang == 'es': return "Memory file is corrupted! JSON decode error: {error}".format_map({"error": error})
 	else: raise ValueError(f'Invalid language {lang}')
 def consider_backup_memory(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Consider backing up and recreating the memory file.**
-	- Es: **Consider backing up and recreating the memory file.**
 	- Fi: **Harkitse muistitiedoston varmuuskopioimista ja uudelleenluontia.**
-	- Fr: **Pense à sauvegarder et recréer le fichier mémoire.**
+	- En: **Consider backing up and recreating the memory file.**
 	- It: **Valuta di fare un backup e ricreare il file di memoria.**
+	- Fr: **Pense à sauvegarder et recréer le fichier mémoire.**
+	- Es: **Consider backing up and recreating the memory file.**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Consider backing up and recreating the memory file."
-	if lang == 'es': return "Consider backing up and recreating the memory file."
 	if lang == 'fi': return "Harkitse muistitiedoston varmuuskopioimista ja uudelleenluontia."
-	if lang == 'fr': return "Pense à sauvegarder et recréer le fichier mémoire."
+	if lang == 'en': return "Consider backing up and recreating the memory file."
 	if lang == 'it': return "Valuta di fare un backup e ricreare il file di memoria."
+	if lang == 'fr': return "Pense à sauvegarder et recréer le fichier mémoire."
+	if lang == 'es': return "Consider backing up and recreating the memory file."
 	else: raise ValueError(f'Invalid language {lang}')
 def memory_file_encoding(error,lang:str|None=None):
 	"""
 	### Locales
-	- En: **Memory file has encoding issues: {error}**
-	- Es: **Memory file has encoding issues: {error}**
 	- Fi: **Muistitiedostossa on koodausongelmia: {error}**
-	- Fr: **Problèmes d’encodage du fichier mémoire : {error}**
+	- En: **Memory file has encoding issues: {error}**
 	- It: **Problemi di codifica nel file memoria: {error}**
+	- Fr: **Problèmes d’encodage du fichier mémoire : {error}**
+	- Es: **Memory file has encoding issues: {error}**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Memory file has encoding issues: {error}".format_map({"error": error})
-	if lang == 'es': return "Memory file has encoding issues: {error}".format_map({"error": error})
 	if lang == 'fi': return "Muistitiedostossa on koodausongelmia: {error}".format_map({"error": error})
-	if lang == 'fr': return "Problèmes d’encodage du fichier mémoire : {error}".format_map({"error": error})
+	if lang == 'en': return "Memory file has encoding issues: {error}".format_map({"error": error})
 	if lang == 'it': return "Problemi di codifica nel file memoria: {error}".format_map({"error": error})
+	if lang == 'fr': return "Problèmes d’encodage du fichier mémoire : {error}".format_map({"error": error})
+	if lang == 'es': return "Memory file has encoding issues: {error}".format_map({"error": error})
 	else: raise ValueError(f'Invalid language {lang}')
 def error_reading_memory(error,lang:str|None=None):
 	"""
 	### Locales
-	- En: **Error reading memory file: {error}**
-	- Es: **Error reading memory file: {error}**
 	- Fi: **Virhe muistitiedoston lukemisessa: {error}**
-	- Fr: **Erreur lecture fichier mémoire : {error}**
+	- En: **Error reading memory file: {error}**
 	- It: **Errore nella lettura del file memoria: {error}**
+	- Fr: **Erreur lecture fichier mémoire : {error}**
+	- Es: **Error reading memory file: {error}**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Error reading memory file: {error}".format_map({"error": error})
-	if lang == 'es': return "Error reading memory file: {error}".format_map({"error": error})
 	if lang == 'fi': return "Virhe muistitiedoston lukemisessa: {error}".format_map({"error": error})
-	if lang == 'fr': return "Erreur lecture fichier mémoire : {error}".format_map({"error": error})
+	if lang == 'en': return "Error reading memory file: {error}".format_map({"error": error})
 	if lang == 'it': return "Errore nella lettura del file memoria: {error}".format_map({"error": error})
+	if lang == 'fr': return "Erreur lecture fichier mémoire : {error}".format_map({"error": error})
+	if lang == 'es': return "Error reading memory file: {error}".format_map({"error": error})
 	else: raise ValueError(f'Invalid language {lang}')
 def memory_file_not_found(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Memory file not found.**
-	- Es: **Memory file not found.**
 	- Fi: **Muistitiedostoa ei löytynyt.**
-	- Fr: **Fichier mémoire introuvable.**
+	- En: **Memory file not found.**
 	- It: **File memoria non trovato.**
+	- Fr: **Fichier mémoire introuvable.**
+	- Es: **Memory file not found.**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Memory file not found."
-	if lang == 'es': return "Memory file not found."
 	if lang == 'fi': return "Muistitiedostoa ei löytynyt."
-	if lang == 'fr': return "Fichier mémoire introuvable."
+	if lang == 'en': return "Memory file not found."
 	if lang == 'it': return "File memoria non trovato."
+	if lang == 'fr': return "Fichier mémoire introuvable."
+	if lang == 'es': return "Memory file not found."
 	else: raise ValueError(f'Invalid language {lang}')
 def modification_warning(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Goober has been modified! Any changes will be lost in an update!**
-	- Es: **Goober ha sido modificado! Se omiten las comprobaciones del servidor por completo...**
 	- Fi: **Gooberia on muokattu! Ohitetaan palvelimen tarkistus kokonaan...**
-	- Fr: **Goober a été modifié ! Toutes les modifications seront perdues lors d'une mise à jour !**
+	- En: **Goober has been modified! Any changes will be lost in an update!**
 	- It: **Goober è stato modificato! Verifiche del server saltate completamente...**
+	- Fr: **Goober a été modifié ! Toutes les modifications seront perdues lors d'une mise à jour !**
+	- Es: **Goober ha sido modificado! Se omiten las comprobaciones del servidor por completo...**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Goober has been modified! Any changes will be lost in an update!"
-	if lang == 'es': return "Goober ha sido modificado! Se omiten las comprobaciones del servidor por completo..."
 	if lang == 'fi': return "Gooberia on muokattu! Ohitetaan palvelimen tarkistus kokonaan..."
-	if lang == 'fr': return "Goober a été modifié ! Toutes les modifications seront perdues lors d'une mise à jour !"
+	if lang == 'en': return "Goober has been modified! Any changes will be lost in an update!"
 	if lang == 'it': return "Goober è stato modificato! Verifiche del server saltate completamente..."
+	if lang == 'fr': return "Goober a été modifié ! Toutes les modifications seront perdues lors d'une mise à jour !"
+	if lang == 'es': return "Goober ha sido modificado! Se omiten las comprobaciones del servidor por completo..."
 	else: raise ValueError(f'Invalid language {lang}')
 def reported_version(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Reported Version:**
-	- Es: **Version reportada:**
 	- Fi: **Ilmoitettu versio:**
-	- Fr: **Version rapportée :**
+	- En: **Reported Version:**
 	- It: **Versione segnalata:**
+	- Fr: **Version rapportée :**
+	- Es: **Version reportada:**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Reported Version:"
-	if lang == 'es': return "Version reportada:"
 	if lang == 'fi': return "Ilmoitettu versio:"
-	if lang == 'fr': return "Version rapportée :"
+	if lang == 'en': return "Reported Version:"
 	if lang == 'it': return "Versione segnalata:"
+	if lang == 'fr': return "Version rapportée :"
+	if lang == 'es': return "Version reportada:"
 	else: raise ValueError(f'Invalid language {lang}')
 def current_hash(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Current Hash:**
-	- Es: **Hash actual:**
 	- Fi: **Tämänhetkinen hash:**
-	- Fr: **Hachage actuel :**
+	- En: **Current Hash:**
 	- It: **Hash attuale:**
+	- Fr: **Hachage actuel :**
+	- Es: **Hash actual:**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Current Hash:"
-	if lang == 'es': return "Hash actual:"
 	if lang == 'fi': return "Tämänhetkinen hash:"
-	if lang == 'fr': return "Hachage actuel :"
+	if lang == 'en': return "Current Hash:"
 	if lang == 'it': return "Hash attuale:"
+	if lang == 'fr': return "Hachage actuel :"
+	if lang == 'es': return "Hash actual:"
 	else: raise ValueError(f'Invalid language {lang}')
 def not_found(lang:str|None=None):
 	"""
 	### Locales
-	- En: **is not found!**
-	- Es: **no existe!**
 	- Fi: **ei löytynyt!**
-	- Fr: **n'est pas trouvé !**
+	- En: **is not found!**
 	- It: **non trovato!**
+	- Fr: **n'est pas trouvé !**
+	- Es: **no existe!**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "is not found!"
-	if lang == 'es': return "no existe!"
 	if lang == 'fi': return "ei löytynyt!"
-	if lang == 'fr': return "n'est pas trouvé !"
+	if lang == 'en': return "is not found!"
 	if lang == 'it': return "non trovato!"
+	if lang == 'fr': return "n'est pas trouvé !"
+	if lang == 'es': return "no existe!"
 	else: raise ValueError(f'Invalid language {lang}')
 def version_error(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Unable to fetch version info. Status code**
-	- Es: **No se puede obtener la informacion de la version. Codigo de estado**
 	- Fi: **Versiotietojen saanti epäonnistui.. Tilakoodi:**
-	- Fr: **Impossible de récupérer les informations de version. Code d'état**
+	- En: **Unable to fetch version info. Status code**
 	- It: **Impossibile recuperare le informazioni sulla versione. Codice di stato**
+	- Fr: **Impossible de récupérer les informations de version. Code d'état**
+	- Es: **No se puede obtener la informacion de la version. Codigo de estado**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Unable to fetch version info. Status code"
-	if lang == 'es': return "No se puede obtener la informacion de la version. Codigo de estado"
 	if lang == 'fi': return "Versiotietojen saanti epäonnistui.. Tilakoodi:"
-	if lang == 'fr': return "Impossible de récupérer les informations de version. Code d'état"
+	if lang == 'en': return "Unable to fetch version info. Status code"
 	if lang == 'it': return "Impossibile recuperare le informazioni sulla versione. Codice di stato"
+	if lang == 'fr': return "Impossible de récupérer les informations de version. Code d'état"
+	if lang == 'es': return "No se puede obtener la informacion de la version. Codigo de estado"
 	else: raise ValueError(f'Invalid language {lang}')
 def loaded_cog(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Loaded cog:**
-	- Es: **Engranaje cog:**
 	- Fi: **Ladatut cogit:**
-	- Fr: **Cog chargé :**
+	- En: **Loaded cog:**
 	- It: **Cog caricato:**
+	- Fr: **Cog chargé :**
+	- Es: **Engranaje cog:**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Loaded cog:"
-	if lang == 'es': return "Engranaje cog:"
 	if lang == 'fi': return "Ladatut cogit:"
-	if lang == 'fr': return "Cog chargé :"
+	if lang == 'en': return "Loaded cog:"
 	if lang == 'it': return "Cog caricato:"
+	if lang == 'fr': return "Cog chargé :"
+	if lang == 'es': return "Engranaje cog:"
 	else: raise ValueError(f'Invalid language {lang}')
 def loaded_cog2(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Loaded module:**
-	- Es: **Loaded module:**
 	- Fi: **Ladattiin moduuli:**
-	- Fr: **Module chargé :**
+	- En: **Loaded module:**
 	- It: **Module caricato:**
+	- Fr: **Module chargé :**
+	- Es: **Loaded module:**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Loaded module:"
-	if lang == 'es': return "Loaded module:"
 	if lang == 'fi': return "Ladattiin moduuli:"
-	if lang == 'fr': return "Module chargé :"
+	if lang == 'en': return "Loaded module:"
 	if lang == 'it': return "Module caricato:"
+	if lang == 'fr': return "Module chargé :"
+	if lang == 'es': return "Loaded module:"
 	else: raise ValueError(f'Invalid language {lang}')
 def cog_fail(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Failed to load cog:**
-	- Es: **No se pudo cargar el cog:**
 	- Fi: **Cogin lataus epäonnistui kohteelle:**
-	- Fr: **Échec du chargement du cog :**
+	- En: **Failed to load cog:**
 	- It: **Impossibile caricare il cog:**
+	- Fr: **Échec du chargement du cog :**
+	- Es: **No se pudo cargar el cog:**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Failed to load cog:"
-	if lang == 'es': return "No se pudo cargar el cog:"
 	if lang == 'fi': return "Cogin lataus epäonnistui kohteelle:"
-	if lang == 'fr': return "Échec du chargement du cog :"
+	if lang == 'en': return "Failed to load cog:"
 	if lang == 'it': return "Impossibile caricare il cog:"
+	if lang == 'fr': return "Échec du chargement du cog :"
+	if lang == 'es': return "No se pudo cargar el cog:"
 	else: raise ValueError(f'Invalid language {lang}')
 def cog_fail2(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Failed to load module:**
-	- Es: **Failed to load module:**
 	- Fi: **Moduulin lataaminen epäonnistui:**
-	- Fr: **Échec du chargement du module :**
+	- En: **Failed to load module:**
 	- It: **Impossibile caricare il module:**
+	- Fr: **Échec du chargement du module :**
+	- Es: **Failed to load module:**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Failed to load module:"
-	if lang == 'es': return "Failed to load module:"
 	if lang == 'fi': return "Moduulin lataaminen epäonnistui:"
-	if lang == 'fr': return "Échec du chargement du module :"
+	if lang == 'en': return "Failed to load module:"
 	if lang == 'it': return "Impossibile caricare il module:"
+	if lang == 'fr': return "Échec du chargement du module :"
+	if lang == 'es': return "Failed to load module:"
 	else: raise ValueError(f'Invalid language {lang}')
 def no_model(lang:str|None=None):
 	"""
 	### Locales
-	- En: **No saved Markov model found. Starting from scratch.**
-	- Es: **No se encontro ningún modelo de Markov guardado. Empezando desde cero.**
 	- Fi: **Olemassaolevaa markov-mallia ei löydetty. Aloitetaan alusta.**
-	- Fr: **Aucun modèle Markov sauvegardé trouvé. Démarrage à partir de zéro.**
+	- En: **No saved Markov model found. Starting from scratch.**
 	- It: **Nessun modello Markov salvato trovato. Iniziamo da zero.**
+	- Fr: **Aucun modèle Markov sauvegardé trouvé. Démarrage à partir de zéro.**
+	- Es: **No se encontro ningún modelo de Markov guardado. Empezando desde cero.**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "No saved Markov model found. Starting from scratch."
-	if lang == 'es': return "No se encontro ningún modelo de Markov guardado. Empezando desde cero."
 	if lang == 'fi': return "Olemassaolevaa markov-mallia ei löydetty. Aloitetaan alusta."
-	if lang == 'fr': return "Aucun modèle Markov sauvegardé trouvé. Démarrage à partir de zéro."
+	if lang == 'en': return "No saved Markov model found. Starting from scratch."
 	if lang == 'it': return "Nessun modello Markov salvato trovato. Iniziamo da zero."
+	if lang == 'fr': return "Aucun modèle Markov sauvegardé trouvé. Démarrage à partir de zéro."
+	if lang == 'es': return "No se encontro ningún modelo de Markov guardado. Empezando desde cero."
 	else: raise ValueError(f'Invalid language {lang}')
 def folder_created(folder_name,lang:str|None=None):
 	"""
 	### Locales
-	- En: **Folder '{folder_name}' created.**
-	- Es: **Directorio '{folder_name}' creado.**
 	- Fi: **Kansio '{folder_name}' luotu.**
-	- Fr: **Dossier '{folder_name}' créé.**
+	- En: **Folder '{folder_name}' created.**
 	- It: **Cartella '{folder_name}' creata.**
+	- Fr: **Dossier '{folder_name}' créé.**
+	- Es: **Directorio '{folder_name}' creado.**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Folder '{folder_name}' created.".format_map({"folder_name": folder_name})
-	if lang == 'es': return "Directorio '{folder_name}' creado.".format_map({"folder_name": folder_name})
 	if lang == 'fi': return "Kansio '{folder_name}' luotu.".format_map({"folder_name": folder_name})
-	if lang == 'fr': return "Dossier '{folder_name}' créé.".format_map({"folder_name": folder_name})
+	if lang == 'en': return "Folder '{folder_name}' created.".format_map({"folder_name": folder_name})
 	if lang == 'it': return "Cartella '{folder_name}' creata.".format_map({"folder_name": folder_name})
+	if lang == 'fr': return "Dossier '{folder_name}' créé.".format_map({"folder_name": folder_name})
+	if lang == 'es': return "Directorio '{folder_name}' creado.".format_map({"folder_name": folder_name})
 	else: raise ValueError(f'Invalid language {lang}')
 def folder_exists(folder_name,lang:str|None=None):
 	"""
 	### Locales
-	- En: **Folder '{folder_name}' already exists. skipping...**
-	- Es: **El directorio '{folder_name}' ya existe. Se omite...**
 	- Fi: **Kansio '{folder_name}' on jo olemassa...**
-	- Fr: **Le dossier '{folder_name}' existe déjà. Ignorons...**
+	- En: **Folder '{folder_name}' already exists. skipping...**
 	- It: **La cartella '{folder_name}' esiste già. Saltando...**
+	- Fr: **Le dossier '{folder_name}' existe déjà. Ignorons...**
+	- Es: **El directorio '{folder_name}' ya existe. Se omite...**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Folder '{folder_name}' already exists. skipping...".format_map({"folder_name": folder_name})
-	if lang == 'es': return "El directorio '{folder_name}' ya existe. Se omite...".format_map({"folder_name": folder_name})
 	if lang == 'fi': return "Kansio '{folder_name}' on jo olemassa...".format_map({"folder_name": folder_name})
-	if lang == 'fr': return "Le dossier '{folder_name}' existe déjà. Ignorons...".format_map({"folder_name": folder_name})
+	if lang == 'en': return "Folder '{folder_name}' already exists. skipping...".format_map({"folder_name": folder_name})
 	if lang == 'it': return "La cartella '{folder_name}' esiste già. Saltando...".format_map({"folder_name": folder_name})
+	if lang == 'fr': return "Le dossier '{folder_name}' existe déjà. Ignorons...".format_map({"folder_name": folder_name})
+	if lang == 'es': return "El directorio '{folder_name}' ya existe. Se omite...".format_map({"folder_name": folder_name})
 	else: raise ValueError(f'Invalid language {lang}')
 def logged_in(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Logged in as**
-	- Es: **Inicio sesion como**
 	- Fi: **Kirjauduttiin sisään käyttäjänä**
-	- Fr: **Connecté en tant que**
+	- En: **Logged in as**
 	- It: **Accesso effettuato come**
+	- Fr: **Connecté en tant que**
+	- Es: **Inicio sesion como**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Logged in as"
-	if lang == 'es': return "Inicio sesion como"
 	if lang == 'fi': return "Kirjauduttiin sisään käyttäjänä"
-	if lang == 'fr': return "Connecté en tant que"
+	if lang == 'en': return "Logged in as"
 	if lang == 'it': return "Accesso effettuato come"
+	if lang == 'fr': return "Connecté en tant que"
+	if lang == 'es': return "Inicio sesion como"
 	else: raise ValueError(f'Invalid language {lang}')
 def synced_commands(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Synced**
-	- Es: **Sincronizado**
 	- Fi: **Synkronoitiin**
-	- Fr: **Synchronisé**
+	- En: **Synced**
 	- It: **Sincronizzati**
+	- Fr: **Synchronisé**
+	- Es: **Sincronizado**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Synced"
-	if lang == 'es': return "Sincronizado"
 	if lang == 'fi': return "Synkronoitiin"
-	if lang == 'fr': return "Synchronisé"
+	if lang == 'en': return "Synced"
 	if lang == 'it': return "Sincronizzati"
+	if lang == 'fr': return "Synchronisé"
+	if lang == 'es': return "Sincronizado"
 	else: raise ValueError(f'Invalid language {lang}')
 def synced_commands2(lang:str|None=None):
 	"""
 	### Locales
-	- En: **commands!**
-	- Es: **comandos!**
 	- Fi: **komennot!**
-	- Fr: **commandes !**
+	- En: **commands!**
 	- It: **comandi!**
+	- Fr: **commandes !**
+	- Es: **comandos!**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "commands!"
-	if lang == 'es': return "comandos!"
 	if lang == 'fi': return "komennot!"
-	if lang == 'fr': return "commandes !"
+	if lang == 'en': return "commands!"
 	if lang == 'it': return "comandi!"
+	if lang == 'fr': return "commandes !"
+	if lang == 'es': return "comandos!"
 	else: raise ValueError(f'Invalid language {lang}')
 def fail_commands_sync(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Failed to sync commands:**
-	- Es: **Error al sincronizar comandos:**
 	- Fi: **Komentojen synkronointi epäonnistui:**
-	- Fr: **Échec de la synchronisation des commandes :**
+	- En: **Failed to sync commands:**
 	- It: **Impossibile sincronizzare i comandi:**
+	- Fr: **Échec de la synchronisation des commandes :**
+	- Es: **Error al sincronizar comandos:**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Failed to sync commands:"
-	if lang == 'es': return "Error al sincronizar comandos:"
 	if lang == 'fi': return "Komentojen synkronointi epäonnistui:"
-	if lang == 'fr': return "Échec de la synchronisation des commandes :"
+	if lang == 'en': return "Failed to sync commands:"
 	if lang == 'it': return "Impossibile sincronizzare i comandi:"
+	if lang == 'fr': return "Échec de la synchronisation des commandes :"
+	if lang == 'es': return "Error al sincronizar comandos:"
 	else: raise ValueError(f'Invalid language {lang}')
 def started(name,lang:str|None=None):
 	"""
 	### Locales
-	- En: **{name} has started!
-You're the star of the show now baby!**
-	- Es: **{name} ha empezado!**
 	- Fi: **{name} on käynnistynyt!
 Olet nyt sarjan tähti, beibi!**
-	- Fr: **{name} a démarré !**
+	- En: **{name} has started!
+You're the star of the show now baby!**
 	- It: **{name} è stato avviato!
 Il palco è tuo!**
+	- Fr: **{name} a démarré !**
+	- Es: **{name} ha empezado!**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "{name} has started!\nYou're the star of the show now baby!".format_map({"name": name})
-	if lang == 'es': return "{name} ha empezado!".format_map({"name": name})
 	if lang == 'fi': return "{name} on käynnistynyt!\nOlet nyt sarjan tähti, beibi!".format_map({"name": name})
-	if lang == 'fr': return "{name} a démarré !".format_map({"name": name})
+	if lang == 'en': return "{name} has started!\nYou're the star of the show now baby!".format_map({"name": name})
 	if lang == 'it': return "{name} è stato avviato!\nIl palco è tuo!".format_map({"name": name})
+	if lang == 'fr': return "{name} a démarré !".format_map({"name": name})
+	if lang == 'es': return "{name} ha empezado!".format_map({"name": name})
 	else: raise ValueError(f'Invalid language {lang}')
 def name_check(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Error checking name availability:**
-	- Es: **Error al comprobar la disponibilidad del nombre:**
 	- Fi: **Nimen saatavuuden tarkistus epäonnistui:**
-	- Fr: **Erreur lors de la vérification de la disponibilité du nom :**
+	- En: **Error checking name availability:**
 	- It: **Errore nel controllo disponibilità del nome:**
+	- Fr: **Erreur lors de la vérification de la disponibilité du nom :**
+	- Es: **Error al comprobar la disponibilidad del nombre:**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Error checking name availability:"
-	if lang == 'es': return "Error al comprobar la disponibilidad del nombre:"
 	if lang == 'fi': return "Nimen saatavuuden tarkistus epäonnistui:"
-	if lang == 'fr': return "Erreur lors de la vérification de la disponibilité du nom :"
+	if lang == 'en': return "Error checking name availability:"
 	if lang == 'it': return "Errore nel controllo disponibilità del nome:"
+	if lang == 'fr': return "Erreur lors de la vérification de la disponibilité du nom :"
+	if lang == 'es': return "Error al comprobar la disponibilidad del nombre:"
 	else: raise ValueError(f'Invalid language {lang}')
 def name_taken(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Name is already taken. Please choose a different name.**
-	- Es: **El nombre ya está en uso. Elija otro.**
 	- Fi: **Nimi on jo käytössä. Valitse toinen nimi.**
-	- Fr: **Le nom est déjà pris. Veuillez choisir un autre nom.**
+	- En: **Name is already taken. Please choose a different name.**
 	- It: **Il nome è già preso. Scegli un nome diverso.**
+	- Fr: **Le nom est déjà pris. Veuillez choisir un autre nom.**
+	- Es: **El nombre ya está en uso. Elija otro.**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Name is already taken. Please choose a different name."
-	if lang == 'es': return "El nombre ya está en uso. Elija otro."
 	if lang == 'fi': return "Nimi on jo käytössä. Valitse toinen nimi."
-	if lang == 'fr': return "Le nom est déjà pris. Veuillez choisir un autre nom."
+	if lang == 'en': return "Name is already taken. Please choose a different name."
 	if lang == 'it': return "Il nome è già preso. Scegli un nome diverso."
+	if lang == 'fr': return "Le nom est déjà pris. Veuillez choisir un autre nom."
+	if lang == 'es': return "El nombre ya está en uso. Elija otro."
 	else: raise ValueError(f'Invalid language {lang}')
 def name_check2(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Error during name availability check:**
-	- Es: **Error durante la comprobacion de disponibilidad del nombre:**
 	- Fi: **Virhe tapahtui nimen saatavuuden tarkistamisessa:**
-	- Fr: **Erreur lors de la vérification de la disponibilité du nom :**
+	- En: **Error during name availability check:**
 	- It: **Errore durante il controllo della disponibilità del nome:**
+	- Fr: **Erreur lors de la vérification de la disponibilité du nom :**
+	- Es: **Error durante la comprobacion de disponibilidad del nombre:**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Error during name availability check:"
-	if lang == 'es': return "Error durante la comprobacion de disponibilidad del nombre:"
 	if lang == 'fi': return "Virhe tapahtui nimen saatavuuden tarkistamisessa:"
-	if lang == 'fr': return "Erreur lors de la vérification de la disponibilité du nom :"
+	if lang == 'en': return "Error during name availability check:"
 	if lang == 'it': return "Errore durante il controllo della disponibilità del nome:"
+	if lang == 'fr': return "Erreur lors de la vérification de la disponibilité du nom :"
+	if lang == 'es': return "Error durante la comprobacion de disponibilidad del nombre:"
 	else: raise ValueError(f'Invalid language {lang}')
 def add_token(token,lang:str|None=None):
 	"""
 	### Locales
-	- En: **Token: {token}
-Please add this token to your .env file as**
-	- Es: **Token: {token}
-Agregue este token a su archivo .env como**
 	- Fi: **Token: {token}
 Lisää tämä .env-tiedostoosi nimellä**
-	- Fr: **Token : {token}
-Veuillez ajouter ce token à votre fichier .env comme**
+	- En: **Token: {token}
+Please add this token to your .env file as**
 	- It: **Token: {token}
 Aggiungi questo token al tuo file .env come**
+	- Fr: **Token : {token}
+Veuillez ajouter ce token à votre fichier .env comme**
+	- Es: **Token: {token}
+Agregue este token a su archivo .env como**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Token: {token}\nPlease add this token to your .env file as".format_map({"token": token})
-	if lang == 'es': return "Token: {token}\nAgregue este token a su archivo .env como".format_map({"token": token})
 	if lang == 'fi': return "Token: {token}\nLisää tämä .env-tiedostoosi nimellä".format_map({"token": token})
-	if lang == 'fr': return "Token : {token}\nVeuillez ajouter ce token à votre fichier .env comme".format_map({"token": token})
+	if lang == 'en': return "Token: {token}\nPlease add this token to your .env file as".format_map({"token": token})
 	if lang == 'it': return "Token: {token}\nAggiungi questo token al tuo file .env come".format_map({"token": token})
+	if lang == 'fr': return "Token : {token}\nVeuillez ajouter ce token à votre fichier .env comme".format_map({"token": token})
+	if lang == 'es': return "Token: {token}\nAgregue este token a su archivo .env como".format_map({"token": token})
 	else: raise ValueError(f'Invalid language {lang}')
 def token_exists(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Token already exists in .env. Continuing with the existing token.**
-	- Es: **Hay un token en el archivo .env. Continue con el token existente.**
 	- Fi: **Token on jo olemassa .env-tiedostossa. Jatketaan määritetyllä tokenilla.**
-	- Fr: **Le token existe déjà dans .env. Utilisation du token existant.**
+	- En: **Token already exists in .env. Continuing with the existing token.**
 	- It: **Il token esiste già in .env. Continuando con il token esistente.**
+	- Fr: **Le token existe déjà dans .env. Utilisation du token existant.**
+	- Es: **Hay un token en el archivo .env. Continue con el token existente.**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Token already exists in .env. Continuing with the existing token."
-	if lang == 'es': return "Hay un token en el archivo .env. Continue con el token existente."
 	if lang == 'fi': return "Token on jo olemassa .env-tiedostossa. Jatketaan määritetyllä tokenilla."
-	if lang == 'fr': return "Le token existe déjà dans .env. Utilisation du token existant."
+	if lang == 'en': return "Token already exists in .env. Continuing with the existing token."
 	if lang == 'it': return "Il token esiste già in .env. Continuando con il token esistente."
+	if lang == 'fr': return "Le token existe déjà dans .env. Utilisation du token existant."
+	if lang == 'es': return "Hay un token en el archivo .env. Continue con el token existente."
 	else: raise ValueError(f'Invalid language {lang}')
 def registration_error(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Error during registration:**
-	- Es: **Error durante el registro:**
 	- Fi: **Virhe rekisteröinnissä:**
-	- Fr: **Erreur lors de l'enregistrement :**
+	- En: **Error during registration:**
 	- It: **Errore durante la registrazione:**
+	- Fr: **Erreur lors de l'enregistrement :**
+	- Es: **Error durante el registro:**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Error during registration:"
-	if lang == 'es': return "Error durante el registro:"
 	if lang == 'fi': return "Virhe rekisteröinnissä:"
-	if lang == 'fr': return "Erreur lors de l'enregistrement :"
+	if lang == 'en': return "Error during registration:"
 	if lang == 'it': return "Errore durante la registrazione:"
+	if lang == 'fr': return "Erreur lors de l'enregistrement :"
+	if lang == 'es': return "Error durante el registro:"
 	else: raise ValueError(f'Invalid language {lang}')
 def version_backup(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Backup created:**
-	- Es: **Copia de seguridad creada:**
 	- Fi: **Varmuuskopio luotu:**
-	- Fr: **Sauvegarde créée :**
+	- En: **Backup created:**
 	- It: **Backup creato:**
+	- Fr: **Sauvegarde créée :**
+	- Es: **Copia de seguridad creada:**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Backup created:"
-	if lang == 'es': return "Copia de seguridad creada:"
 	if lang == 'fi': return "Varmuuskopio luotu:"
-	if lang == 'fr': return "Sauvegarde créée :"
+	if lang == 'en': return "Backup created:"
 	if lang == 'it': return "Backup creato:"
+	if lang == 'fr': return "Sauvegarde créée :"
+	if lang == 'es': return "Copia de seguridad creada:"
 	else: raise ValueError(f'Invalid language {lang}')
 def backup_error(LOCAL_VERSION_FILE,lang:str|None=None):
 	"""
 	### Locales
-	- En: **Error: {LOCAL_VERSION_FILE} not found for backup.**
-	- Es: **Error: {LOCAL_VERSION_FILE} no encontrado para la copia de seguridad.**
 	- Fi: **Virhe: {LOCAL_VERSION_FILE}-tiedostoa ei löytynyt varmuuskopiota varten.**
-	- Fr: **Erreur : {LOCAL_VERSION_FILE} introuvable pour la sauvegarde.**
+	- En: **Error: {LOCAL_VERSION_FILE} not found for backup.**
 	- It: **Errore: {LOCAL_VERSION_FILE} non trovato per il backup.**
+	- Fr: **Erreur : {LOCAL_VERSION_FILE} introuvable pour la sauvegarde.**
+	- Es: **Error: {LOCAL_VERSION_FILE} no encontrado para la copia de seguridad.**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Error: {LOCAL_VERSION_FILE} not found for backup.".format_map({"LOCAL_VERSION_FILE": LOCAL_VERSION_FILE})
-	if lang == 'es': return "Error: {LOCAL_VERSION_FILE} no encontrado para la copia de seguridad.".format_map({"LOCAL_VERSION_FILE": LOCAL_VERSION_FILE})
 	if lang == 'fi': return "Virhe: {LOCAL_VERSION_FILE}-tiedostoa ei löytynyt varmuuskopiota varten.".format_map({"LOCAL_VERSION_FILE": LOCAL_VERSION_FILE})
-	if lang == 'fr': return "Erreur : {LOCAL_VERSION_FILE} introuvable pour la sauvegarde.".format_map({"LOCAL_VERSION_FILE": LOCAL_VERSION_FILE})
+	if lang == 'en': return "Error: {LOCAL_VERSION_FILE} not found for backup.".format_map({"LOCAL_VERSION_FILE": LOCAL_VERSION_FILE})
 	if lang == 'it': return "Errore: {LOCAL_VERSION_FILE} non trovato per il backup.".format_map({"LOCAL_VERSION_FILE": LOCAL_VERSION_FILE})
+	if lang == 'fr': return "Erreur : {LOCAL_VERSION_FILE} introuvable pour la sauvegarde.".format_map({"LOCAL_VERSION_FILE": LOCAL_VERSION_FILE})
+	if lang == 'es': return "Error: {LOCAL_VERSION_FILE} no encontrado para la copia de seguridad.".format_map({"LOCAL_VERSION_FILE": LOCAL_VERSION_FILE})
 	else: raise ValueError(f'Invalid language {lang}')
 def model_loaded(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Markov model loaded from**
-	- Es: **Modelo de Markov cargado desde**
 	- Fi: **Markov-malli ladattu**
-	- Fr: **Modèle Markov chargé depuis**
+	- En: **Markov model loaded from**
 	- It: **Modello Markov caricato da**
+	- Fr: **Modèle Markov chargé depuis**
+	- Es: **Modelo de Markov cargado desde**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Markov model loaded from"
-	if lang == 'es': return "Modelo de Markov cargado desde"
 	if lang == 'fi': return "Markov-malli ladattu"
-	if lang == 'fr': return "Modèle Markov chargé depuis"
+	if lang == 'en': return "Markov model loaded from"
 	if lang == 'it': return "Modello Markov caricato da"
+	if lang == 'fr': return "Modèle Markov chargé depuis"
+	if lang == 'es': return "Modelo de Markov cargado desde"
 	else: raise ValueError(f'Invalid language {lang}')
 def fetch_update_fail(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Could not fetch update information.**
-	- Es: **No se pudo obtener la informacion de actualizacion.**
 	- Fi: **Päivitystietojen hankkiminen epäonnistui.**
-	- Fr: **Impossible de récupérer les informations de mise à jour.**
+	- En: **Could not fetch update information.**
 	- It: **Impossibile recuperare le informazioni sull'aggiornamento.**
+	- Fr: **Impossible de récupérer les informations de mise à jour.**
+	- Es: **No se pudo obtener la informacion de actualizacion.**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Could not fetch update information."
-	if lang == 'es': return "No se pudo obtener la informacion de actualizacion."
 	if lang == 'fi': return "Päivitystietojen hankkiminen epäonnistui."
-	if lang == 'fr': return "Impossible de récupérer les informations de mise à jour."
+	if lang == 'en': return "Could not fetch update information."
 	if lang == 'it': return "Impossibile recuperare le informazioni sull'aggiornamento."
+	if lang == 'fr': return "Impossible de récupérer les informations de mise à jour."
+	if lang == 'es': return "No se pudo obtener la informacion de actualizacion."
 	else: raise ValueError(f'Invalid language {lang}')
 def invalid_server(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Error: Invalid version information received from server.**
-	- Es: **Error: Se recibio informacion de version no valida del servidor.**
 	- Fi: **Virhe: Palvelin antoi virheellisen versiotietoraportin.**
-	- Fr: **Erreur : Informations de version invalides reçues du serveur.**
+	- En: **Error: Invalid version information received from server.**
 	- It: **Errore: informazioni sulla versione non valide ricevute dal server.**
+	- Fr: **Erreur : Informations de version invalides reçues du serveur.**
+	- Es: **Error: Se recibio informacion de version no valida del servidor.**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Error: Invalid version information received from server."
-	if lang == 'es': return "Error: Se recibio informacion de version no valida del servidor."
 	if lang == 'fi': return "Virhe: Palvelin antoi virheellisen versiotietoraportin."
-	if lang == 'fr': return "Erreur : Informations de version invalides reçues du serveur."
+	if lang == 'en': return "Error: Invalid version information received from server."
 	if lang == 'it': return "Errore: informazioni sulla versione non valide ricevute dal server."
+	if lang == 'fr': return "Erreur : Informations de version invalides reçues du serveur."
+	if lang == 'es': return "Error: Se recibio informacion de version no valida del servidor."
 	else: raise ValueError(f'Invalid language {lang}')
 def goober_server_alert(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Alert from goober central!
-**
-	- Es: **Alert from goober central!
-**
 	- Fi: **Viesti goober centralista!
 **
-	- Fr: **Alerte du serveur Goober central !
+	- En: **Alert from goober central!
 **
 	- It: **Avviso da goober central!
 **
+	- Fr: **Alerte du serveur Goober central !
+**
+	- Es: **Alert from goober central!
+**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Alert from goober central!\n"
-	if lang == 'es': return "Alert from goober central!\n"
 	if lang == 'fi': return "Viesti goober centralista!\n"
-	if lang == 'fr': return "Alerte du serveur Goober central !\n"
+	if lang == 'en': return "Alert from goober central!\n"
 	if lang == 'it': return "Avviso da goober central!\n"
+	if lang == 'fr': return "Alerte du serveur Goober central !\n"
+	if lang == 'es': return "Alert from goober central!\n"
 	else: raise ValueError(f'Invalid language {lang}')
 def new_version(latest_version,local_version,lang:str|None=None):
 	"""
 	### Locales
-	- En: **New version available: {latest_version} (Current: {local_version})**
-	- Es: **Nueva version disponible: {latest_version} (Version actual: {local_version})**
 	- Fi: **Uusi versio saatavilla: {latest_version} (Tämänhetkinen: {local_version})**
-	- Fr: **Nouvelle version disponible : {latest_version} (Actuelle : {local_version})**
+	- En: **New version available: {latest_version} (Current: {local_version})**
 	- It: **Nuova versione disponibile: {latest_version} (Attuale: {local_version})**
+	- Fr: **Nouvelle version disponible : {latest_version} (Actuelle : {local_version})**
+	- Es: **Nueva version disponible: {latest_version} (Version actual: {local_version})**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "New version available: {latest_version} (Current: {local_version})".format_map({"latest_version": latest_version,"local_version": local_version})
-	if lang == 'es': return "Nueva version disponible: {latest_version} (Version actual: {local_version})".format_map({"latest_version": latest_version,"local_version": local_version})
 	if lang == 'fi': return "Uusi versio saatavilla: {latest_version} (Tämänhetkinen: {local_version})".format_map({"latest_version": latest_version,"local_version": local_version})
-	if lang == 'fr': return "Nouvelle version disponible : {latest_version} (Actuelle : {local_version})".format_map({"latest_version": latest_version,"local_version": local_version})
+	if lang == 'en': return "New version available: {latest_version} (Current: {local_version})".format_map({"latest_version": latest_version,"local_version": local_version})
 	if lang == 'it': return "Nuova versione disponibile: {latest_version} (Attuale: {local_version})".format_map({"latest_version": latest_version,"local_version": local_version})
+	if lang == 'fr': return "Nouvelle version disponible : {latest_version} (Actuelle : {local_version})".format_map({"latest_version": latest_version,"local_version": local_version})
+	if lang == 'es': return "Nueva version disponible: {latest_version} (Version actual: {local_version})".format_map({"latest_version": latest_version,"local_version": local_version})
 	else: raise ValueError(f'Invalid language {lang}')
 def changelog(VERSION_URL,lang:str|None=None):
 	"""
 	### Locales
-	- En: **Check {VERSION_URL}/goob/changes.txt to check out the changelog
-
-**
-	- Es: **Consulte {VERSION_URL}/goob/changes.txt para ver el registro de cambios
-
-**
 	- Fi: **Mene osoitteeseen {VERSION_URL}/goob/changes.txt katsotakseen muutoslokin
 
 **
-	- Fr: **Consultez {VERSION_URL}/goob/changes.txt pour voir les modifications
+	- En: **Check {VERSION_URL}/goob/changes.txt to check out the changelog
 
 **
 	- It: **Controlla {VERSION_URL}/goob/changes.txt per vedere il changelog
 
 **
+	- Fr: **Consultez {VERSION_URL}/goob/changes.txt pour voir les modifications
+
+**
+	- Es: **Consulte {VERSION_URL}/goob/changes.txt para ver el registro de cambios
+
+**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Check {VERSION_URL}/goob/changes.txt to check out the changelog\n\n".format_map({"VERSION_URL": VERSION_URL})
-	if lang == 'es': return "Consulte {VERSION_URL}/goob/changes.txt para ver el registro de cambios\n\n".format_map({"VERSION_URL": VERSION_URL})
 	if lang == 'fi': return "Mene osoitteeseen {VERSION_URL}/goob/changes.txt katsotakseen muutoslokin\n\n".format_map({"VERSION_URL": VERSION_URL})
-	if lang == 'fr': return "Consultez {VERSION_URL}/goob/changes.txt pour voir les modifications\n\n".format_map({"VERSION_URL": VERSION_URL})
+	if lang == 'en': return "Check {VERSION_URL}/goob/changes.txt to check out the changelog\n\n".format_map({"VERSION_URL": VERSION_URL})
 	if lang == 'it': return "Controlla {VERSION_URL}/goob/changes.txt per vedere il changelog\n\n".format_map({"VERSION_URL": VERSION_URL})
+	if lang == 'fr': return "Consultez {VERSION_URL}/goob/changes.txt pour voir les modifications\n\n".format_map({"VERSION_URL": VERSION_URL})
+	if lang == 'es': return "Consulte {VERSION_URL}/goob/changes.txt para ver el registro de cambios\n\n".format_map({"VERSION_URL": VERSION_URL})
 	else: raise ValueError(f'Invalid language {lang}')
 def invalid_version(local_version,lang:str|None=None):
 	"""
 	### Locales
-	- En: **The version: {local_version} isnt valid!**
-	- Es: **La version: {local_version} no es valida!**
 	- Fi: **Versio: {local_version} on virheellinen!**
-	- Fr: **La version : {local_version} n'est pas valide !**
+	- En: **The version: {local_version} isnt valid!**
 	- It: **La versione: {local_version} non è valida!**
+	- Fr: **La version : {local_version} n'est pas valide !**
+	- Es: **La version: {local_version} no es valida!**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "The version: {local_version} isnt valid!".format_map({"local_version": local_version})
-	if lang == 'es': return "La version: {local_version} no es valida!".format_map({"local_version": local_version})
 	if lang == 'fi': return "Versio: {local_version} on virheellinen!".format_map({"local_version": local_version})
-	if lang == 'fr': return "La version : {local_version} n'est pas valide !".format_map({"local_version": local_version})
+	if lang == 'en': return "The version: {local_version} isnt valid!".format_map({"local_version": local_version})
 	if lang == 'it': return "La versione: {local_version} non è valida!".format_map({"local_version": local_version})
+	if lang == 'fr': return "La version : {local_version} n'est pas valide !".format_map({"local_version": local_version})
+	if lang == 'es': return "La version: {local_version} no es valida!".format_map({"local_version": local_version})
 	else: raise ValueError(f'Invalid language {lang}')
 def invalid_version2(lang:str|None=None):
 	"""
 	### Locales
-	- En: **If this is intended then ignore this message, else press Y to pull a valid version from the server regardless of the version of goober currently running**
-	- Es: **Si esto es lo que pretende, ignore este mensaje; si no, haga clic en Y en su teclado para descargar una version valida del servidor, independientemente de la version que se este ejecutando actualmente.**
 	- Fi: **Jos tämä on tahallista, voit jättää tämän viestin huomiotta. Jos tämä ei ole tahallista, paina Y-näppäintä hankkiaksesi kelvollisen version, riippumatta Gooberin tämänhetkisestä versiosta.**
-	- Fr: **Si c'est intentionnel, ignorez ce message. Sinon, appuyez sur Y pour récupérer une version valide depuis le serveur, quelle que soit la version actuelle de Goober.**
+	- En: **If this is intended then ignore this message, else press Y to pull a valid version from the server regardless of the version of goober currently running**
 	- It: **Se è intenzionale ignora questo messaggio, altrimenti premi Y per scaricare una versione valida dal server indipendentemente dalla versione attuale di goober**
+	- Fr: **Si c'est intentionnel, ignorez ce message. Sinon, appuyez sur Y pour récupérer une version valide depuis le serveur, quelle que soit la version actuelle de Goober.**
+	- Es: **Si esto es lo que pretende, ignore este mensaje; si no, haga clic en Y en su teclado para descargar una version valida del servidor, independientemente de la version que se este ejecutando actualmente.**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "If this is intended then ignore this message, else press Y to pull a valid version from the server regardless of the version of goober currently running"
-	if lang == 'es': return "Si esto es lo que pretende, ignore este mensaje; si no, haga clic en Y en su teclado para descargar una version valida del servidor, independientemente de la version que se este ejecutando actualmente."
 	if lang == 'fi': return "Jos tämä on tahallista, voit jättää tämän viestin huomiotta. Jos tämä ei ole tahallista, paina Y-näppäintä hankkiaksesi kelvollisen version, riippumatta Gooberin tämänhetkisestä versiosta."
-	if lang == 'fr': return "Si c'est intentionnel, ignorez ce message. Sinon, appuyez sur Y pour récupérer une version valide depuis le serveur, quelle que soit la version actuelle de Goober."
+	if lang == 'en': return "If this is intended then ignore this message, else press Y to pull a valid version from the server regardless of the version of goober currently running"
 	if lang == 'it': return "Se è intenzionale ignora questo messaggio, altrimenti premi Y per scaricare una versione valida dal server indipendentemente dalla versione attuale di goober"
+	if lang == 'fr': return "Si c'est intentionnel, ignorez ce message. Sinon, appuyez sur Y pour récupérer une version valide depuis le serveur, quelle que soit la version actuelle de Goober."
+	if lang == 'es': return "Si esto es lo que pretende, ignore este mensaje; si no, haga clic en Y en su teclado para descargar una version valida del servidor, independientemente de la version que se este ejecutando actualmente."
 	else: raise ValueError(f'Invalid language {lang}')
 def invalid_version3(lang:str|None=None):
 	"""
 	### Locales
-	- En: **The current version will be backed up to current_version.bak..**
-	- Es: **La version actual se copiara a current_version.bak..**
 	- Fi: **Tämänhetkinen versio varmuuskopioidaan kohteeseen current_version.bak..**
-	- Fr: **La version actuelle sera sauvegardée dans current_version.bak..**
+	- En: **The current version will be backed up to current_version.bak..**
 	- It: **La versione attuale sarà salvata come current_version.bak..**
+	- Fr: **La version actuelle sera sauvegardée dans current_version.bak..**
+	- Es: **La version actual se copiara a current_version.bak..**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "The current version will be backed up to current_version.bak.."
-	if lang == 'es': return "La version actual se copiara a current_version.bak.."
 	if lang == 'fi': return "Tämänhetkinen versio varmuuskopioidaan kohteeseen current_version.bak.."
-	if lang == 'fr': return "La version actuelle sera sauvegardée dans current_version.bak.."
+	if lang == 'en': return "The current version will be backed up to current_version.bak.."
 	if lang == 'it': return "La versione attuale sarà salvata come current_version.bak.."
+	if lang == 'fr': return "La version actuelle sera sauvegardée dans current_version.bak.."
+	if lang == 'es': return "La version actual se copiara a current_version.bak.."
 	else: raise ValueError(f'Invalid language {lang}')
 def input(lang:str|None=None):
 	"""
 	### Locales
-	- En: **(Y or any other key to ignore....)**
-	- Es: **(Y o cualquier otra tecla para ignorar....)**
 	- Fi: **(Y:tä tai mitä vaan muuta näppäintä jättää tämän huomioimatta....)**
-	- Fr: **(Y ou toute autre touche pour ignorer...)**
+	- En: **(Y or any other key to ignore....)**
 	- It: **(Y o qualsiasi altro tasto per ignorare....)**
+	- Fr: **(Y ou toute autre touche pour ignorer...)**
+	- Es: **(Y o cualquier otra tecla para ignorar....)**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "(Y or any other key to ignore....)"
-	if lang == 'es': return "(Y o cualquier otra tecla para ignorar....)"
 	if lang == 'fi': return "(Y:tä tai mitä vaan muuta näppäintä jättää tämän huomioimatta....)"
-	if lang == 'fr': return "(Y ou toute autre touche pour ignorer...)"
+	if lang == 'en': return "(Y or any other key to ignore....)"
 	if lang == 'it': return "(Y o qualsiasi altro tasto per ignorare....)"
+	if lang == 'fr': return "(Y ou toute autre touche pour ignorer...)"
+	if lang == 'es': return "(Y o cualquier otra tecla para ignorar....)"
 	else: raise ValueError(f'Invalid language {lang}')
 def modification_ignored(lang:str|None=None):
 	"""
 	### Locales
-	- En: **You've modified**
-	- Es: **Has modificado**
 	- Fi: **Olet muokannut**
-	- Fr: **Vous avez modifié**
+	- En: **You've modified**
 	- It: **Hai modificato**
+	- Fr: **Vous avez modifié**
+	- Es: **Has modificado**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "You've modified"
-	if lang == 'es': return "Has modificado"
 	if lang == 'fi': return "Olet muokannut"
-	if lang == 'fr': return "Vous avez modifié"
+	if lang == 'en': return "You've modified"
 	if lang == 'it': return "Hai modificato"
+	if lang == 'fr': return "Vous avez modifié"
+	if lang == 'es': return "Has modificado"
 	else: raise ValueError(f'Invalid language {lang}')
 def modification_ignored2(lang:str|None=None):
 	"""
 	### Locales
-	- En: **IGNOREWARNING is set to false..**
-	- Es: **IGNOREWARNING es falso**
 	- Fi: **IGNOREWARNING on asetettu false:ksi..**
-	- Fr: **IGNOREWARNING est désactivé..**
+	- En: **IGNOREWARNING is set to false..**
 	- It: **IGNOREWARNING è impostato su false..**
+	- Fr: **IGNOREWARNING est désactivé..**
+	- Es: **IGNOREWARNING es falso**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "IGNOREWARNING is set to false.."
-	if lang == 'es': return "IGNOREWARNING es falso"
 	if lang == 'fi': return "IGNOREWARNING on asetettu false:ksi.."
-	if lang == 'fr': return "IGNOREWARNING est désactivé.."
+	if lang == 'en': return "IGNOREWARNING is set to false.."
 	if lang == 'it': return "IGNOREWARNING è impostato su false.."
+	if lang == 'fr': return "IGNOREWARNING est désactivé.."
+	if lang == 'es': return "IGNOREWARNING es falso"
 	else: raise ValueError(f'Invalid language {lang}')
 def latest_version(lang:str|None=None):
 	"""
 	### Locales
-	- En: **You're using the latest version:**
-	- Es: **Usando la ultima version:**
 	- Fi: **Käytät uusinta versiota:**
-	- Fr: **Vous utilisez la dernière version :**
+	- En: **You're using the latest version:**
 	- It: **Stai utilizzando l'ultima versione:**
+	- Fr: **Vous utilisez la dernière version :**
+	- Es: **Usando la ultima version:**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "You're using the latest version:"
-	if lang == 'es': return "Usando la ultima version:"
 	if lang == 'fi': return "Käytät uusinta versiota:"
-	if lang == 'fr': return "Vous utilisez la dernière version :"
+	if lang == 'en': return "You're using the latest version:"
 	if lang == 'it': return "Stai utilizzando l'ultima versione:"
+	if lang == 'fr': return "Vous utilisez la dernière version :"
+	if lang == 'es': return "Usando la ultima version:"
 	else: raise ValueError(f'Invalid language {lang}')
 def latest_version2(VERSION_URL,lang:str|None=None):
 	"""
 	### Locales
-	- En: **Check {VERSION_URL}/goob/changes.txt to check out the changelog**
-	- Es: **Consulte {VERSION_URL}/goob/changes.txt para ver el registro de cambios**
 	- Fi: **Tarkista {VERSION_URL}/goob/changes.txt katsotakseen muutosloki**
-	- Fr: **Consultez {VERSION_URL}/goob/changes.txt pour voir les modifications**
+	- En: **Check {VERSION_URL}/goob/changes.txt to check out the changelog**
 	- It: **Controlla {VERSION_URL}/goob/changes.txt per vedere il changelog**
+	- Fr: **Consultez {VERSION_URL}/goob/changes.txt pour voir les modifications**
+	- Es: **Consulte {VERSION_URL}/goob/changes.txt para ver el registro de cambios**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Check {VERSION_URL}/goob/changes.txt to check out the changelog".format_map({"VERSION_URL": VERSION_URL})
-	if lang == 'es': return "Consulte {VERSION_URL}/goob/changes.txt para ver el registro de cambios".format_map({"VERSION_URL": VERSION_URL})
 	if lang == 'fi': return "Tarkista {VERSION_URL}/goob/changes.txt katsotakseen muutosloki".format_map({"VERSION_URL": VERSION_URL})
-	if lang == 'fr': return "Consultez {VERSION_URL}/goob/changes.txt pour voir les modifications".format_map({"VERSION_URL": VERSION_URL})
+	if lang == 'en': return "Check {VERSION_URL}/goob/changes.txt to check out the changelog".format_map({"VERSION_URL": VERSION_URL})
 	if lang == 'it': return "Controlla {VERSION_URL}/goob/changes.txt per vedere il changelog".format_map({"VERSION_URL": VERSION_URL})
+	if lang == 'fr': return "Consultez {VERSION_URL}/goob/changes.txt pour voir les modifications".format_map({"VERSION_URL": VERSION_URL})
+	if lang == 'es': return "Consulte {VERSION_URL}/goob/changes.txt para ver el registro de cambios".format_map({"VERSION_URL": VERSION_URL})
 	else: raise ValueError(f'Invalid language {lang}')
 def pinging_disabled(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Pinging is disabled! Not telling the server im on...**
-	- Es: **El ping esta deshabilitado**
 	- Fi: **Pingaus on poistettu käytöstä! En kerro palvelimelle, että olen päällä...**
-	- Fr: **Le ping est désactivé ! Je ne préviens pas le serveur que je suis en ligne...**
+	- En: **Pinging is disabled! Not telling the server im on...**
 	- It: **Il ping è disabilitato! Non dico al server che sono online...**
+	- Fr: **Le ping est désactivé ! Je ne préviens pas le serveur que je suis en ligne...**
+	- Es: **El ping esta deshabilitado**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Pinging is disabled! Not telling the server im on..."
-	if lang == 'es': return "El ping esta deshabilitado"
 	if lang == 'fi': return "Pingaus on poistettu käytöstä! En kerro palvelimelle, että olen päällä..."
-	if lang == 'fr': return "Le ping est désactivé ! Je ne préviens pas le serveur que je suis en ligne..."
+	if lang == 'en': return "Pinging is disabled! Not telling the server im on..."
 	if lang == 'it': return "Il ping è disabilitato! Non dico al server che sono online..."
+	if lang == 'fr': return "Le ping est désactivé ! Je ne préviens pas le serveur que je suis en ligne..."
+	if lang == 'es': return "El ping esta deshabilitado"
 	else: raise ValueError(f'Invalid language {lang}')
 def goober_ping_success(NAME,lang:str|None=None):
 	"""
 	### Locales
-	- En: **Logged into goober central as {NAME}**
-	- Es: **Envie ping a Goober Central!**
 	- Fi: **Lähetettiin olemassaolo ping goober centraliin!**
-	- Fr: **Connecté à Goober central en tant que {NAME}**
+	- En: **Logged into goober central as {NAME}**
 	- It: **Accesso a goober central come {NAME}**
+	- Fr: **Connecté à Goober central en tant que {NAME}**
+	- Es: **Envie ping a Goober Central!**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Logged into goober central as {NAME}".format_map({"NAME": NAME})
-	if lang == 'es': return "Envie ping a Goober Central!".format_map({"NAME": NAME})
 	if lang == 'fi': return "Lähetettiin olemassaolo ping goober centraliin!".format_map({"NAME": NAME})
-	if lang == 'fr': return "Connecté à Goober central en tant que {NAME}".format_map({"NAME": NAME})
+	if lang == 'en': return "Logged into goober central as {NAME}".format_map({"NAME": NAME})
 	if lang == 'it': return "Accesso a goober central come {NAME}".format_map({"NAME": NAME})
+	if lang == 'fr': return "Connecté à Goober central en tant que {NAME}".format_map({"NAME": NAME})
+	if lang == 'es': return "Envie ping a Goober Central!".format_map({"NAME": NAME})
 	else: raise ValueError(f'Invalid language {lang}')
 def goober_ping_fail(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Failed to send data. Server returned status code:**
-	- Es: **Error al enviar datos. El servidor devolvio el codigo de estado:**
 	- Fi: **Tiedon lähetys epäonnistui. Palvelin antoi tilakoodin:**
-	- Fr: **Échec de l'envoi des données. Le serveur a retourné le code d'état :**
+	- En: **Failed to send data. Server returned status code:**
 	- It: **Impossibile inviare i dati. Il server ha restituito il codice di stato:**
+	- Fr: **Échec de l'envoi des données. Le serveur a retourné le code d'état :**
+	- Es: **Error al enviar datos. El servidor devolvio el codigo de estado:**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Failed to send data. Server returned status code:"
-	if lang == 'es': return "Error al enviar datos. El servidor devolvio el codigo de estado:"
 	if lang == 'fi': return "Tiedon lähetys epäonnistui. Palvelin antoi tilakoodin:"
-	if lang == 'fr': return "Échec de l'envoi des données. Le serveur a retourné le code d'état :"
+	if lang == 'en': return "Failed to send data. Server returned status code:"
 	if lang == 'it': return "Impossibile inviare i dati. Il server ha restituito il codice di stato:"
+	if lang == 'fr': return "Échec de l'envoi des données. Le serveur a retourné le code d'état :"
+	if lang == 'es': return "Error al enviar datos. El servidor devolvio el codigo de estado:"
 	else: raise ValueError(f'Invalid language {lang}')
 def goober_ping_fail2(lang:str|None=None):
 	"""
 	### Locales
-	- En: **An error occurred while sending data:**
-	- Es: **Se produjo un error al enviar los datos:**
 	- Fi: **Tiedon lähettämisen aikana tapahtui virhe:**
-	- Fr: **Une erreur est survenue lors de l'envoi des données :**
+	- En: **An error occurred while sending data:**
 	- It: **Si è verificato un errore durante l'invio dei dati:**
+	- Fr: **Une erreur est survenue lors de l'envoi des données :**
+	- Es: **Se produjo un error al enviar los datos:**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "An error occurred while sending data:"
-	if lang == 'es': return "Se produjo un error al enviar los datos:"
 	if lang == 'fi': return "Tiedon lähettämisen aikana tapahtui virhe:"
-	if lang == 'fr': return "Une erreur est survenue lors de l'envoi des données :"
+	if lang == 'en': return "An error occurred while sending data:"
 	if lang == 'it': return "Si è verificato un errore durante l'invio dei dati:"
+	if lang == 'fr': return "Une erreur est survenue lors de l'envoi des données :"
+	if lang == 'es': return "Se produjo un error al enviar los datos:"
 	else: raise ValueError(f'Invalid language {lang}')
 def sentence_positivity(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Positivity of sentence is:**
-	- Es: **La positividad de la sentencia es:**
 	- Fi: **Lauseen positiivisuus on:**
-	- Fr: **La positivité de la phrase est :**
+	- En: **Positivity of sentence is:**
 	- It: **La positività della frase è:**
+	- Fr: **La positivité de la phrase est :**
+	- Es: **La positividad de la sentencia es:**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Positivity of sentence is:"
-	if lang == 'es': return "La positividad de la sentencia es:"
 	if lang == 'fi': return "Lauseen positiivisuus on:"
-	if lang == 'fr': return "La positivité de la phrase est :"
+	if lang == 'en': return "Positivity of sentence is:"
 	if lang == 'it': return "La positività della frase è:"
+	if lang == 'fr': return "La positivité de la phrase est :"
+	if lang == 'es': return "La positividad de la sentencia es:"
 	else: raise ValueError(f'Invalid language {lang}')
 def command_edit_fail(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Failed to edit message:**
-	- Es: **No se pudo editar el mensaje:**
 	- Fi: **Viestin muokkaus epäonnistui:**
-	- Fr: **Échec de la modification du message :**
+	- En: **Failed to edit message:**
 	- It: **Impossibile modificare il messaggio:**
+	- Fr: **Échec de la modification du message :**
+	- Es: **No se pudo editar el mensaje:**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Failed to edit message:"
-	if lang == 'es': return "No se pudo editar el mensaje:"
 	if lang == 'fi': return "Viestin muokkaus epäonnistui:"
-	if lang == 'fr': return "Échec de la modification du message :"
+	if lang == 'en': return "Failed to edit message:"
 	if lang == 'it': return "Impossibile modificare il messaggio:"
+	if lang == 'fr': return "Échec de la modification du message :"
+	if lang == 'es': return "No se pudo editar el mensaje:"
 	else: raise ValueError(f'Invalid language {lang}')
 def command_desc_retrain(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Retrains the Markov model manually.**
-	- Es: **Vuelve a entrenar el modelo de Markov manualmente.**
 	- Fi: **Uudelleenkouluttaa markov-mallin manuaalisesti.**
-	- Fr: **Réentraîne manuellement le modèle Markov.**
+	- En: **Retrains the Markov model manually.**
 	- It: **Rafforza manualmente il modello Markov.**
+	- Fr: **Réentraîne manuellement le modèle Markov.**
+	- Es: **Vuelve a entrenar el modelo de Markov manualmente.**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Retrains the Markov model manually."
-	if lang == 'es': return "Vuelve a entrenar el modelo de Markov manualmente."
 	if lang == 'fi': return "Uudelleenkouluttaa markov-mallin manuaalisesti."
-	if lang == 'fr': return "Réentraîne manuellement le modèle Markov."
+	if lang == 'en': return "Retrains the Markov model manually."
 	if lang == 'it': return "Rafforza manualmente il modello Markov."
+	if lang == 'fr': return "Réentraîne manuellement le modèle Markov."
+	if lang == 'es': return "Vuelve a entrenar el modelo de Markov manualmente."
 	else: raise ValueError(f'Invalid language {lang}')
 def command_markov_retrain(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Retraining the Markov model... Please wait.**
-	- Es: **Reentrenando el modelo de Markov... Por favor espere**
 	- Fi: **Uudelleenkoulutetaan markov-mallia... Odota.**
-	- Fr: **Réentraînement du modèle Markov... Veuillez patienter.**
+	- En: **Retraining the Markov model... Please wait.**
 	- It: **Rafforzamento del modello Markov in corso... Attendere.**
+	- Fr: **Réentraînement du modèle Markov... Veuillez patienter.**
+	- Es: **Reentrenando el modelo de Markov... Por favor espere**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Retraining the Markov model... Please wait."
-	if lang == 'es': return "Reentrenando el modelo de Markov... Por favor espere"
 	if lang == 'fi': return "Uudelleenkoulutetaan markov-mallia... Odota."
-	if lang == 'fr': return "Réentraînement du modèle Markov... Veuillez patienter."
+	if lang == 'en': return "Retraining the Markov model... Please wait."
 	if lang == 'it': return "Rafforzamento del modello Markov in corso... Attendere."
+	if lang == 'fr': return "Réentraînement du modèle Markov... Veuillez patienter."
+	if lang == 'es': return "Reentrenando el modelo de Markov... Por favor espere"
 	else: raise ValueError(f'Invalid language {lang}')
 def command_markov_memory_not_found(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Error: memory file not found!**
-	- Es: **Error: no hay archivo de memoria!**
 	- Fi: **Virhe: muistitiedostoa ei löytynyt!**
-	- Fr: **Erreur : fichier de mémoire introuvable !**
+	- En: **Error: memory file not found!**
 	- It: **Errore: file di memoria non trovato!**
+	- Fr: **Erreur : fichier de mémoire introuvable !**
+	- Es: **Error: no hay archivo de memoria!**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Error: memory file not found!"
-	if lang == 'es': return "Error: no hay archivo de memoria!"
 	if lang == 'fi': return "Virhe: muistitiedostoa ei löytynyt!"
-	if lang == 'fr': return "Erreur : fichier de mémoire introuvable !"
+	if lang == 'en': return "Error: memory file not found!"
 	if lang == 'it': return "Errore: file di memoria non trovato!"
+	if lang == 'fr': return "Erreur : fichier de mémoire introuvable !"
+	if lang == 'es': return "Error: no hay archivo de memoria!"
 	else: raise ValueError(f'Invalid language {lang}')
 def command_markov_memory_is_corrupt(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Error: memory file is corrupt!**
-	- Es: **Error: el archivo de memoria esta danado!**
 	- Fi: **Virhe: muistitiedosto on korruptoitu!**
-	- Fr: **Erreur : le fichier de mémoire est corrompu !**
+	- En: **Error: memory file is corrupt!**
 	- It: **Errore: file di memoria corrotto!**
+	- Fr: **Erreur : le fichier de mémoire est corrompu !**
+	- Es: **Error: el archivo de memoria esta danado!**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Error: memory file is corrupt!"
-	if lang == 'es': return "Error: el archivo de memoria esta danado!"
 	if lang == 'fi': return "Virhe: muistitiedosto on korruptoitu!"
-	if lang == 'fr': return "Erreur : le fichier de mémoire est corrompu !"
+	if lang == 'en': return "Error: memory file is corrupt!"
 	if lang == 'it': return "Errore: file di memoria corrotto!"
+	if lang == 'fr': return "Erreur : le fichier de mémoire est corrompu !"
+	if lang == 'es': return "Error: el archivo de memoria esta danado!"
 	else: raise ValueError(f'Invalid language {lang}')
 def command_markov_retraining(data_size,lang:str|None=None):
 	"""
 	### Locales
-	- En: **Processing {data_size} data points...**
-	- Es: **Procesando {processed_data}/{data_size} puntos de datos...**
 	- Fi: **Käsitellään {processed_data}/{data_size} datapistettä...**
-	- Fr: **Traitement de {processed_data}/{data_size} points de données...**
+	- En: **Processing {data_size} data points...**
 	- It: **Elaborazione di {data_size} punti dati...**
+	- Fr: **Traitement de {processed_data}/{data_size} points de données...**
+	- Es: **Procesando {processed_data}/{data_size} puntos de datos...**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Processing {data_size} data points...".format_map({"data_size": data_size})
-	if lang == 'es': return "Procesando {processed_data}/{data_size} puntos de datos...".format_map({"data_size": data_size})
 	if lang == 'fi': return "Käsitellään {processed_data}/{data_size} datapistettä...".format_map({"data_size": data_size})
-	if lang == 'fr': return "Traitement de {processed_data}/{data_size} points de données...".format_map({"data_size": data_size})
+	if lang == 'en': return "Processing {data_size} data points...".format_map({"data_size": data_size})
 	if lang == 'it': return "Elaborazione di {data_size} punti dati...".format_map({"data_size": data_size})
+	if lang == 'fr': return "Traitement de {processed_data}/{data_size} points de données...".format_map({"data_size": data_size})
+	if lang == 'es': return "Procesando {processed_data}/{data_size} puntos de datos...".format_map({"data_size": data_size})
 	else: raise ValueError(f'Invalid language {lang}')
 def command_markov_retrain_successful(data_size,lang:str|None=None):
 	"""
 	### Locales
-	- En: **Markov model retrained successfully using {data_size} data points!**
-	- Es: **Modelo de Markov reentrenado exitosamente usando {data_size} puntos de datos!**
 	- Fi: **Markov-malli koulutettiin uudestaan {data_size} datapisteellä!**
-	- Fr: **Modèle Markov réentraîné avec succès en utilisant {data_size} points de données !**
+	- En: **Markov model retrained successfully using {data_size} data points!**
 	- It: **Modello Markov rafforzato con successo utilizzando {data_size} punti dati!**
+	- Fr: **Modèle Markov réentraîné avec succès en utilisant {data_size} points de données !**
+	- Es: **Modelo de Markov reentrenado exitosamente usando {data_size} puntos de datos!**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Markov model retrained successfully using {data_size} data points!".format_map({"data_size": data_size})
-	if lang == 'es': return "Modelo de Markov reentrenado exitosamente usando {data_size} puntos de datos!".format_map({"data_size": data_size})
 	if lang == 'fi': return "Markov-malli koulutettiin uudestaan {data_size} datapisteellä!".format_map({"data_size": data_size})
-	if lang == 'fr': return "Modèle Markov réentraîné avec succès en utilisant {data_size} points de données !".format_map({"data_size": data_size})
+	if lang == 'en': return "Markov model retrained successfully using {data_size} data points!".format_map({"data_size": data_size})
 	if lang == 'it': return "Modello Markov rafforzato con successo utilizzando {data_size} punti dati!".format_map({"data_size": data_size})
+	if lang == 'fr': return "Modèle Markov réentraîné avec succès en utilisant {data_size} points de données !".format_map({"data_size": data_size})
+	if lang == 'es': return "Modelo de Markov reentrenado exitosamente usando {data_size} puntos de datos!".format_map({"data_size": data_size})
 	else: raise ValueError(f'Invalid language {lang}')
 def command_desc_talk(lang:str|None=None):
 	"""
 	### Locales
-	- En: **talks n like stuf**
-	- Es: **hace que el bot hable**
 	- Fi: **puhuu ja sillei**
-	- Fr: **parle et tout ça**
+	- En: **talks n like stuf**
 	- It: **parla n come stuf**
+	- Fr: **parle et tout ça**
+	- Es: **hace que el bot hable**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "talks n like stuf"
-	if lang == 'es': return "hace que el bot hable"
 	if lang == 'fi': return "puhuu ja sillei"
-	if lang == 'fr': return "parle et tout ça"
+	if lang == 'en': return "talks n like stuf"
 	if lang == 'it': return "parla n come stuf"
+	if lang == 'fr': return "parle et tout ça"
+	if lang == 'es': return "hace que el bot hable"
 	else: raise ValueError(f'Invalid language {lang}')
 def command_talk_insufficent_text(lang:str|None=None):
 	"""
 	### Locales
-	- En: **I need to learn more from messages before I can talk.**
-	- Es: **Necesito aprender más sobre los mensajes antes de hablar.**
 	- Fi: **Minun pitää oppia lisää viesteistä ennen kun puhun.**
-	- Fr: **Je dois apprendre plus de messages avant de pouvoir parler.**
+	- En: **I need to learn more from messages before I can talk.**
 	- It: **Ho bisogno di imparare di più dai messaggi prima di poter parlare.**
+	- Fr: **Je dois apprendre plus de messages avant de pouvoir parler.**
+	- Es: **Necesito aprender más sobre los mensajes antes de hablar.**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "I need to learn more from messages before I can talk."
-	if lang == 'es': return "Necesito aprender más sobre los mensajes antes de hablar."
 	if lang == 'fi': return "Minun pitää oppia lisää viesteistä ennen kun puhun."
-	if lang == 'fr': return "Je dois apprendre plus de messages avant de pouvoir parler."
+	if lang == 'en': return "I need to learn more from messages before I can talk."
 	if lang == 'it': return "Ho bisogno di imparare di più dai messaggi prima di poter parlare."
+	if lang == 'fr': return "Je dois apprendre plus de messages avant de pouvoir parler."
+	if lang == 'es': return "Necesito aprender más sobre los mensajes antes de hablar."
 	else: raise ValueError(f'Invalid language {lang}')
 def command_talk_generation_fail(lang:str|None=None):
 	"""
 	### Locales
-	- En: **I have nothing to say right now!**
-	- Es: **No tengo nada que decir ahora!**
 	- Fi: **Minulla ei ole mitään sanottavaa!**
-	- Fr: **Je n'ai rien à dire pour le moment !**
+	- En: **I have nothing to say right now!**
 	- It: **Non ho nulla da dire in questo momento!**
+	- Fr: **Je n'ai rien à dire pour le moment !**
+	- Es: **No tengo nada que decir ahora!**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "I have nothing to say right now!"
-	if lang == 'es': return "No tengo nada que decir ahora!"
 	if lang == 'fi': return "Minulla ei ole mitään sanottavaa!"
-	if lang == 'fr': return "Je n'ai rien à dire pour le moment !"
+	if lang == 'en': return "I have nothing to say right now!"
 	if lang == 'it': return "Non ho nulla da dire in questo momento!"
+	if lang == 'fr': return "Je n'ai rien à dire pour le moment !"
+	if lang == 'es': return "No tengo nada que decir ahora!"
 	else: raise ValueError(f'Invalid language {lang}')
 def command_desc_help(lang:str|None=None):
 	"""
 	### Locales
-	- En: **help**
-	- Es: **Ayuda**
 	- Fi: **auta**
-	- Fr: **aide**
+	- En: **help**
 	- It: **aiuto**
+	- Fr: **aide**
+	- Es: **Ayuda**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "help"
-	if lang == 'es': return "Ayuda"
 	if lang == 'fi': return "auta"
-	if lang == 'fr': return "aide"
+	if lang == 'en': return "help"
 	if lang == 'it': return "aiuto"
+	if lang == 'fr': return "aide"
+	if lang == 'es': return "Ayuda"
 	else: raise ValueError(f'Invalid language {lang}')
 def command_help_embed_title(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Bot Help**
-	- Es: **Ayuda del bot**
 	- Fi: **Botin apu**
-	- Fr: **Aide du bot**
+	- En: **Bot Help**
 	- It: **Aiuto Bot**
+	- Fr: **Aide du bot**
+	- Es: **Ayuda del bot**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Bot Help"
-	if lang == 'es': return "Ayuda del bot"
 	if lang == 'fi': return "Botin apu"
-	if lang == 'fr': return "Aide du bot"
+	if lang == 'en': return "Bot Help"
 	if lang == 'it': return "Aiuto Bot"
+	if lang == 'fr': return "Aide du bot"
+	if lang == 'es': return "Ayuda del bot"
 	else: raise ValueError(f'Invalid language {lang}')
 def command_help_embed_desc(lang:str|None=None):
 	"""
 	### Locales
-	- En: **List of commands grouped by category.**
-	- Es: **Lista de comandos agrupados por categoria**
 	- Fi: **Komennot ryhmitelty kategorioilla**
-	- Fr: **Liste des commandes regroupées par catégorie.**
+	- En: **List of commands grouped by category.**
 	- It: **Elenco dei comandi raggruppati per categoria.**
+	- Fr: **Liste des commandes regroupées par catégorie.**
+	- Es: **Lista de comandos agrupados por categoria**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "List of commands grouped by category."
-	if lang == 'es': return "Lista de comandos agrupados por categoria"
 	if lang == 'fi': return "Komennot ryhmitelty kategorioilla"
-	if lang == 'fr': return "Liste des commandes regroupées par catégorie."
+	if lang == 'en': return "List of commands grouped by category."
 	if lang == 'it': return "Elenco dei comandi raggruppati per categoria."
+	if lang == 'fr': return "Liste des commandes regroupées par catégorie."
+	if lang == 'es': return "Lista de comandos agrupados por categoria"
 	else: raise ValueError(f'Invalid language {lang}')
 def command_help_categories_general(lang:str|None=None):
 	"""
 	### Locales
-	- En: **General**
-	- Es: **General**
 	- Fi: **Yleiset**
-	- Fr: **Général**
+	- En: **General**
 	- It: **Generale**
+	- Fr: **Général**
+	- Es: **General**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "General"
-	if lang == 'es': return "General"
 	if lang == 'fi': return "Yleiset"
-	if lang == 'fr': return "Général"
+	if lang == 'en': return "General"
 	if lang == 'it': return "Generale"
+	if lang == 'fr': return "Général"
+	if lang == 'es': return "General"
 	else: raise ValueError(f'Invalid language {lang}')
 def command_help_categories_admin(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Administration**
-	- Es: **Administracion**
 	- Fi: **Ylläpito**
-	- Fr: **Administration**
+	- En: **Administration**
 	- It: **Amministrazione**
+	- Fr: **Administration**
+	- Es: **Administracion**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Administration"
-	if lang == 'es': return "Administracion"
 	if lang == 'fi': return "Ylläpito"
-	if lang == 'fr': return "Administration"
+	if lang == 'en': return "Administration"
 	if lang == 'it': return "Amministrazione"
+	if lang == 'fr': return "Administration"
+	if lang == 'es': return "Administracion"
 	else: raise ValueError(f'Invalid language {lang}')
 def command_help_categories_custom(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Custom Commands**
-	- Es: **Comandos personalizados**
 	- Fi: **Mukautetut komennot**
-	- Fr: **Commandes personnalisées**
+	- En: **Custom Commands**
 	- It: **Comandi personalizzati**
+	- Fr: **Commandes personnalisées**
+	- Es: **Comandos personalizados**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Custom Commands"
-	if lang == 'es': return "Comandos personalizados"
 	if lang == 'fi': return "Mukautetut komennot"
-	if lang == 'fr': return "Commandes personnalisées"
+	if lang == 'en': return "Custom Commands"
 	if lang == 'it': return "Comandi personalizzati"
+	if lang == 'fr': return "Commandes personnalisées"
+	if lang == 'es': return "Comandos personalizados"
 	else: raise ValueError(f'Invalid language {lang}')
 def command_ran(message_author_name,message_content,lang:str|None=None):
 	"""
 	### Locales
-	- En: **Info: {message.author.name} ran {message.content}**
-	- Es: **Informacion: {message.author.name} ejecuto {message.content}**
 	- Fi: **Tietoa: {message.author.name} suoritti {message.content}**
-	- Fr: **Info : {message.author.name} a exécuté {message.content}**
+	- En: **Info: {message.author.name} ran {message.content}**
 	- It: **Info: {message.author.name} ha eseguito {message.content}**
+	- Fr: **Info : {message.author.name} a exécuté {message.content}**
+	- Es: **Informacion: {message.author.name} ejecuto {message.content}**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Info: {message_author_name} ran {message_content}".format_map({"message_author_name": message_author_name,"message_content": message_content})
-	if lang == 'es': return "Informacion: {message_author_name} ejecuto {message_content}".format_map({"message_author_name": message_author_name,"message_content": message_content})
 	if lang == 'fi': return "Tietoa: {message_author_name} suoritti {message_content}".format_map({"message_author_name": message_author_name,"message_content": message_content})
-	if lang == 'fr': return "Info : {message_author_name} a exécuté {message_content}".format_map({"message_author_name": message_author_name,"message_content": message_content})
+	if lang == 'en': return "Info: {message_author_name} ran {message_content}".format_map({"message_author_name": message_author_name,"message_content": message_content})
 	if lang == 'it': return "Info: {message_author_name} ha eseguito {message_content}".format_map({"message_author_name": message_author_name,"message_content": message_content})
+	if lang == 'fr': return "Info : {message_author_name} a exécuté {message_content}".format_map({"message_author_name": message_author_name,"message_content": message_content})
+	if lang == 'es': return "Informacion: {message_author_name} ejecuto {message_content}".format_map({"message_author_name": message_author_name,"message_content": message_content})
 	else: raise ValueError(f'Invalid language {lang}')
 def command_ran_s(interaction_user,lang:str|None=None):
 	"""
 	### Locales
-	- En: **Info: {interaction.user} ran **
-	- Es: **Info: {interaction.user} ran **
 	- Fi: **Info: {interaction.user} suoritti**
-	- Fr: **Info : {interaction.user} a exécuté **
+	- En: **Info: {interaction.user} ran **
 	- It: **Info: {interaction.user} ha eseguito **
+	- Fr: **Info : {interaction.user} a exécuté **
+	- Es: **Info: {interaction.user} ran **
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Info: {interaction_user} ran ".format_map({"interaction_user": interaction_user})
-	if lang == 'es': return "Info: {interaction_user} ran ".format_map({"interaction_user": interaction_user})
 	if lang == 'fi': return "Info: {interaction_user} suoritti".format_map({"interaction_user": interaction_user})
-	if lang == 'fr': return "Info : {interaction_user} a exécuté ".format_map({"interaction_user": interaction_user})
+	if lang == 'en': return "Info: {interaction_user} ran ".format_map({"interaction_user": interaction_user})
 	if lang == 'it': return "Info: {interaction_user} ha eseguito ".format_map({"interaction_user": interaction_user})
+	if lang == 'fr': return "Info : {interaction_user} a exécuté ".format_map({"interaction_user": interaction_user})
+	if lang == 'es': return "Info: {interaction_user} ran ".format_map({"interaction_user": interaction_user})
 	else: raise ValueError(f'Invalid language {lang}')
 def command_desc_ping(lang:str|None=None):
 	"""
 	### Locales
-	- En: **ping**
-	- Es: **ping**
 	- Fi: **ping**
-	- Fr: **ping**
+	- En: **ping**
 	- It: **ping**
+	- Fr: **ping**
+	- Es: **ping**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "ping"
-	if lang == 'es': return "ping"
 	if lang == 'fi': return "ping"
-	if lang == 'fr': return "ping"
+	if lang == 'en': return "ping"
 	if lang == 'it': return "ping"
+	if lang == 'fr': return "ping"
+	if lang == 'es': return "ping"
 	else: raise ValueError(f'Invalid language {lang}')
 def command_desc_setlang(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Set a new language for the bot (temporarily)**
-	- Es: **Set a new language for the bot (temporarily)**
 	- Fi: **Set a new language for the bot (temporarily)**
-	- Fr: **Set a new language for the bot (temporarily)**
+	- En: **Set a new language for the bot (temporarily)**
 	- It: **Imposta una nuova lingua per il bot (temporaneamente)**
+	- Fr: **Set a new language for the bot (temporarily)**
+	- Es: **Set a new language for the bot (temporarily)**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Set a new language for the bot (temporarily)"
-	if lang == 'es': return "Set a new language for the bot (temporarily)"
 	if lang == 'fi': return "Set a new language for the bot (temporarily)"
-	if lang == 'fr': return "Set a new language for the bot (temporarily)"
+	if lang == 'en': return "Set a new language for the bot (temporarily)"
 	if lang == 'it': return "Imposta una nuova lingua per il bot (temporaneamente)"
+	if lang == 'fr': return "Set a new language for the bot (temporarily)"
+	if lang == 'es': return "Set a new language for the bot (temporarily)"
 	else: raise ValueError(f'Invalid language {lang}')
 def command_ping_embed_desc(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Bot Latency:**
-	- Es: **Latencia del bot:**
 	- Fi: **Botin viive:**
-	- Fr: **Latence du bot :**
+	- En: **Bot Latency:**
 	- It: **Latenza del bot:**
+	- Fr: **Latence du bot :**
+	- Es: **Latencia del bot:**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Bot Latency:"
-	if lang == 'es': return "Latencia del bot:"
 	if lang == 'fi': return "Botin viive:"
-	if lang == 'fr': return "Latence du bot :"
+	if lang == 'en': return "Bot Latency:"
 	if lang == 'it': return "Latenza del bot:"
+	if lang == 'fr': return "Latence du bot :"
+	if lang == 'es': return "Latencia del bot:"
 	else: raise ValueError(f'Invalid language {lang}')
 def command_ping_footer(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Requested by**
-	- Es: **Solicitado por**
 	- Fi: **Pyytäjä: **
-	- Fr: **Demandé par**
+	- En: **Requested by**
 	- It: **Richiesto da**
+	- Fr: **Demandé par**
+	- Es: **Solicitado por**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Requested by"
-	if lang == 'es': return "Solicitado por"
 	if lang == 'fi': return "Pyytäjä: "
-	if lang == 'fr': return "Demandé par"
+	if lang == 'en': return "Requested by"
 	if lang == 'it': return "Richiesto da"
+	if lang == 'fr': return "Demandé par"
+	if lang == 'es': return "Solicitado por"
 	else: raise ValueError(f'Invalid language {lang}')
 def command_about_desc(lang:str|None=None):
 	"""
 	### Locales
-	- En: **about**
-	- Es: **Acerca**
 	- Fi: **tietoa**
-	- Fr: **à propos**
+	- En: **about**
 	- It: **informazioni**
+	- Fr: **à propos**
+	- Es: **Acerca**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "about"
-	if lang == 'es': return "Acerca"
 	if lang == 'fi': return "tietoa"
-	if lang == 'fr': return "à propos"
+	if lang == 'en': return "about"
 	if lang == 'it': return "informazioni"
+	if lang == 'fr': return "à propos"
+	if lang == 'es': return "Acerca"
 	else: raise ValueError(f'Invalid language {lang}')
 def command_about_embed_title(lang:str|None=None):
 	"""
 	### Locales
-	- En: **About me**
-	- Es: **Acerca de mi**
 	- Fi: **Tietoa minusta**
-	- Fr: **À propos de moi**
+	- En: **About me**
 	- It: **Informazioni su di me**
+	- Fr: **À propos de moi**
+	- Es: **Acerca de mi**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "About me"
-	if lang == 'es': return "Acerca de mi"
 	if lang == 'fi': return "Tietoa minusta"
-	if lang == 'fr': return "À propos de moi"
+	if lang == 'en': return "About me"
 	if lang == 'it': return "Informazioni su di me"
+	if lang == 'fr': return "À propos de moi"
+	if lang == 'es': return "Acerca de mi"
 	else: raise ValueError(f'Invalid language {lang}')
 def command_about_embed_field1(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Name**
-	- Es: **Nombre**
 	- Fi: **Nimi**
-	- Fr: **Nom**
+	- En: **Name**
 	- It: **Nome**
+	- Fr: **Nom**
+	- Es: **Nombre**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Name"
-	if lang == 'es': return "Nombre"
 	if lang == 'fi': return "Nimi"
-	if lang == 'fr': return "Nom"
+	if lang == 'en': return "Name"
 	if lang == 'it': return "Nome"
+	if lang == 'fr': return "Nom"
+	if lang == 'es': return "Nombre"
 	else: raise ValueError(f'Invalid language {lang}')
 def command_about_embed_field2name(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Version**
-	- Es: **Version**
 	- Fi: **Versio**
-	- Fr: **Version**
+	- En: **Version**
 	- It: **Versione**
+	- Fr: **Version**
+	- Es: **Version**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Version"
-	if lang == 'es': return "Version"
 	if lang == 'fi': return "Versio"
-	if lang == 'fr': return "Version"
+	if lang == 'en': return "Version"
 	if lang == 'it': return "Versione"
+	if lang == 'fr': return "Version"
+	if lang == 'es': return "Version"
 	else: raise ValueError(f'Invalid language {lang}')
 def command_about_embed_field2value(local_version,latest_version,lang:str|None=None):
 	"""
 	### Locales
-	- En: **Local: {local_version} 
-Latest: {latest_version}**
-	- Es: **Version local: {local_version} 
-Ultima version: {latest_version}**
 	- Fi: **Paikallinen: {local_version} 
 Uusin: {latest_version}**
-	- Fr: **Locale : {local_version} 
-Dernière : {latest_version}**
+	- En: **Local: {local_version} 
+Latest: {latest_version}**
 	- It: **Locale: {local_version} 
 Ultima: {latest_version}**
+	- Fr: **Locale : {local_version} 
+Dernière : {latest_version}**
+	- Es: **Version local: {local_version} 
+Ultima version: {latest_version}**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Local: {local_version} \nLatest: {latest_version}".format_map({"local_version": local_version,"latest_version": latest_version})
-	if lang == 'es': return "Version local: {local_version} \nUltima version: {latest_version}".format_map({"local_version": local_version,"latest_version": latest_version})
 	if lang == 'fi': return "Paikallinen: {local_version} \nUusin: {latest_version}".format_map({"local_version": local_version,"latest_version": latest_version})
-	if lang == 'fr': return "Locale : {local_version} \nDernière : {latest_version}".format_map({"local_version": local_version,"latest_version": latest_version})
+	if lang == 'en': return "Local: {local_version} \nLatest: {latest_version}".format_map({"local_version": local_version,"latest_version": latest_version})
 	if lang == 'it': return "Locale: {local_version} \nUltima: {latest_version}".format_map({"local_version": local_version,"latest_version": latest_version})
+	if lang == 'fr': return "Locale : {local_version} \nDernière : {latest_version}".format_map({"local_version": local_version,"latest_version": latest_version})
+	if lang == 'es': return "Version local: {local_version} \nUltima version: {latest_version}".format_map({"local_version": local_version,"latest_version": latest_version})
 	else: raise ValueError(f'Invalid language {lang}')
 def command_desc_stats(lang:str|None=None):
 	"""
 	### Locales
-	- En: **stats**
-	- Es: **Estadistica**
 	- Fi: **statistiikat**
-	- Fr: **statistiques**
+	- En: **stats**
 	- It: **statistiche**
+	- Fr: **statistiques**
+	- Es: **Estadistica**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "stats"
-	if lang == 'es': return "Estadistica"
 	if lang == 'fi': return "statistiikat"
-	if lang == 'fr': return "statistiques"
+	if lang == 'en': return "stats"
 	if lang == 'it': return "statistiche"
+	if lang == 'fr': return "statistiques"
+	if lang == 'es': return "Estadistica"
 	else: raise ValueError(f'Invalid language {lang}')
 def command_stats_embed_title(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Bot stats**
-	- Es: **Estadisticas de bot**
 	- Fi: **Botin statistiikat**
-	- Fr: **Statistiques du bot**
+	- En: **Bot stats**
 	- It: **Statistiche del bot**
+	- Fr: **Statistiques du bot**
+	- Es: **Estadisticas de bot**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Bot stats"
-	if lang == 'es': return "Estadisticas de bot"
 	if lang == 'fi': return "Botin statistiikat"
-	if lang == 'fr': return "Statistiques du bot"
+	if lang == 'en': return "Bot stats"
 	if lang == 'it': return "Statistiche del bot"
+	if lang == 'fr': return "Statistiques du bot"
+	if lang == 'es': return "Estadisticas de bot"
 	else: raise ValueError(f'Invalid language {lang}')
 def command_stats_embed_desc(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Data about the the bot's memory.**
-	- Es: **Datos sobre la memoria del bot**
 	- Fi: **Tietoa botin muistista.**
-	- Fr: **Données sur la mémoire du bot.**
+	- En: **Data about the the bot's memory.**
 	- It: **Dati sulla memoria del bot.**
+	- Fr: **Données sur la mémoire du bot.**
+	- Es: **Datos sobre la memoria del bot**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Data about the the bot's memory."
-	if lang == 'es': return "Datos sobre la memoria del bot"
 	if lang == 'fi': return "Tietoa botin muistista."
-	if lang == 'fr': return "Données sur la mémoire du bot."
+	if lang == 'en': return "Data about the the bot's memory."
 	if lang == 'it': return "Dati sulla memoria del bot."
+	if lang == 'fr': return "Données sur la mémoire du bot."
+	if lang == 'es': return "Datos sobre la memoria del bot"
 	else: raise ValueError(f'Invalid language {lang}')
 def command_stats_embed_field1name(lang:str|None=None):
 	"""
 	### Locales
-	- En: **File Stats**
-	- Es: **Estadisticas**
 	- Fi: **Tiedostostatistiikat**
-	- Fr: **Statistiques du fichier**
+	- En: **File Stats**
 	- It: **Statistiche del file**
+	- Fr: **Statistiques du fichier**
+	- Es: **Estadisticas**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "File Stats"
-	if lang == 'es': return "Estadisticas"
 	if lang == 'fi': return "Tiedostostatistiikat"
-	if lang == 'fr': return "Statistiques du fichier"
+	if lang == 'en': return "File Stats"
 	if lang == 'it': return "Statistiche del file"
+	if lang == 'fr': return "Statistiques du fichier"
+	if lang == 'es': return "Estadisticas"
 	else: raise ValueError(f'Invalid language {lang}')
 def command_stats_embed_field1value(file_size,line_count,lang:str|None=None):
 	"""
 	### Locales
-	- En: **Size: {file_size} bytes
-Lines: {line_count}**
-	- Es: **Tamano: {file_size} bytes
-Lineas: {line_count}**
 	- Fi: **Koko: {file_size} tavua
 Linjoja: {line_count}**
-	- Fr: **Taille : {file_size} octets
-Lignes : {line_count}**
+	- En: **Size: {file_size} bytes
+Lines: {line_count}**
 	- It: **Dimensione: {file_size} byte
 Linee: {line_count}**
+	- Fr: **Taille : {file_size} octets
+Lignes : {line_count}**
+	- Es: **Tamano: {file_size} bytes
+Lineas: {line_count}**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Size: {file_size} bytes\nLines: {line_count}".format_map({"file_size": file_size,"line_count": line_count})
-	if lang == 'es': return "Tamano: {file_size} bytes\nLineas: {line_count}".format_map({"file_size": file_size,"line_count": line_count})
 	if lang == 'fi': return "Koko: {file_size} tavua\nLinjoja: {line_count}".format_map({"file_size": file_size,"line_count": line_count})
-	if lang == 'fr': return "Taille : {file_size} octets\nLignes : {line_count}".format_map({"file_size": file_size,"line_count": line_count})
+	if lang == 'en': return "Size: {file_size} bytes\nLines: {line_count}".format_map({"file_size": file_size,"line_count": line_count})
 	if lang == 'it': return "Dimensione: {file_size} byte\nLinee: {line_count}".format_map({"file_size": file_size,"line_count": line_count})
+	if lang == 'fr': return "Taille : {file_size} octets\nLignes : {line_count}".format_map({"file_size": file_size,"line_count": line_count})
+	if lang == 'es': return "Tamano: {file_size} bytes\nLineas: {line_count}".format_map({"file_size": file_size,"line_count": line_count})
 	else: raise ValueError(f'Invalid language {lang}')
 def command_stats_embed_field2name(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Version**
-	- Es: **Version**
 	- Fi: **Versio**
-	- Fr: **Version**
+	- En: **Version**
 	- It: **Versione**
+	- Fr: **Version**
+	- Es: **Version**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Version"
-	if lang == 'es': return "Version"
 	if lang == 'fi': return "Versio"
-	if lang == 'fr': return "Version"
+	if lang == 'en': return "Version"
 	if lang == 'it': return "Versione"
+	if lang == 'fr': return "Version"
+	if lang == 'es': return "Version"
 	else: raise ValueError(f'Invalid language {lang}')
 def command_stats_embed_field2value(local_version,latest_version,lang:str|None=None):
 	"""
 	### Locales
-	- En: **Local: {local_version} 
-Latest: {latest_version}**
-	- Es: **Version local: {local_version} 
-Ultima version: {latest_version}**
 	- Fi: **Paikallinen: {local_version} 
 Uusin: {latest_version}**
-	- Fr: **Locale : {local_version} 
-Dernière : {latest_version}**
+	- En: **Local: {local_version} 
+Latest: {latest_version}**
 	- It: **Locale: {local_version} 
 Ultima: {latest_version}**
+	- Fr: **Locale : {local_version} 
+Dernière : {latest_version}**
+	- Es: **Version local: {local_version} 
+Ultima version: {latest_version}**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Local: {local_version} \nLatest: {latest_version}".format_map({"local_version": local_version,"latest_version": latest_version})
-	if lang == 'es': return "Version local: {local_version} \nUltima version: {latest_version}".format_map({"local_version": local_version,"latest_version": latest_version})
 	if lang == 'fi': return "Paikallinen: {local_version} \nUusin: {latest_version}".format_map({"local_version": local_version,"latest_version": latest_version})
-	if lang == 'fr': return "Locale : {local_version} \nDernière : {latest_version}".format_map({"local_version": local_version,"latest_version": latest_version})
+	if lang == 'en': return "Local: {local_version} \nLatest: {latest_version}".format_map({"local_version": local_version,"latest_version": latest_version})
 	if lang == 'it': return "Locale: {local_version} \nUltima: {latest_version}".format_map({"local_version": local_version,"latest_version": latest_version})
+	if lang == 'fr': return "Locale : {local_version} \nDernière : {latest_version}".format_map({"local_version": local_version,"latest_version": latest_version})
+	if lang == 'es': return "Version local: {local_version} \nUltima version: {latest_version}".format_map({"local_version": local_version,"latest_version": latest_version})
 	else: raise ValueError(f'Invalid language {lang}')
 def command_stats_embed_field3name(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Variable Info**
-	- Es: **informacion sobre las variables**
 	- Fi: **Muuttajainformaatio**
-	- Fr: **Informations variables**
+	- En: **Variable Info**
 	- It: **Informazioni sulle variabili**
+	- Fr: **Informations variables**
+	- Es: **informacion sobre las variables**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Variable Info"
-	if lang == 'es': return "informacion sobre las variables"
 	if lang == 'fi': return "Muuttajainformaatio"
-	if lang == 'fr': return "Informations variables"
+	if lang == 'en': return "Variable Info"
 	if lang == 'it': return "Informazioni sulle variabili"
+	if lang == 'fr': return "Informations variables"
+	if lang == 'es': return "informacion sobre las variables"
 	else: raise ValueError(f'Invalid language {lang}')
 def command_stats_embed_field3value(NAME,PREFIX,ownerid,PING_LINE,showmemenabled,USERTRAIN_ENABLED,song,splashtext,lang:str|None=None):
 	"""
 	### Locales
-	- En: **Name: {NAME} 
-Prefix: {PREFIX} 
-Owner ID: {ownerid}
-Ping line: {PING_LINE} 
-Memory Sharing Enabled: {showmemenabled} 
-User Training Enabled: {USERTRAIN_ENABLED}
-Song: {song} 
-Splashtext: ```{splashtext}```**
-	- Es: **Nombre: {NAME} 
-Prefijo: {PREFIX} 
-ID del propietario: {ownerid}
-Linea de ping: {PING_LINE} 
-Compartir memoria habilitada: {showmemenabled} 
-Entrenamiento de usuario habilitado: {USERTRAIN_ENABLED} 
-Cancion: {song} 
-Texto de bienvenida: ```{splashtext}```**
 	- Fi: **Nimi: {NAME} 
 Etuliite: {PREFIX} 
 Omistajan ID: {ownerid}
@@ -2186,14 +2170,14 @@ Muistin jako päällä: {showmemenabled}
 Oppiminen käyttäjistä: {USERTRAIN_ENABLED}
 Laulu: {song} 
 Roisketeksti: ```{splashtext}```**
-	- Fr: **Nom : {NAME} 
-Préfixe : {PREFIX} 
-ID du propriétaire : {ownerid}
-Ligne de ping : {PING_LINE} 
-Partage de mémoire activé : {showmemenabled} 
-Entraînement utilisateur activé : {USERTRAIN_ENABLED} 
-Chanson : {song} 
-Texte de démarrage : ```{splashtext}```**
+	- En: **Name: {NAME} 
+Prefix: {PREFIX} 
+Owner ID: {ownerid}
+Ping line: {PING_LINE} 
+Memory Sharing Enabled: {showmemenabled} 
+User Training Enabled: {USERTRAIN_ENABLED}
+Song: {song} 
+Splashtext: ```{splashtext}```**
 	- It: **Nome: {NAME} 
 Prefisso: {PREFIX} 
 ID Proprietario: {ownerid}
@@ -2202,187 +2186,203 @@ Memoria Condivisa Abilitata: {showmemenabled}
 Addestramento Utente Abilitato: {USERTRAIN_ENABLED}
 Canzone: {song} 
 Splashtext: ```{splashtext}```**
+	- Fr: **Nom : {NAME} 
+Préfixe : {PREFIX} 
+ID du propriétaire : {ownerid}
+Ligne de ping : {PING_LINE} 
+Partage de mémoire activé : {showmemenabled} 
+Entraînement utilisateur activé : {USERTRAIN_ENABLED} 
+Chanson : {song} 
+Texte de démarrage : ```{splashtext}```**
+	- Es: **Nombre: {NAME} 
+Prefijo: {PREFIX} 
+ID del propietario: {ownerid}
+Linea de ping: {PING_LINE} 
+Compartir memoria habilitada: {showmemenabled} 
+Entrenamiento de usuario habilitado: {USERTRAIN_ENABLED} 
+Cancion: {song} 
+Texto de bienvenida: ```{splashtext}```**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Name: {NAME} \nPrefix: {PREFIX} \nOwner ID: {ownerid}\nPing line: {PING_LINE} \nMemory Sharing Enabled: {showmemenabled} \nUser Training Enabled: {USERTRAIN_ENABLED}\nSong: {song} \nSplashtext: ```{splashtext}```".format_map({"NAME": NAME,"PREFIX": PREFIX,"ownerid": ownerid,"PING_LINE": PING_LINE,"showmemenabled": showmemenabled,"USERTRAIN_ENABLED": USERTRAIN_ENABLED,"song": song,"splashtext": splashtext})
-	if lang == 'es': return "Nombre: {NAME} \nPrefijo: {PREFIX} \nID del propietario: {ownerid}\nLinea de ping: {PING_LINE} \nCompartir memoria habilitada: {showmemenabled} \nEntrenamiento de usuario habilitado: {USERTRAIN_ENABLED} \nCancion: {song} \nTexto de bienvenida: ```{splashtext}```".format_map({"NAME": NAME,"PREFIX": PREFIX,"ownerid": ownerid,"PING_LINE": PING_LINE,"showmemenabled": showmemenabled,"USERTRAIN_ENABLED": USERTRAIN_ENABLED,"song": song,"splashtext": splashtext})
 	if lang == 'fi': return "Nimi: {NAME} \nEtuliite: {PREFIX} \nOmistajan ID: {ownerid}\nPing-linja: {PING_LINE} \nMuistin jako päällä: {showmemenabled} \nOppiminen käyttäjistä: {USERTRAIN_ENABLED}\nLaulu: {song} \nRoisketeksti: ```{splashtext}```".format_map({"NAME": NAME,"PREFIX": PREFIX,"ownerid": ownerid,"PING_LINE": PING_LINE,"showmemenabled": showmemenabled,"USERTRAIN_ENABLED": USERTRAIN_ENABLED,"song": song,"splashtext": splashtext})
-	if lang == 'fr': return "Nom : {NAME} \nPréfixe : {PREFIX} \nID du propriétaire : {ownerid}\nLigne de ping : {PING_LINE} \nPartage de mémoire activé : {showmemenabled} \nEntraînement utilisateur activé : {USERTRAIN_ENABLED} \nChanson : {song} \nTexte de démarrage : ```{splashtext}```".format_map({"NAME": NAME,"PREFIX": PREFIX,"ownerid": ownerid,"PING_LINE": PING_LINE,"showmemenabled": showmemenabled,"USERTRAIN_ENABLED": USERTRAIN_ENABLED,"song": song,"splashtext": splashtext})
+	if lang == 'en': return "Name: {NAME} \nPrefix: {PREFIX} \nOwner ID: {ownerid}\nPing line: {PING_LINE} \nMemory Sharing Enabled: {showmemenabled} \nUser Training Enabled: {USERTRAIN_ENABLED}\nSong: {song} \nSplashtext: ```{splashtext}```".format_map({"NAME": NAME,"PREFIX": PREFIX,"ownerid": ownerid,"PING_LINE": PING_LINE,"showmemenabled": showmemenabled,"USERTRAIN_ENABLED": USERTRAIN_ENABLED,"song": song,"splashtext": splashtext})
 	if lang == 'it': return "Nome: {NAME} \nPrefisso: {PREFIX} \nID Proprietario: {ownerid}\nLinea ping: {PING_LINE} \nMemoria Condivisa Abilitata: {showmemenabled} \nAddestramento Utente Abilitato: {USERTRAIN_ENABLED}\nCanzone: {song} \nSplashtext: ```{splashtext}```".format_map({"NAME": NAME,"PREFIX": PREFIX,"ownerid": ownerid,"PING_LINE": PING_LINE,"showmemenabled": showmemenabled,"USERTRAIN_ENABLED": USERTRAIN_ENABLED,"song": song,"splashtext": splashtext})
+	if lang == 'fr': return "Nom : {NAME} \nPréfixe : {PREFIX} \nID du propriétaire : {ownerid}\nLigne de ping : {PING_LINE} \nPartage de mémoire activé : {showmemenabled} \nEntraînement utilisateur activé : {USERTRAIN_ENABLED} \nChanson : {song} \nTexte de démarrage : ```{splashtext}```".format_map({"NAME": NAME,"PREFIX": PREFIX,"ownerid": ownerid,"PING_LINE": PING_LINE,"showmemenabled": showmemenabled,"USERTRAIN_ENABLED": USERTRAIN_ENABLED,"song": song,"splashtext": splashtext})
+	if lang == 'es': return "Nombre: {NAME} \nPrefijo: {PREFIX} \nID del propietario: {ownerid}\nLinea de ping: {PING_LINE} \nCompartir memoria habilitada: {showmemenabled} \nEntrenamiento de usuario habilitado: {USERTRAIN_ENABLED} \nCancion: {song} \nTexto de bienvenida: ```{splashtext}```".format_map({"NAME": NAME,"PREFIX": PREFIX,"ownerid": ownerid,"PING_LINE": PING_LINE,"showmemenabled": showmemenabled,"USERTRAIN_ENABLED": USERTRAIN_ENABLED,"song": song,"splashtext": splashtext})
 	else: raise ValueError(f'Invalid language {lang}')
 def no_image_available(lang:str|None=None):
 	"""
 	### Locales
-	- En: **No images available!**
-	- Es: **No images available!**
 	- Fi: **No images available!**
-	- Fr: **No images available!**
+	- En: **No images available!**
 	- It: **No images available!**
+	- Fr: **No images available!**
+	- Es: **No images available!**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "No images available!"
-	if lang == 'es': return "No images available!"
 	if lang == 'fi': return "No images available!"
-	if lang == 'fr': return "No images available!"
+	if lang == 'en': return "No images available!"
 	if lang == 'it': return "No images available!"
+	if lang == 'fr': return "No images available!"
+	if lang == 'es': return "No images available!"
 	else: raise ValueError(f'Invalid language {lang}')
 def failed_generate_image(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Failed to generate an image**
-	- Es: **Failed to generate an image**
 	- Fi: **Failed to generate an image**
-	- Fr: **Failed to generate an image**
+	- En: **Failed to generate an image**
 	- It: **Failed to generate an image**
+	- Fr: **Failed to generate an image**
+	- Es: **Failed to generate an image**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Failed to generate an image"
-	if lang == 'es': return "Failed to generate an image"
 	if lang == 'fi': return "Failed to generate an image"
-	if lang == 'fr': return "Failed to generate an image"
+	if lang == 'en': return "Failed to generate an image"
 	if lang == 'it': return "Failed to generate an image"
+	if lang == 'fr': return "Failed to generate an image"
+	if lang == 'es': return "Failed to generate an image"
 	else: raise ValueError(f'Invalid language {lang}')
 def markov_model_not_found(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Markov model not found!**
-	- Es: **Markov model not found!**
 	- Fi: **Markov model not found!**
-	- Fr: **Markov model not found!**
+	- En: **Markov model not found!**
 	- It: **Markov model not found!**
+	- Fr: **Markov model not found!**
+	- Es: **Markov model not found!**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Markov model not found!"
-	if lang == 'es': return "Markov model not found!"
 	if lang == 'fi': return "Markov model not found!"
-	if lang == 'fr': return "Markov model not found!"
+	if lang == 'en': return "Markov model not found!"
 	if lang == 'it': return "Markov model not found!"
+	if lang == 'fr': return "Markov model not found!"
+	if lang == 'es': return "Markov model not found!"
 	else: raise ValueError(f'Invalid language {lang}')
 def blacklisted(lang:str|None=None):
 	"""
 	### Locales
-	- En: **blacklisted**
-	- Es: **blacklisted**
 	- Fi: **blacklisted**
-	- Fr: **blacklisted**
+	- En: **blacklisted**
 	- It: **blacklisted**
+	- Fr: **blacklisted**
+	- Es: **blacklisted**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "blacklisted"
-	if lang == 'es': return "blacklisted"
 	if lang == 'fi': return "blacklisted"
-	if lang == 'fr': return "blacklisted"
+	if lang == 'en': return "blacklisted"
 	if lang == 'it': return "blacklisted"
+	if lang == 'fr': return "blacklisted"
+	if lang == 'es': return "blacklisted"
 	else: raise ValueError(f'Invalid language {lang}')
 def blacklisted_user(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Blacklisted user**
-	- Es: **Blacklisted user**
 	- Fi: **Blacklisted user**
-	- Fr: **Blacklisted user**
+	- En: **Blacklisted user**
 	- It: **Blacklisted user**
+	- Fr: **Blacklisted user**
+	- Es: **Blacklisted user**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Blacklisted user"
-	if lang == 'es': return "Blacklisted user"
 	if lang == 'fi': return "Blacklisted user"
-	if lang == 'fr': return "Blacklisted user"
+	if lang == 'en': return "Blacklisted user"
 	if lang == 'it': return "Blacklisted user"
+	if lang == 'fr': return "Blacklisted user"
+	if lang == 'es': return "Blacklisted user"
 	else: raise ValueError(f'Invalid language {lang}')
 def edit_fail(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Failed to edit message**
-	- Es: **Failed to edit message**
 	- Fi: **Failed to edit message**
-	- Fr: **Failed to edit message**
+	- En: **Failed to edit message**
 	- It: **Failed to edit message**
+	- Fr: **Failed to edit message**
+	- Es: **Failed to edit message**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Failed to edit message"
-	if lang == 'es': return "Failed to edit message"
 	if lang == 'fi': return "Failed to edit message"
-	if lang == 'fr': return "Failed to edit message"
+	if lang == 'en': return "Failed to edit message"
 	if lang == 'it': return "Failed to edit message"
+	if lang == 'fr': return "Failed to edit message"
+	if lang == 'es': return "Failed to edit message"
 	else: raise ValueError(f'Invalid language {lang}')
 def system_info(lang:str|None=None):
 	"""
 	### Locales
-	- En: **System information**
-	- Es: **System information**
 	- Fi: **System information**
-	- Fr: **System information**
+	- En: **System information**
 	- It: **System information**
+	- Fr: **System information**
+	- Es: **System information**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "System information"
-	if lang == 'es': return "System information"
 	if lang == 'fi': return "System information"
-	if lang == 'fr': return "System information"
+	if lang == 'en': return "System information"
 	if lang == 'it': return "System information"
+	if lang == 'fr': return "System information"
+	if lang == 'es': return "System information"
 	else: raise ValueError(f'Invalid language {lang}')
 def cpu_info(cpu,lang:str|None=None):
 	"""
 	### Locales
-	- En: **CPU: {cpu}**
-	- Es: **CPU: {cpu}**
 	- Fi: **CPU: {cpu}**
-	- Fr: **CPU: {cpu}**
+	- En: **CPU: {cpu}**
 	- It: **CPU: {cpu}**
+	- Fr: **CPU: {cpu}**
+	- Es: **CPU: {cpu}**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "CPU: {cpu}".format_map({"cpu": cpu})
-	if lang == 'es': return "CPU: {cpu}".format_map({"cpu": cpu})
 	if lang == 'fi': return "CPU: {cpu}".format_map({"cpu": cpu})
-	if lang == 'fr': return "CPU: {cpu}".format_map({"cpu": cpu})
+	if lang == 'en': return "CPU: {cpu}".format_map({"cpu": cpu})
 	if lang == 'it': return "CPU: {cpu}".format_map({"cpu": cpu})
+	if lang == 'fr': return "CPU: {cpu}".format_map({"cpu": cpu})
+	if lang == 'es': return "CPU: {cpu}".format_map({"cpu": cpu})
 	else: raise ValueError(f'Invalid language {lang}')
 def sync_hub_info(lang:str|None=None):
 	"""
 	### Locales
-	- En: **Sync hub**
-	- Es: **Sync hub**
 	- Fi: **Sync hub**
-	- Fr: **Sync hub**
+	- En: **Sync hub**
 	- It: **Sync hub**
+	- Fr: **Sync hub**
+	- Es: **Sync hub**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Sync hub"
-	if lang == 'es': return "Sync hub"
 	if lang == 'fi': return "Sync hub"
-	if lang == 'fr': return "Sync hub"
+	if lang == 'en': return "Sync hub"
 	if lang == 'it': return "Sync hub"
+	if lang == 'fr': return "Sync hub"
+	if lang == 'es': return "Sync hub"
 	else: raise ValueError(f'Invalid language {lang}')
 def sync_hub_description(connected,url,lang:str|None=None):
 	"""
 	### Locales
-	- En: **Connected: {connected}, URL: {url}**
-	- Es: **Connected: {connected}, URL: {url}**
 	- Fi: **Connected: {connected}, URL: {url}**
-	- Fr: **Connected: {connected}, URL: {url}**
+	- En: **Connected: {connected}, URL: {url}**
 	- It: **Connected: {connected}, URL: {url}**
+	- Fr: **Connected: {connected}, URL: {url}**
+	- Es: **Connected: {connected}, URL: {url}**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "Connected: {connected}, URL: {url}".format_map({"connected": connected,"url": url})
-	if lang == 'es': return "Connected: {connected}, URL: {url}".format_map({"connected": connected,"url": url})
 	if lang == 'fi': return "Connected: {connected}, URL: {url}".format_map({"connected": connected,"url": url})
-	if lang == 'fr': return "Connected: {connected}, URL: {url}".format_map({"connected": connected,"url": url})
+	if lang == 'en': return "Connected: {connected}, URL: {url}".format_map({"connected": connected,"url": url})
 	if lang == 'it': return "Connected: {connected}, URL: {url}".format_map({"connected": connected,"url": url})
+	if lang == 'fr': return "Connected: {connected}, URL: {url}".format_map({"connected": connected,"url": url})
+	if lang == 'es': return "Connected: {connected}, URL: {url}".format_map({"connected": connected,"url": url})
 	else: raise ValueError(f'Invalid language {lang}')
 def os_info(os,lang:str|None=None):
 	"""
 	### Locales
-	- En: **OS: {os}**
-	- Es: **OS: {os}**
 	- Fi: **OS: {os}**
-	- Fr: **OS: {os}**
+	- En: **OS: {os}**
 	- It: **OS: {os}**
+	- Fr: **OS: {os}**
+	- Es: **OS: {os}**
 	"""
 	if not lang: lang=default_lang
-	if lang == 'en': return "OS: {os}".format_map({"os": os})
-	if lang == 'es': return "OS: {os}".format_map({"os": os})
 	if lang == 'fi': return "OS: {os}".format_map({"os": os})
-	if lang == 'fr': return "OS: {os}".format_map({"os": os})
+	if lang == 'en': return "OS: {os}".format_map({"os": os})
 	if lang == 'it': return "OS: {os}".format_map({"os": os})
+	if lang == 'fr': return "OS: {os}".format_map({"os": os})
+	if lang == 'es': return "OS: {os}".format_map({"os": os})
 	else: raise ValueError(f'Invalid language {lang}')
