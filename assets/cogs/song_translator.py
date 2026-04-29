@@ -109,7 +109,7 @@ class SongTranslator(commands.Cog):
 
         translated_texts = self.deepl_translate(texts)
         for i, text in enumerate(translated_texts):
-            subtitles = subtitles.replace(f"CONTENT{i}", text)
+            subtitles = subtitles.replace(f"CONTENT{i}", text, 1)
 
         return subtitles
 
