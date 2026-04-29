@@ -3,6 +3,8 @@ from discord.ext import commands
 from discord.ext.commands import Context
 import requests
 from requests import Response
+from modules.sentenceprocessing import send_message
+import os
 
 class AIConnector(commands.Cog):
     def __init__(self, bot):
@@ -33,13 +35,14 @@ class AIConnector(commands.Cog):
         content = content.strip()
 
         async with ctx.typing():
-            response: Response = requests.post("http://host.docker.internal:3800/generate", json={"prompt": content, "person": person})
-
+            response: Response = requests.post("http://host.docker.internal:3800/generate", json={"prompt": content, "person": person}, headers={
+                "X-Auth": os.environ.get("AI_KEY")
+            })
         if comparing:
             json: dict = response.json()["generated"]
-            await ctx.send(f"Charles: {json[0]}\n\nExpect: {json[1]}\n\nRock: {json[2]}\n\nRuotsin: {json[3]}\n\nAll: {json[4]}")
+            await send_message(ctx, f"Charles: {json[0]}\n\nExpect: {json[1]}\n\nRock: {json[2]}\n\nRuotsin: {json[3]}\n\nAll: {json[4]}")
         else:
-            await ctx.send(response.json()["generated"])
+            await send_message(ctx, response.json().get("generated", "Failed to generate???"))
 
 async def setup(bot):
     await bot.add_cog(AIConnector(bot))

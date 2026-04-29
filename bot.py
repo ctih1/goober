@@ -78,7 +78,7 @@ from discord.ext import commands
 
 from modules.markovmemory import *
 from modules.sentenceprocessing import *
-from modules.unhandledexception import handle_exception
+from modules.unhandledexception import handle_exception, handle_exception_with_context
 from modules.image import gen_demotivator
 
 sys.excepthook = handle_exception
@@ -201,18 +201,18 @@ async def on_ready() -> None:
 
 @bot.event
 async def on_command_error(ctx: commands.Context, error: commands.CommandError) -> None:
-    from modules.unhandledexception import handle_exception
-
     if isinstance(error, commands.CommandInvokeError):
         original: Exception = error.original
-        handle_exception(
+        await handle_exception_with_context(
+            ctx,
             type(original),
             original,
             original.__traceback__,
             context=f"Command: {ctx.command} | User: {ctx.author}",
         )
     else:
-        handle_exception(
+        await handle_exception_with_context(
+            ctx,
             type(error),
             error,
             error.__traceback__,

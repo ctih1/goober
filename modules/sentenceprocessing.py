@@ -58,15 +58,15 @@ async def send_message(
     embed: discord.Embed | None = None,
     file: discord.File | None = None,
     edit: bool = False,
-    message_reference: discord.Message | None = None,
+    edit_message_reference: discord.Message | None = None,
 ) -> discord.Message | None:
 
     sent_message: discord.Message | None = None
 
-    if edit and message_reference:
+    if edit and edit_message_reference:
         try:
-            await message_reference.edit(content=message, embed=embed)
-            return message_reference
+            await edit_message_reference.edit(content=message, embed=embed)
+            return edit_message_reference
         except Exception as e:
             await ctx.send(f"{k.edit_fail()} {e}")
             return None
