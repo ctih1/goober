@@ -66,6 +66,21 @@ class SongTranslator(commands.Cog):
 
         return string
 
+    def deepl_translate(self, texts: List[str]) -> List[str]:
+        logger.info("Getting DEEPL Translations")
+        res = requests.post("https://api-free.deepl.com/v2/translate",
+                            json={
+                                "text": texts,
+                                "target_lang": "EN",
+                                "split_sentences": "off"
+                            },
+                            headers={
+                                "Authorization": "DeepL-Auth-Key " + os.environ["DEEPL_KEY"],
+                                "Content-Type": "application/json"
+                            })
+        
+        return [obj["text"] for obj in res.json()["translations"]]
+
 
     def turn_synced_to_srt(self, synced: str, video_length_s: float, offset: float) -> str:
         minutes = video_length_s//60
@@ -73,6 +88,8 @@ class SongTranslator(commands.Cog):
         last_subtitle = f"00:{str(minutes).zfill(2)}:{str(video_length_s-(minutes*60)).zfill(2)},00"
 
         lyrics = synced.split("\n")
+
+        texts = []
 
         for i, lyric in enumerate(lyrics):
             if not lyric: continue
@@ -86,14 +103,22 @@ class SongTranslator(commands.Cog):
             else:
                 next_time = last_subtitle
 
-            srt = f"{i+1}\n{srt_time} --> {next_time}\n{text.strip()}\n\n"
+            srt = f"{i+1}\n{srt_time} --> {next_time}\nCONTENT{i}\n\n"
+            texts.append(text.strip())
             subtitles += srt
+
+        translated_texts = self.deepl_translate(texts)
+        for i, text in enumerate(translated_texts):
+            subtitles = subtitles.replace(f"CONTENT{i}", text)
 
         return subtitles
 
     async def translate_and_combine(self, message: discord.Message, video_id: str, video_length: float, lyrics: str, synced: bool, offset: float = 0.0) -> None:
+        await message.edit(content="Translating lyrics...")
+
         if not synced:
-            await message.edit(content=lyrics)
+            translated_subtitles = "\n".join(self.deepl_translate(lyrics.split("\n")))
+            await message.edit(content=translated_subtitles)
             return
     
         with open(f"data/youtube/{video_id}.srt", "w", encoding="utf-8") as f:
@@ -101,6 +126,8 @@ class SongTranslator(commands.Cog):
         
         path = os.path.abspath(f"data/youtube/{video_id}").replace("\\", "/")
         logger.info(path)
+
+        await message.edit(content="Burning lyrics onto video")
 
         command = f'{os.environ.get("FFMPEG_PATH", "ffmpeg")} -i {path}.mp4 {os.environ.get("FFMPEG_ARGS", "")} -vf "subtitles=filemame={path}.srt" {path}_sub.mp4'
         logger.info(command)
@@ -112,7 +139,7 @@ class SongTranslator(commands.Cog):
         logger.info("Done")
 
         if os.path.getsize(path+"_sub.mp4") < 9.5*1024*1024:
-            await message.edit(content="Sending...")
+            await message.edit(content="Sending video...")
             with open(path+"_sub.mp4", "rb") as f:
                 await message.reply(file=discord.File(f))
         else:
@@ -157,7 +184,6 @@ class SongTranslator(commands.Cog):
 
         if len(matches) > 1:
             response_string = ""
-
             
             for i, match in enumerate(matches, start=1):
                 styling = "**" if match["syncedLyrics"] else ""
