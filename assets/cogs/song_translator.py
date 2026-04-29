@@ -220,7 +220,7 @@ class SongTranslator(commands.Cog):
                 if len(parts) > 1:
                     offset = float(parts[1])
 
-                song_id = int(parts[0])
+                song_id = int(parts[0])-1
 
                 song = waiting_object["options"][song_id]
                 synced_lyrics = song["syncedLyrics"]
