@@ -59,7 +59,7 @@ async def send_message(
     file: discord.File | None = None,
     edit: bool = False,
     edit_message_reference: discord.Message | None = None,
-) -> discord.Message | None:
+) -> discord.Message:
 
     sent_message: discord.Message | None = None
 
@@ -78,7 +78,7 @@ async def send_message(
     else:
         sent_message = await ctx.send(content=message)
 
-    return sent_message
+    return sent_message # type: ignore
 
 
 def append_mentions_to_18digit_integer(message):

@@ -15,10 +15,12 @@ settings = settings_manager.settings
 class PermissionError(Exception):
     pass
 
+def is_admin(id: int) -> bool:
+    return id in settings["bot"]["owner_ids"]
 
 def requires_admin():
     async def wrapper(ctx: discord.ext.commands.Context):
-        if ctx.author.id not in settings["bot"]["owner_ids"]:
+        if not is_admin(ctx.author.id):
             await ctx.send(
                 "You don't have the necessary permissions to run this command!"
             )
