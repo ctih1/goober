@@ -18,7 +18,7 @@ import logging
 import math
 import os
 import shutil
-
+import asyncio
 
 logger = logging.getLogger("goober")
 
@@ -160,11 +160,14 @@ class SongTranslator(commands.Cog):
         if await video.length() > 5*60 and not is_admin(user_id):
             await message.edit(content="Video is too long!! Consult an admin to download xwx")
         
-        await message.edit(content=f"Found video '{await video.title()}', downloading")
+        await message.edit(content=f"Found video '{await video.title()}', downloading.. This may take a bit...")
         stream = (await video.streams()).filter(progressive=True, file_extension="mp4")
         target_stream = stream.get_by_resolution("480p") or stream.get_by_resolution("360p") or stream.get_by_resolution("240p") or stream.get_by_resolution("144p")
+        assert target_stream
 
-        target_stream.download(f"data/youtube", filename=video.video_id+".mp4") # type: ignore
+        loop = asyncio.get_running_loop()
+
+        await loop.run_in_executor(None, lambda: target_stream.download(f"data/youtube", filename=video.video_id+".mp4"))
 
         return video
 
