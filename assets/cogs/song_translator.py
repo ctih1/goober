@@ -19,6 +19,11 @@ import math
 import os
 import shutil
 
+PROXIES = {
+    "https": "65.108.159.129:999",
+    "http": "65.108.159.129:3128"
+}
+
 logger = logging.getLogger("goober")
 
 class LRCLIBResponse(TypedDict):
@@ -154,7 +159,7 @@ class SongTranslator(commands.Cog):
     async def download_video(self, url: str, user_id: int, message: discord.Message) ->  AsyncYouTube:
         await message.edit(content="Fetching video data...")
 
-        video = AsyncYouTube(url, "WEB")
+        video = AsyncYouTube(url, "WEB", proxies=PROXIES)
 
         if await video.length() > 5*60 and not is_admin(user_id):
             await message.edit(content="Video is too long!! Consult an admin to download xwx")
