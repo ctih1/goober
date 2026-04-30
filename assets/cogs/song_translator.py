@@ -155,7 +155,7 @@ class SongTranslator(commands.Cog):
     async def download_video(self, url: str, user_id: int, message: discord.Message) ->  AsyncYouTube:
         await message.edit(content="Fetching video data...")
 
-        video = AsyncYouTube(url, "WEB")
+        video = AsyncYouTube(url, client="WEB", use_oauth=True, allow_oauth_cache=True)
 
         if await video.length() > 5*60 and not is_admin(user_id):
             await message.edit(content="Video is too long!! Consult an admin to download xwx")
