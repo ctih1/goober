@@ -53,12 +53,12 @@ class SongTranslator(commands.Cog):
         i_seconds = int(raw[3:5]) + math.floor(offset) - int(minute_offset * 60)
         i_milliseconds = int(round(int(raw[6:8])*10 + ms_offset, 3))
         
-        if i_milliseconds > 999:
-            i_milliseconds = 0
+        while i_milliseconds > 999:
+            i_milliseconds -= 999
             i_seconds += 1
     
-        if i_seconds >= 60:
-            i_seconds = 0
+        while i_seconds >= 60:
+            i_seconds -= 60
             i_minutes += 1
 
         string =  f"00:{str(i_minutes).zfill(2)}:{str(i_seconds).zfill(2)},{str(i_milliseconds).zfill(3)}"
@@ -215,7 +215,8 @@ class SongTranslator(commands.Cog):
         video = await self.download_video(url, ctx.author.id, message)
 
         await self.translate_and_combine(message, video.video_id, await video.length(), synced_lyrics or lyrics, bool(synced_lyrics))
-    
+
+
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
         waiting_object: WaitingObject | None = self.waiting_ids.get(message.author.id)
