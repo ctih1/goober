@@ -20,8 +20,8 @@ import os
 import shutil
 
 PROXIES = {
-    "https": "65.108.159.129:999",
-    "http": "65.108.159.129:3128"
+    "https": "https://65.108.159.129:999",
+    "http": "https://65.108.159.129:3128"
 }
 
 logger = logging.getLogger("goober")
