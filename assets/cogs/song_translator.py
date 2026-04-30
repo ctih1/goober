@@ -190,31 +190,20 @@ class SongTranslator(commands.Cog):
             await message.edit(content=f"No lyrics available!")
             return
 
-        if len(matches) > 1:
-            response_string = ""
+        response_string = ""
             
-            for i, match in enumerate(matches, start=1):
-                styling = "**" if match["syncedLyrics"] else ""
+        for i, match in enumerate(matches, start=1):
+            styling = "**" if match["syncedLyrics"] else ""
 
-                response_string +=  f"""{styling} {i}. {match["artistName"]} - {match["trackName"]} {styling} ({match["duration"]}s {f"starts @ {self.get_first_lyric_time(match['syncedLyrics'])}s" if styling else ""})\n"""
+            response_string +=  f"""{styling} {i}. {match["artistName"]} - {match["trackName"]} {styling} ({match["duration"]}s {f"starts @ {self.get_first_lyric_time(match['syncedLyrics'])}s" if styling else ""})\n"""
 
-            await message.edit(content=f"Found multiple matches. **Bolded entries are time synced**. Reply with the number:\n\n{response_string}")
+        await message.edit(content=f"Found multiple matches. **Bolded entries are time synced**. Reply with the number:\n\n{response_string}")
 
-            self.waiting_ids[ctx.author.id] = {
-                "options": matches,
-                "video_url": url,
-                "message": message
-            }
-
-            return
-        
-        else:
-            synced_lyrics = matches[0]["syncedLyrics"]
-            lyrics = matches[0]["plainLyrics"]
-
-        video = await self.download_video(url, ctx.author.id, message)
-
-        await self.translate_and_combine(message, video.video_id, await video.length(), synced_lyrics or lyrics, bool(synced_lyrics))
+        self.waiting_ids[ctx.author.id] = {
+            "options": matches,
+            "video_url": url,
+            "message": message
+        }
 
 
     @commands.Cog.listener()
