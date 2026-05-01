@@ -4,7 +4,7 @@ from discord import app_commands
 
 import discord.ext
 import discord.ext.commands
-
+import math
 import random
 import time
 from modules.permission import requires_admin
@@ -13,6 +13,16 @@ from modules.settings import instance as settings_manager
 from typing import TypedDict, Dict
 import requests_async
 import logging
+import datetime
+
+class SettingsType(TypedDict):
+    latitude: float
+    longtitude: float
+
+default_settings: SettingsType = {
+    "latitude": 30,
+    "longtitude": 0
+}
 
 class IndoorData(TypedDict):
     temperature: float
@@ -236,6 +246,33 @@ OUTDOOR_HUMIDITY_TRESHOLDS: Dict[int, TresholdValue] = {
     }
 }
 
+SUN_POSITION_TRESHOLD: Dict[int, TresholdValue] = {
+    -100: {
+        "label": "Night",
+        "emoji": "🌌"
+    },
+    -18: {
+        "label": "Astronomical twilight",
+        "emoji": "🌙"
+    },
+    -12: {
+        "label": "Nautical twilight",
+        "emoji": "⭐"
+    },
+    -6: {
+        "label": "Civil twilight",
+        "emoji": ""
+    },
+    -1: {
+        "label": "Sunrise or -set",
+        "emoji": "🌅"
+    },
+    2: {
+        "label": "Day",
+        "emoji": "☀️"
+    }
+}
+
 logger = logging.getLogger("goober")
 
 class Climate(commands.Cog): 
@@ -278,6 +315,25 @@ class Climate(commands.Cog):
             data[key.strip()] = float(value.strip())
         
         return data
+    
+    def get_sun_angle(self) -> float:
+        settings: SettingsType = settings_manager.get_plugin_settings("climate", default_settings) # type: ignore
+
+        now = datetime.datetime.now()
+        hour = now.hour + now.minute / 60 + now.second / 3600
+        solar_hour = hour + (settings["longtitude"]-30)/15
+        nth_day_of_year = (now - datetime.datetime(now.year, 1, 1)).days + 1    
+        declanation: float = math.radians(23.445 * math.sin(((360/365.25) * (nth_day_of_year-81)*math.pi) / 180))
+        
+
+        return math.degrees(math.asin(
+            math.sin(declanation) * 
+            math.sin(math.radians(settings["latitude"])) + 
+            math.cos(declanation) * 
+            math.cos(math.radians(settings["latitude"])) *
+            math.cos(math.radians(15 * (solar_hour-12)))
+        ))
+        
 
     @commands.command()
     async def indoors(self, ctx: commands.Context):
@@ -293,7 +349,7 @@ class Climate(commands.Cog):
         air_humidity: float = (data["scd40_humidity"] + data["relative_humidity"]) / 2
 
         embed.add_field(**self.format_embed("CO2", "PPM", data['carbon_dioxide'], CO2_TRESHOLDS))
-        embed.add_field(**self.format_embed("Temperature", "*C", calculated_temp, TEMP_TRESHOLDS))
+        embed.add_field(**self.format_embed("Temperature", "°C", calculated_temp, TEMP_TRESHOLDS))
         embed.add_field(**self.format_embed("Relative Humidity", "%", air_humidity, HUMIDITY_TRESHOLDS))
         embed.add_field(**self.format_embed("Air Resistance", "Ω", data['air_resistance'], RESISTANCE_TRESHOLDS))
 
@@ -315,8 +371,19 @@ class Climate(commands.Cog):
         embed.add_field(**self.format_embed("PM10.0", "µg/m³", data["mc10p0"], PM100_TRESHOLDS))
         embed.add_field(**self.format_embed("Temperature", "*C", data["temp"], OUTDOOR_TEMP_TRESHOLDS))
         embed.add_field(**self.format_embed("Relative Humidity", "%", data["humidity"], OUTDOOR_HUMIDITY_TRESHOLDS))
+        embed.add_field(**self.format_embed("Sun angle", "°", self.get_sun_angle(), SUN_POSITION_TRESHOLD))
 
         await send_message(ctx, embed=embed)
+
+    @requires_admin()
+    @commands.command()
+    async def set_coords(self, ctx: commands.Context, latitude: float, longtitude: float):
+        settings: SettingsType = settings_manager.get_plugin_settings("climate", default_settings) # type: ignore
+        settings["latitude"] = latitude
+        settings["longtitude"] = longtitude
+        settings_manager.set_plugin_setting("climate", settings)
+
+        await send_message(ctx, "Saved latitude!")
 
 async def setup(bot):
     await bot.add_cog(Climate(bot))
