@@ -263,7 +263,7 @@ SUN_POSITION_TRESHOLD: Dict[int, TresholdValue] = {
         "label": "Civil twilight",
         "emoji": ""
     },
-    -1: {
+    -2: {
         "label": "Sunrise or -set",
         "emoji": "🌅"
     },
