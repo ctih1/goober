@@ -7,6 +7,8 @@ import platform
 class Flex(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.description = "💪|Flex your machine!!"
+
 
     @commands.command()
     async def flex(self, ctx):

@@ -20,6 +20,8 @@ class FileSync(commands.Cog):
         self.mode: AvailableModes | None = None
         self.peer_id = None
         self.awaiting_file = False
+        self.description = "🛜|Send and receive files between bots"
+
 
     @requires_admin()
     @commands.command()

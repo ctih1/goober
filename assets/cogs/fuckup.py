@@ -41,9 +41,10 @@ async def deepfryimage(path):
         return out_path
 
 
-class whami(commands.Cog):
+class FuckUp(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.description = "♨️|Fucks up images"
 
     @commands.command()
     async def fuckup(self, ctx):
@@ -100,4 +101,4 @@ class whami(commands.Cog):
 
 
 async def setup(bot):
-    await bot.add_cog(whami(bot))
+    await bot.add_cog(FuckUp(bot))

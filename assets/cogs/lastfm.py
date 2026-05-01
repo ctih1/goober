@@ -19,6 +19,8 @@ class LastFmCog(commands.Cog):
         self.update_presence_task = None
         self.ready = False
         bot.loop.create_task(self.wait_until_ready())
+        self.description = "📻|Update presence to match LastFM"
+
 
     async def wait_until_ready(self):
         await self.bot.wait_until_ready()

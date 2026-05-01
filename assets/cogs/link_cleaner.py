@@ -27,6 +27,7 @@ DEFAULT: LinkCleanerSettings = {
 class LinkCleaner(commands.Cog): 
     def __init__(self, bot: discord.ext.commands.Bot):
         self.bot: discord.ext.commands.Bot = bot
+        self.description = "✂|Removes tracking URLs from links"
 
 
     @commands.command()

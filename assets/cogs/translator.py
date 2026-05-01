@@ -213,6 +213,8 @@ class Translator(commands.Cog):
         self, bot: discord.ext.commands.Bot
     ):  # type hinting (aka : discord.ext.commands.Bot) isn't necessary, but provides better intellisense in code editors
         self.bot: discord.ext.commands.Bot = bot
+        self.description = "🔣|OCR image translator"
+
 
     # A command which requires the executor to be an admin, and takes a discord user as an argument
     @requires_admin()  # from modules.permission import requires_admin

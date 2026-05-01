@@ -9,9 +9,9 @@ import random
 from modules.permission import is_admin
 from modules.sentenceprocessing import send_message
 from modules.settings import instance as settings_manager
-from typing import TypedDict, Dict, List
+from modules.helpers.lrclib import LRCAPI, LRCLIBResponse
+from typing import TypedDict, Dict, List, Any
 import time
-from slugify import slugify
 from pytubefix import AsyncYouTube
 import requests
 import logging
@@ -21,17 +21,6 @@ import shutil
 import asyncio
 
 logger = logging.getLogger("goober")
-
-class LRCLIBResponse(TypedDict):
-    id: int
-    name: str
-    trackName: str
-    artistName: str
-    albumName: str
-    duration: float
-    instrumental: bool
-    plainLyrics: str
-    syncedLyrics: str
 
 
 class WaitingObject(TypedDict):
@@ -44,6 +33,8 @@ class SongTranslator(commands.Cog):
     def __init__(self, bot: discord.ext.commands.Bot):
         self.bot: discord.ext.commands.Bot = bot
         self.waiting_ids: Dict[int, WaitingObject] = {}
+        self.description = "♫|Finds song lyrics, translates them into English, and burns onto a music video."
+
 
     def get_srt_time(self, raw: str, offset: float) -> str:
         minute_offset = offset//60
@@ -170,8 +161,7 @@ class SongTranslator(commands.Cog):
         await loop.run_in_executor(None, lambda: target_stream.download(f"data/youtube", filename=video.video_id+".mp4"))
 
         return video
-
-
+    
     @commands.command()
     async def translate(self, ctx: commands.Context, *args):
         logger.info(f"Trying {' '.join(args[1:])}")
@@ -183,15 +173,14 @@ class SongTranslator(commands.Cog):
 
         message = await send_message(ctx, "Searching for subtitles...")
 
-        response = requests.get(f"https://lrclib.net/api/search?q={slugify(' '.join(args[1:]), separator='+')}")
-        matches: List[LRCLIBResponse] = response.json()
+        matches = await LRCAPI.search_song(' '.join(args[1:]))
 
         if len(matches) == 0:
             await message.edit(content=f"No lyrics available!")
             return
 
         response_string = ""
-            
+        
         for i, match in enumerate(matches, start=1):
             styling = "**" if match["syncedLyrics"] else ""
 

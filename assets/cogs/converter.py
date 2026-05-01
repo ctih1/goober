@@ -300,6 +300,7 @@ class Converters:
 class Converter(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.description = "🔄|Automatically convert between units (Metric/Imperial) found in chats"
         self.regexes: Dict[re.Pattern, Callable] = {
             re.compile(r"(?:\s|^)(-?[0-9(.?|,?)]+)\s?(c|\*c)(\s|$)", re.IGNORECASE): Converters.from_celsius,
             re.compile(r"(?:\s|^)(-?[0-9(.?|,?)]+)\s?(f|\*f)(\s|$)", re.IGNORECASE): Converters.from_fahrenheit,

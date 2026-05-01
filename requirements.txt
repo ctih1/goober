@@ -16,3 +16,4 @@ requests
 easyocr
 pytubefix
 python-slugify
+requests-async

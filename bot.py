@@ -54,7 +54,6 @@ from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 from modules.settings import instance as settings_manager, ActivityType
 from modules.sync_connector import instance as sync_connector
-import threading
 
 messages_recieved = 0
 
@@ -105,6 +104,8 @@ slash_commands_enabled: bool = False
 intents: discord.Intents = discord.Intents.default()
 intents.messages = True
 intents.message_content = True
+intents.presences = True
+intents.members = True
 
 bot: commands.Bot = commands.Bot(
     command_prefix=settings["bot"]["prefix"],
@@ -144,8 +145,7 @@ async def load_cogs_from_folder(bot: commands.Bot, folder_name="assets/cogs"):
             logger.info(f"{k.loaded_cog()} {cog_name}")
         except Exception as e:
             logger.error(f"{k.cog_fail()} {cog_name} {e}")
-            traceback.print_exc()
-
+            traceback.print_exc()    
 
 # Event: Called when the bot is ready
 @bot.event

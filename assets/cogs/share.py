@@ -26,7 +26,7 @@ default_settings: SettingsType = {
 class Share(commands.Cog): 
     def __init__(self, bot: discord.ext.commands.Bot):
         self.bot: discord.ext.commands.Bot = bot
-
+        self.description = "?"
 
     @requires_admin()
     @commands.command()
@@ -36,13 +36,13 @@ class Share(commands.Cog):
             return
         
         if not link.startswith(("http://", "https://")):
-            await send_message("Please specify a valid link with https://")
+            await send_message(ctx, "Please specify a valid link with https://")
             return
 
         settings: SettingsType = settings_manager.get_plugin_settings("share", default=default_settings) #type: ignore[assignment]
 
         if link in settings["medias"]:
-            await send_message("Image is already in medias!")
+            await send_message(ctx, "Image is already in medias!")
             return
         
         settings["medias"].append(link)
@@ -58,13 +58,13 @@ class Share(commands.Cog):
             return
         
         if not link.startswith(("http://", "https://")):
-            await send_message("Please specify a valid link with https://")
+            await send_message(ctx, "Please specify a valid link with https://")
             return
 
         settings: SettingsType = settings_manager.get_plugin_settings("share", default=default_settings) #type: ignore[assignment]
 
         if link not in settings["medias"]:
-            await send_message("Image isn't in medias!")
+            await send_message(ctx, "Image isn't in medias!")
             return
         
         settings["medias"].remove(link)

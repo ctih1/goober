@@ -3,9 +3,11 @@ import discord
 from discord.ext import commands
 
 
-class eightball(commands.Cog):
+class Eightball(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.description = "🎱|It is certainly an 8-ball"
+
 
     @commands.command()
     async def eightball(self, ctx):
@@ -38,4 +40,4 @@ class eightball(commands.Cog):
 
 
 async def setup(bot):
-    await bot.add_cog(eightball(bot))
+    await bot.add_cog(Eightball(bot))

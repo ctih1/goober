@@ -25,6 +25,7 @@ class BreakingNews(commands.Cog):
         self.font: ImageFont.FreeTypeFont = ImageFont.truetype(
             os.path.join("assets", "fonts", "SpecialGothic.ttf"), self.font_size
         )
+        self.description = "🚨|Lets you make your very own news stories"
 
         self.model: markovify.NewlineText | None = load_markov_model()
 
@@ -53,7 +54,6 @@ class BreakingNews(commands.Cog):
             return
 
         if not message.content.lower().startswith("breaking news:"):
-            logger.debug("Ignoring message - doesnt start with breaking news:")
             return
         
         if not sync_hub.can_breaking_news(message.id, message.channel.id):

@@ -9,6 +9,8 @@ import os
 class AIConnector(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.description = "Interact with the goober gang models"
+
 
     @commands.command()
     async def do(self, ctx: Context, *, content: str):

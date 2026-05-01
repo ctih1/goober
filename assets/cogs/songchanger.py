@@ -8,9 +8,11 @@ from modules.permission import requires_admin
 from typing import get_args, Dict
 
 
-class songchange(commands.Cog):
+class SongChanger(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.description = "🎧|Changes the bot's 'Listening to' status"
+
 
     def get_local_version():
         if os.path.exists(LOCAL_VERSION_FILE):
@@ -23,7 +25,7 @@ class songchange(commands.Cog):
 
     @requires_admin()
     @commands.command()
-    async def changesong(self, ctx, song: str):
+    async def change_song(self, ctx, song: str):
         await ctx.send(f"Changed song to {song}")
         try:
             await self.bot.change_presence(
@@ -71,4 +73,4 @@ class songchange(commands.Cog):
         await ctx.send("Changed activity!")
 
 async def setup(bot):
-    await bot.add_cog(songchange(bot))
+    await bot.add_cog(SongChanger(bot))

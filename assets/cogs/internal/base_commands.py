@@ -29,15 +29,15 @@ class BaseCommands(commands.Cog):
         self.bot: discord.ext.commands.Bot = bot
 
     @commands.command()
-    async def help(self, ctx: commands.Context) -> None:
+    async def help(self, ctx: commands.Context, layout: str = "h") -> None:
         embed: discord.Embed = discord.Embed(
             title=f"{k.command_help_embed_title()}",
-            description=f"{k.command_help_embed_desc()}",
+            description=f"{k.command_help_embed_desc()}. Do `{settings['bot']['prefix']}help v` to use a vertical layout",
             color=discord.Colour(0x000000),
         )
 
         command_categories = {
-            f"{k.command_help_categories_general()}": [
+            "General": [
                 "mem",
                 "talk",
                 "about",
@@ -46,38 +46,41 @@ class BaseCommands(commands.Cog):
                 "demotivator",
                 "help",
             ],
-            f"{k.command_help_categories_admin()}": ["stats", "retrain", "setlanguage"],
+            "Administration": ["stats", "retrain", "setlanguage", "add_owner", "remove_owner", "blacklist_user", "unblacklist_user", "restart", "force_update"],
+            "Cog management": ["enable", "load", "unload", "disable", "reload", "listcogs"],
+            "Synchub": ["synchub_test", "synchub_connect", "synchub_stats"]
         }
 
-        custom_commands: List[str] = []
+        cog_commands: Dict[str, List[str]] = {}
+        category_descriptions: Dict[str, str] = {
+            "Administration": "🛠️|Commands meant for stuff like stuff",
+            "Cog management": "💼|Commands for managing cogs",
+            "Synchub": "📨|Commands for managing Sync hub",
+            "General": "🌐|General commands for stuff"
+        }
+
         for cog_name, cog in self.bot.cogs.items():
             for command in cog.get_commands():
-                if (
-                    command.name
-                    not in command_categories[f"{k.command_help_categories_general()}"]
-                    and command.name
-                    not in command_categories[f"{k.command_help_categories_admin()}"]
-                ):
-                    custom_commands.append(command.name)
+                if any([command.name in commands for commands in list(command_categories.values())]): continue
 
-        if custom_commands:
-            embed.add_field(
-                name=f"{k.command_help_categories_custom()}",
-                value="\n".join(
-                    [
-                        f"{settings['bot']['prefix']}{command}"
-                        for command in custom_commands
-                    ]
-                ),
-                inline=False,
-            )
+                if cog_commands.get(cog_name) is None:
+                    cog_commands[cog_name] = []
+                
+                cog_commands[cog_name].append(command.name)
+            category_descriptions[cog_name] = cog.description
 
-        for category, commands_list in command_categories.items():
+
+        for category, commands_list in (command_categories | cog_commands).items():
             commands_in_category: str = "\n".join(
-                [f"{settings['bot']['prefix']}{command}" for command in commands_list]
+                [f"{settings['bot']['prefix']}**{command}**" for command in commands_list]
             )
-            embed.add_field(name=category, value=commands_in_category, inline=False)
+            description = category_descriptions.get(category, 'No description')
+            emoji = ""
+            if "|" in description:
+                emoji, description = description.split("|", 1)
 
+            embed_value = f"\n\n{commands_in_category}\n‌" # don't remove zero width non joiner since it adds spacing
+            embed.add_field(name=f"{emoji} {category}", value=embed_value, inline=(False if layout == "v" else True))
         await send_message(ctx, embed=embed)
 
     @requires_admin()
@@ -98,10 +101,7 @@ class BaseCommands(commands.Cog):
 
         embed: discord.Embed = discord.Embed(
             title="Pong!!",
-            description=(
-                settings["bot"]["misc"]["ping_line"],
-                f"`{k.command_ping_embed_desc()}: {latency}ms`\n",
-            ),
+            description=f'{settings["bot"]["misc"]["ping_line"]}\n`{k.command_ping_embed_desc()}: {latency}ms`',
             color=discord.Colour(0x000000),
         )
         embed.set_footer(
