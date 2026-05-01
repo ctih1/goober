@@ -79,7 +79,7 @@ class BaseCommands(commands.Cog):
             if "|" in description:
                 emoji, description = description.split("|", 1)
 
-            embed_value = f"\n\n{commands_in_category}\n‌" # don't remove zero width non joiner since it adds spacing
+            embed_value = f"{description}\n\n{commands_in_category}\n‌" # don't remove zero width non joiner since it adds spacing
             embed.add_field(name=f"{emoji} {category}", value=embed_value, inline=(False if layout == "v" else True))
         await send_message(ctx, embed=embed)
 
