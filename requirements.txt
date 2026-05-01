@@ -13,7 +13,6 @@ websocket-client
 unalix==0.9
 psutil
 requests
-easyocr
 pytubefix
 python-slugify
 requests-async
