@@ -44,9 +44,6 @@ class CogManager(commands.Cog):
             await ctx.send("Give cog_name")
             return
 
-        if cog_name[:-3] not in settings["bot"]["enabled_cogs"]:
-            await ctx.send("Please enable the cog first!")
-            return
         if cog_name is None:
             await ctx.send("Please provide the cog name to load.")
             return
@@ -97,10 +94,7 @@ class CogManager(commands.Cog):
         if cog_name is None:
             await ctx.send("Please provide the cog name to reload.")
             return
-
-        if cog_name[:-3] not in settings["bot"]["enabled_cogs"]:
-            await ctx.send("Please enable the cog first!")
-            return
+        
         try:
             await self.bot.unload_extension(COG_PREFIX + cog_name)
             await self.bot.load_extension(COG_PREFIX + cog_name)
