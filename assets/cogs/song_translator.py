@@ -197,7 +197,7 @@ class SongTranslator(commands.Cog):
 
             response_string +=  f"""{styling} {i}. {match["artistName"]} - {match["trackName"]} {styling} ({match["duration"]}s {f"starts @ {self.get_first_lyric_time(match['syncedLyrics'])}s" if styling else ""})\n"""
 
-        await message.edit(content=f"Found multiple matches. **Bolded entries are time synced**. Reply with the number:\n\n{response_string}")
+        await message.edit(content=f"Found matches. **Bolded entries are time synced**. Reply with the number:\n\n{response_string}")
 
         self.waiting_ids[ctx.author.id] = {
             "options": matches,
