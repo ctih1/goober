@@ -28,6 +28,7 @@ class SpotifyLarper(commands.Cog):
         self.bot: discord.ext.commands.Bot = bot
         self.last_song_id: str = "0"
         self.last_request_time: float = 0
+        self.current_activity: discord.activity.Spotify | None = None
         self.description = "📝|Sets the bot's RPC to be a random lyric from the song you're listening to"
 
 
@@ -39,6 +40,15 @@ class SpotifyLarper(commands.Cog):
         settings_manager.set_plugin_setting("spotify_larper", settings)
 
         await send_message(ctx, f"Changed followed user to {user.mention}")
+
+    @commands.command()
+    async def now_larping(self, ctx: commands.Context):
+        if self.current_activity is None:
+            await send_message(ctx, "Currently not larping :sunglasses:")
+            return
+        
+        await send_message(ctx, f"Currently larping \"{self.current_activity.name}\" by {self.current_activity.artist}")
+        await send_message(ctx, self.current_activity.album_cover_url)
 
     
     @commands.Cog.listener()
@@ -108,6 +118,7 @@ class SpotifyLarper(commands.Cog):
             logger.info("Could not find a good enough lyric, skipping")
             return
 
+        self.current_activity = target_activity
 
         await self.bot.change_presence(
             activity=discord.Activity(
