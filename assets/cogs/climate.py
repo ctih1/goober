@@ -119,6 +119,10 @@ RESISTANCE_TRESHOLDS: Dict[int, TresholdValue] = {
 
 PM25_TRESHOLDS: Dict[int, TresholdValue] = {
     0: {
+        "label": "Excellent",
+        "emoji": "🔵"
+    },
+    6: {
         "label": "Good",
         "emoji": "🟢"
     },
@@ -139,6 +143,10 @@ PM25_TRESHOLDS: Dict[int, TresholdValue] = {
 
 PM100_TRESHOLDS: Dict[int, TresholdValue] = {
     0: {
+        "label": "Excellent",
+        "emoji": "🔵"
+    },
+    12: {
         "label": "Good",
         "emoji": "🟢"
     },
@@ -199,7 +207,7 @@ OUTDOOR_TEMP_TRESHOLDS: Dict[int, TresholdValue] = {
     },
     20: {
         "label": "Very warm",
-        "emoji": "🟠"
+        "emoji": "🟡"
     },
     25: {
         "label": "Hot",
@@ -220,7 +228,7 @@ OUTDOOR_HUMIDITY_TRESHOLDS: Dict[int, TresholdValue] = {
         "label": "Very dry",
         "emoji": "🟠"
     },
-    35: {
+    30: {
         "label": "Dry",
         "emoji": "🟡"
     },
@@ -270,6 +278,33 @@ SUN_POSITION_TRESHOLD: Dict[int, TresholdValue] = {
     2: {
         "label": "Day",
         "emoji": "☀️"
+    }
+}
+
+PRESSURE_TRESHOLS: Dict[int, TresholdValue] = {
+    900: {
+        "label": "Extremely low pressure",
+        "emoji": "🔴"
+    },
+    980: {
+        "label": "Very low pressure",
+        "emoji": "🟠"
+    },
+    995: {
+        "label": "Low pressure",
+        "emoji":  "🟡"
+    },
+    1005: {
+        "label": "Normal pressure",
+        "emoji": "🟢"
+    },
+    1015: {
+        "label": "High pressure",
+        "emoji": "🔵"
+    },
+    1025: {
+        "label": "Very high pressure",
+        "emoji": "🟣"
     }
 }
 
@@ -362,15 +397,20 @@ class Climate(commands.Cog):
         res = await requests_async.get("http://192.168.32.2:7777/metrics")
         data = self.parse_prometheus_format(res.text)
 
+        indoor_data = await requests_async.get("http://192.168.32.88:7778/data")
+
         embed = discord.Embed(
             title="Climate data",
             description=f"Information about my outdoor climate"
         )
 
+        pressure = indoor_data.json()["air_pressure"] * math.pow((1 - 119/44330), -5.225) 
+
         embed.add_field(**self.format_embed("PM2.5", "µg/m³", data["mc2p5"], PM25_TRESHOLDS))
         embed.add_field(**self.format_embed("PM10.0", "µg/m³", data["mc10p0"], PM100_TRESHOLDS))
-        embed.add_field(**self.format_embed("Temperature", "*C", data["temp"], OUTDOOR_TEMP_TRESHOLDS))
+        embed.add_field(**self.format_embed("Temperature", "°C", data["temp"], OUTDOOR_TEMP_TRESHOLDS))
         embed.add_field(**self.format_embed("Relative Humidity", "%", data["humidity"], OUTDOOR_HUMIDITY_TRESHOLDS))
+        embed.add_field(**self.format_embed("Air Pressure", "hPa", pressure, PRESSURE_TRESHOLS))
         embed.add_field(**self.format_embed("Sun angle", "°", self.get_sun_angle(), SUN_POSITION_TRESHOLD))
 
         await send_message(ctx, embed=embed)
