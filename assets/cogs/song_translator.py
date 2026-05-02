@@ -113,15 +113,19 @@ class SongTranslator(commands.Cog):
             await message.edit(content=translated_subtitles)
             return
     
-        with open(f"data/youtube/{video_id}.srt", "w", encoding="utf-8") as f:
-            f.writelines(self.turn_synced_to_srt(lyrics, video_length, offset))
-        
         path = os.path.abspath(f"data/youtube/{video_id}").replace("\\", "/")
-        logger.info(path)
+        os.makedirs(path, exist_ok=True)
 
+        video_path = os.path.join(path, "video.mp4")
+        subtitle_path = os.path.join(path, "subtitles.srt")
+        final_path = os.path.join(path, "final.mp4")
+
+        with open(subtitle_path, "w", encoding="utf-8") as f:
+            f.writelines(self.turn_synced_to_srt(lyrics, video_length, offset))
+    
         await message.edit(content="Burning lyrics onto video...")
 
-        command = f'{os.environ.get("FFMPEG_PATH", "ffmpeg")} -i {path}.mp4 {os.environ.get("FFMPEG_ARGS", "")} -vf "subtitles=filename={path}.srt" {path}_sub.mp4'
+        command = f'{os.environ.get("FFMPEG_PATH", "ffmpeg")} -i {video_path} {os.environ.get("FFMPEG_ARGS", "")} -vf "subtitles=filename={subtitle_path}" {final_path}'
         logger.info(command)
         code = os.system(command)
         if code != 0:
@@ -131,12 +135,12 @@ class SongTranslator(commands.Cog):
     
         logger.info("Done")
 
-        if os.path.getsize(path+"_sub.mp4") < 9.5*1024*1024:
+        if os.path.getsize(final_path) < 9.5*1024*1024:
             await message.edit(content="Sending video...")
-            with open(path+"_sub.mp4", "rb") as f:
+            with open(final_path, "rb") as f:
                 await message.reply(file=discord.File(f))
         else:
-            shutil.move(path+"_sub.mp4", f"data/cdn/{video_id}_sub.mp4")
+            shutil.move(final_path, f"data/cdn/{video_id}_sub.mp4")
             await message.reply(content=f"https://homecdn.frii.site/vids/{video_id}_sub.mp4")
 
 
@@ -158,7 +162,7 @@ class SongTranslator(commands.Cog):
 
         loop = asyncio.get_running_loop()
 
-        await loop.run_in_executor(None, lambda: target_stream.download(f"data/youtube", filename=video.video_id+".mp4"))
+        await loop.run_in_executor(None, lambda: target_stream.download(f"data/youtube/{video.video_id}", filename="video.mp4"))
 
         return video
     
