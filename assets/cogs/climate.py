@@ -350,24 +350,30 @@ class Climate(commands.Cog):
             data[key.strip()] = float(value.strip())
         
         return data
-    
+        
     def get_sun_angle(self) -> float:
-        settings: SettingsType = settings_manager.get_plugin_settings("climate", default_settings) # type: ignore
+        settings: SettingsType = settings_manager.get_plugin_settings("climate", default_settings)  # type: ignore
 
         now = datetime.datetime.now()
         hour = now.hour + now.minute / 60 + now.second / 3600
-        solar_hour = hour + (settings["longtitude"]-30)/15
-        nth_day_of_year = (now - datetime.datetime(now.year, 1, 1)).days + 1    
-        declanation: float = math.radians(23.445 * math.sin(((360/365.25) * (nth_day_of_year-81)*math.pi) / 180))
-        
+        solar_hour = hour + (settings["longtitude"] - 45) / 15
+        nth_day_of_year = (now - datetime.datetime(now.year, 1, 1)).days + 1
+        declination = math.radians(23.445 * math.sin(math.radians((360 / 365.25) * (nth_day_of_year - 81))))
+        hour_angle = math.radians(15 * (solar_hour - 12))
 
-        return math.degrees(math.asin(
-            math.sin(declanation) * 
-            math.sin(math.radians(settings["latitude"])) + 
-            math.cos(declanation) * 
+        result = math.degrees(math.asin(
+            math.sin(declination) *
+            math.sin(math.radians(settings["latitude"])) +
+            math.cos(declination) *
             math.cos(math.radians(settings["latitude"])) *
-            math.cos(math.radians(15 * (solar_hour-12)))
+            math.cos(hour_angle)
         ))
+        
+        if result > -1.0:
+            refraction = 1.02 / math.tan(math.radians(result + 10.3 / (result + 5.11))) / 60
+            result += refraction
+
+        return result
         
 
     @commands.command()
@@ -394,7 +400,7 @@ class Climate(commands.Cog):
 
     @commands.command()
     async def outdoors(self, ctx: commands.Context):
-        res = await requests_async.get("http://192.168.32.2:7777/metrics")
+        res = await requests_async.get("http://192.168.100.32:7777/metrics")
         data = self.parse_prometheus_format(res.text)
 
         indoor_data = await requests_async.get("http://192.168.32.88:7778/data")
