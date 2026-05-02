@@ -37,7 +37,7 @@ class AIConnector(commands.Cog):
         content = content.strip()
 
         async with ctx.typing():
-            response: Response = requests.post("http://127.0.01:3800/generate", json={"prompt": content, "person": person}, headers={
+            response: Response = requests.post("http://192.168.32.88:3800/generate", json={"prompt": content, "person": person}, headers={
                 "X-Auth": os.environ.get("AI_KEY")
             })
         if comparing:

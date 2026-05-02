@@ -261,7 +261,7 @@ SUN_POSITION_TRESHOLD: Dict[int, TresholdValue] = {
     },
     -6: {
         "label": "Civil twilight",
-        "emoji": ""
+        "emoji": "🌃"
     },
     -2: {
         "label": "Sunrise or -set",
@@ -383,7 +383,7 @@ class Climate(commands.Cog):
         settings["longtitude"] = longtitude
         settings_manager.set_plugin_setting("climate", settings)
 
-        await send_message(ctx, "Saved latitude!")
+        await send_message(ctx, "Saved coordinates!")
 
 async def setup(bot):
     await bot.add_cog(Climate(bot))
