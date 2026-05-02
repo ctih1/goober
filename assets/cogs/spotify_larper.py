@@ -43,9 +43,7 @@ class SpotifyLarper(commands.Cog):
     
     @commands.Cog.listener()
     async def on_presence_update(self, before: discord.Member, after: discord.Member) -> None:
-        
         settings: SettingsType = settings_manager.get_plugin_settings("spotify_larper", default_settings) # type: ignore
-        logger.debug("member update fired")
         
         if after.id != settings["followed_user"]:
             return
@@ -60,9 +58,11 @@ class SpotifyLarper(commands.Cog):
             break
 
         if target_activity is None:
+            logger.debug("No Spotify activity")
             return
         
         if target_activity.track_id == self.last_song_id:
+            logger.debug("Same track ID; skipping")
             return
         
         if time.time() - self.last_request_time < 12:
@@ -108,7 +108,7 @@ class SpotifyLarper(commands.Cog):
             logger.info("Could not find a good enough lyric, skipping")
             return
 
-            
+
         await self.bot.change_presence(
             activity=discord.Activity(
                 type=discord.ActivityType.listening,
