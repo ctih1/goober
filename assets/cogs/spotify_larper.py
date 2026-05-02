@@ -103,6 +103,11 @@ class SpotifyLarper(commands.Cog):
 
                 if len(lyric) > 5 and len(lyric) < 30 and len(set(lyric)) >= 4:
                     break
+
+        if lyric == "":
+            logger.info("Could not find a good enough lyric, skipping")
+            return
+
             
         await self.bot.change_presence(
             activity=discord.Activity(
