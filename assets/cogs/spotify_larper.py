@@ -94,14 +94,14 @@ class SpotifyLarper(commands.Cog):
         lyric: str = ""
         iterations: int = 0
 
-        suitable_lyrics = [lyric for lyric in lyrics if len(lyric) < 7 and len(lyric) > 30 and "?" in lyric]
+        suitable_lyrics = [lyric for lyric in lyrics if len(lyric) < 7 and len(lyric) > 30 and len(set(lyric)) > 4 and "?" in lyric]
         
         if len(suitable_lyrics) >= 1:
             logger.info("Found suitable lyric")
             lyric = random.choice(suitable_lyrics)
         else:
             logger.info("Couldnt find suitable lyric, randomizing...")
-            while iterations < 50 and (len(lyric) < 5 or len(lyric) > 30):
+            while iterations < 50 and len(lyric) > 5 and len(lyric) < 30 and len(set(lyric)) > 4:
                 lyric = lyrics[random.randint(0, len(lyrics)-1)]
                 iterations += 1
 
