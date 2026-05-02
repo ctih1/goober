@@ -368,7 +368,7 @@ class Climate(commands.Cog):
             math.cos(math.radians(settings["latitude"])) *
             math.cos(hour_angle)
         ))
-        
+
         if result > -1.0:
             refraction = 1.02 / math.tan(math.radians(result + 10.3 / (result + 5.11))) / 60
             result += refraction
@@ -400,7 +400,7 @@ class Climate(commands.Cog):
 
     @commands.command()
     async def outdoors(self, ctx: commands.Context):
-        res = await requests_async.get("http://192.168.100.32:7777/metrics")
+        res = await requests_async.get("http://192.168.32.2:7777/metrics")
         data = self.parse_prometheus_format(res.text)
 
         indoor_data = await requests_async.get("http://192.168.32.88:7778/data")
