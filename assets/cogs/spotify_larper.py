@@ -60,11 +60,9 @@ class SpotifyLarper(commands.Cog):
             break
 
         if target_activity is None:
-            logger.debug("User does not have a Spotify activity")
             return
         
         if target_activity.track_id == self.last_song_id:
-            logger.debug("Track ID is the same, not updating lyrics")
             return
         
         if time.time() - self.last_request_time < 12:
@@ -92,19 +90,20 @@ class SpotifyLarper(commands.Cog):
 
         logger.info(f"Found song with {len(lyrics)} lyrics")
         lyric: str = ""
-        iterations: int = 0
 
-        suitable_lyrics = [lyric for lyric in lyrics if len(lyric) < 7 and len(lyric) > 30 and len(set(lyric)) > 4 and "?" in lyric]
+        suitable_lyrics = [lyric for lyric in lyrics if len(lyric) > 5 and len(lyric) < 30 and len(set(lyric)) > 4 and "?" in lyric]
         
         if len(suitable_lyrics) >= 1:
             logger.info("Found suitable lyric")
             lyric = random.choice(suitable_lyrics)
         else:
             logger.info("Couldnt find suitable lyric, randomizing...")
-            while iterations < 50 and len(lyric) > 5 and len(lyric) < 30 and len(set(lyric)) > 4:
-                lyric = lyrics[random.randint(0, len(lyrics)-1)]
-                iterations += 1
+            for _ in range(500):
+                lyric = random.choice(lyrics)
 
+                if len(lyric) > 5 and len(lyric) < 30 and len(set(lyric)) >= 4:
+                    break
+            
         await self.bot.change_presence(
             activity=discord.Activity(
                 type=discord.ActivityType.listening,
