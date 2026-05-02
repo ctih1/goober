@@ -47,7 +47,7 @@ class SpotifyLarper(commands.Cog):
             await send_message(ctx, "Currently not larping :sunglasses:")
             return
         
-        await send_message(ctx, f"Currently larping \"{self.current_activity.name}\" by {self.current_activity.artist}")
+        await send_message(ctx, f"Currently larping \"{self.current_activity.title}\" by {self.current_activity.artist}")
         await send_message(ctx, self.current_activity.album_cover_url)
 
     
