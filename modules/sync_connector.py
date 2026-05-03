@@ -87,7 +87,9 @@ class SyncConnector:
         """
 
         return self.can_event(message_id, channel_id, "breaking_news")
-    
+
+    def can_convert(self, message_id: int, channel_id: int) -> bool:
+        return self.can_event(message_id, channel_id, "convert")
         
     def can_event(self, message_id: int, channel_id: int, event: str, retry_depth: int = 0) -> bool:
         """
