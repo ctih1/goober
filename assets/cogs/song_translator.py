@@ -12,7 +12,7 @@ from modules.settings import instance as settings_manager
 from modules.helpers.lrclib import LRCAPI, LRCLIBResponse
 from typing import TypedDict, Dict, List, Any
 import time
-from pytubefix import AsyncYouTube
+from pytubefix import AsyncYouTube, innertube
 import requests
 import logging
 import math
@@ -22,6 +22,12 @@ import asyncio
 
 logger = logging.getLogger("goober")
 
+class SettingsType(TypedDict):
+    use_web_client: bool
+
+default_settings: SettingsType = {
+    "use_web_client": True
+}
 
 class WaitingObject(TypedDict):
     video_url: str
@@ -145,8 +151,9 @@ class SongTranslator(commands.Cog):
 
     async def download_video(self, url: str, user_id: int, message: discord.Message) ->  AsyncYouTube:
         await message.edit(content="Fetching video data...")
+        settings: SettingsType = settings_manager.get_plugin_settings("youtube", default_settings) # type: ignore
 
-        video = AsyncYouTube(url, use_oauth=True, allow_oauth_cache=True)
+        video = AsyncYouTube(url, client="WEB" if settings["use_web_client"] else innertube.InnerTube().client_name, use_oauth=True, allow_oauth_cache=True)
 
         if await video.length() > 5*60 and not is_admin(user_id):
             await message.edit(content="Video is too long!! Consult an admin to download xwx")
