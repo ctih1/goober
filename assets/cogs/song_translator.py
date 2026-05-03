@@ -6,7 +6,7 @@ import discord.ext
 import discord.ext.commands
 
 import random
-from modules.permission import is_admin
+from modules.permission import is_admin, requires_admin
 from modules.sentenceprocessing import send_message
 from modules.settings import instance as settings_manager
 from modules.helpers.lrclib import LRCAPI, LRCLIBResponse
@@ -204,6 +204,19 @@ class SongTranslator(commands.Cog):
             "video_url": url,
             "message": message
         }
+
+    @requires_admin()
+    @commands.command()
+    async def toggle_po_token(self, ctx: commands.Context, mode: str):
+        if mode not in ["yes", "no"]:
+            await send_message(ctx, "Please specify `yes` or `no`")
+            return
+        
+        settings: SettingsType = settings_manager.get_plugin_settings("youtube", default_settings) # type: ignore
+        settings["use_web_client"] = mode == "yes"
+        settings_manager.set_plugin_setting("youtube", settings)
+
+        await send_message(ctx, "Changed web client mode!")
 
 
     @commands.Cog.listener()

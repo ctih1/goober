@@ -12,13 +12,14 @@ from modules.permission import requires_admin
 from modules.sentenceprocessing import send_message
 from modules.settings import instance as settings_manager
 from typing import TypedDict, Dict, List, Union, Literal
-from pytubefix import AsyncYouTube, Search, YouTube
+from pytubefix import AsyncYouTube, Search, YouTube, innertube
 import logging
 import requests_async
 import slugify
 import os
 import time
 import base64
+from assets.cogs.song_translator import default_settings, SettingsType
 
 logger = logging.getLogger("goober")
 
@@ -92,7 +93,8 @@ class NaviDrome(commands.Cog):
             await message.edit(content="Ayo sussy boy that video is looking long ash im not letting you download that shit")
             return
         
-        video = AsyncYouTube(url=f"https://youtube.com/watch?v={match['videoId']}")
+        settings = settings_manager.get_plugin_settings("youtube", default_settings)
+        video = AsyncYouTube(url=f"https://youtube.com/watch?v={match['videoId']}", client="WEB" if settings["use_web_client"] else innertube.InnerTube().client_name,  allow_oauth_cache=True, use_oauth=True)
         stream = (await video.streams()).filter(only_audio=True, mime_type="audio/webm").first()
         if stream is None:
             await message.edit(content="No suitable audio streams found")
