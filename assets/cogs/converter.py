@@ -9,7 +9,7 @@ from modules.sentenceprocessing import send_message
 import random
 from copy import copy
 import logging
-
+from modules.sync_connector import instance as synchub
 
 logger = logging.getLogger("goober")
 settings = settings_manager.settings
@@ -387,7 +387,7 @@ class Converter(commands.Cog):
         unit_list: List[tuple[int, ConvertedValue]] = list(found_units_dict.items())
         sorted_units = [val[1] for val in sorted(unit_list, key=lambda val: val[0])]
 
-        if len(sorted_units) > 0:
+        if len(sorted_units) > 0 and synchub.can_convert(message.id, message.channel.id):
             await message.reply(self.__format_response(sorted_units))
 
     @requires_admin()
