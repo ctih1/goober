@@ -36,7 +36,7 @@ class Example(commands.Cog):
         settings: SettingsType = settings_manager.get_plugin_settings("devices", default_settings) # type: ignore
 
         for device, ip in settings["devices"].items():
-            is_up = os.system(f"ping -c 1 -t 10 {ip}") == 0
+            is_up = os.system(f"ping -c 1 -i 0.2 {ip}") == 0
             stauts_emoji: str = "✅" if is_up else "❌"
 
             embed.add_field(name=f"{device} {stauts_emoji} ", value=f"`{ip}` **{'UP' if is_up else 'DOWN'}**", inline=True) 
