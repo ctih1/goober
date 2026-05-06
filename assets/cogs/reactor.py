@@ -16,6 +16,12 @@ class Reaction(TypedDict):
     search: str
     text_content: str
 
+reactions: List[Reaction] = [
+    {
+        "search": "good morning",
+        "text_content": ""
+    }
+]
 
 class Reactor(commands.Cog): 
     def __init__(self, bot: discord.ext.commands.Bot):

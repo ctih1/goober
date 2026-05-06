@@ -2,14 +2,15 @@ import websocket
 from modules.settings import instance as settings_manager
 import logging
 import threading
-
+import time
+import random
 
 logger = logging.getLogger("goober")
 settings = settings_manager.settings
 
 class SyncConnector:
     def __init__(self, url: str):
-        self.connected: bool = True
+        self.connected: bool = False
         self.url = url
         self.client: websocket.WebSocket | None = None
 
@@ -18,6 +19,12 @@ class SyncConnector:
 
     def __connect(self) -> bool:
         try:
+            try:
+                if self.client:
+                    self.client.close()
+            except Exception as e:
+                logger.warning(e)
+
             self.client = websocket.create_connection(self.url, timeout=3)
         except OSError as e:
             logger.debug(e)
@@ -91,7 +98,7 @@ class SyncConnector:
     def can_convert(self, message_id: int, channel_id: int) -> bool:
         return self.can_event(message_id, channel_id, "convert")
         
-    def can_event(self, message_id: int, channel_id: int, event: str, retry_depth: int = 0) -> bool:
+    def can_event(self, message_id: int, channel_id: int, event: str, name_override: str | None = None, retry_depth: int = 0) -> bool:
         """
         Checks if goober can send a breaking news alert
         """
@@ -117,9 +124,17 @@ class SyncConnector:
             else:
                 return False
         
+        if name_override:
+            logger.warning("Synchub is using a name override. This is meant for debugging")
+            
         try:
-            self.client.send(f"event={event};ref={message_id};channel={channel_id};name={settings['name']}")
-            return self.client.recv() == "unhandled"
+            bot_name = name_override or settings['name']
+            time.sleep(random.random())
+            self.client.send(f"event={event};ref={message_id};channel={channel_id};name={bot_name}")
+            logger.info("Sent packet, waiting for response")
+            result = self.client.recv() 
+            logger.info(f"Received response {result}")
+            return result == "unhandled"
         except Exception as e:
             logger.debug(e)
             logger.error("Connection to sync hub reset! Retrying...")
@@ -131,7 +146,7 @@ class SyncConnector:
 
             logger.info("Managed to reconnect to sync hub! Retrying requests")
             self.connected = True
-            return self.can_event(message_id, channel_id, event, retry_depth+1)
+            return self.can_event(message_id, channel_id, event, retry_depth=retry_depth+1)
     
 
 instance = SyncConnector(settings["bot"]["sync_hub"]["url"])

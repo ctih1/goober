@@ -239,6 +239,14 @@ class BaseCommands(commands.Cog):
 
         await send_message(ctx, f"Allowed to react to message {message_id}? {'yes' if status else 'no'} (connection to {settings['bot']['sync_hub']['url']} active? {'yes' if sync_connector.connected else 'no'})")
 
+    @requires_admin()
+    @commands.command()
+    async def st(self, ctx: commands.Context, message_id: str | None, larp_num: str | None) -> None:
+        message_id = message_id or "0"
+        status = sync_connector.can_event(int(message_id), 0, "test", name_override=larp_num)
+
+        await send_message(ctx, f"Allowed to react to message {message_id}? **{'YES' if status else 'NO'}** (connection to {settings['bot']['sync_hub']['url']} active? {'yes' if sync_connector.connected else 'no'})")
+
 
     @requires_admin()
     @commands.command()
