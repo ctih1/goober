@@ -29,6 +29,9 @@ class SpotifyLarper(commands.Cog):
         self.last_song_id: str = "0"
         self.last_request_time: float = 0
         self.current_activity: discord.activity.Spotify | None = None
+        self.current_lyrics: List[str] = []
+        self.current_lyric_index: int = 0
+
         self.description = "📝|Sets the bot's RPC to be a random lyric from the song you're listening to"
 
 
@@ -47,8 +50,18 @@ class SpotifyLarper(commands.Cog):
             await send_message(ctx, "Currently not larping :sunglasses:")
             return
         
-        await send_message(ctx, f"Currently larping \"{self.current_activity.title}\" by {self.current_activity.artist}")
-        await send_message(ctx, self.current_activity.album_cover_url)
+        styling = "**"
+        min_index = max(0, self.current_lyric_index-1)
+        max_index = min(len(self.current_lyrics)-1, self.current_lyric_index+1)
+
+        lyrics: List[str] = [self.current_lyrics[min_index], styling + self.current_lyrics[self.current_lyric_index] + styling, self.current_lyrics[max_index]]
+
+        embed = discord.Embed(title="Currently Larping", description=f"## {self.current_activity.title}\nby **{self.current_activity.artist}** on album \"{self.current_activity.album}\"\n‌")
+        embed.add_field(name="Lyrics", value="\n".join(lyrics), inline=False)
+        embed.set_image(url=self.current_activity.album_cover_url)
+
+
+        await send_message(ctx, embed=embed)
 
     
     @commands.Cog.listener()
@@ -57,7 +70,6 @@ class SpotifyLarper(commands.Cog):
         
         if after.id != settings["followed_user"]:
             return
-        
 
         logger.debug("User changed status! Checking for activity")
         target_activity: discord.activity.Spotify | None = None
@@ -68,11 +80,9 @@ class SpotifyLarper(commands.Cog):
             break
 
         if target_activity is None:
-            logger.debug("No Spotify activity")
             return
         
         if target_activity.track_id == self.last_song_id:
-            logger.debug("Same track ID; skipping")
             return
         
         if time.time() - self.last_request_time < 12:
@@ -100,16 +110,24 @@ class SpotifyLarper(commands.Cog):
 
         logger.info(f"Found song with {len(lyrics)} lyrics")
         lyric: str = ""
+        current_lyric_index = 0
 
         suitable_lyrics = [lyric for lyric in lyrics if len(lyric) > 5 and len(lyric) < 30 and len(set(lyric)) > 4 and "?" in lyric]
         
         if len(suitable_lyrics) >= 1:
             logger.info("Found suitable lyric")
+
             lyric = random.choice(suitable_lyrics)
+            try:
+                current_lyric_index = lyrics.index(lyric)
+            except Exception as e:
+                logger.error(e)
+                current_lyric_index = 0
         else:
             logger.info("Couldnt find suitable lyric, randomizing...")
             for _ in range(500):
-                lyric = random.choice(lyrics)
+                current_lyric_index = random.randint(0, len(lyrics)-1)
+                lyric = lyrics[current_lyric_index]
 
                 if len(lyric) > 5 and len(lyric) < 30 and len(set(lyric)) >= 4:
                     break
@@ -119,6 +137,8 @@ class SpotifyLarper(commands.Cog):
             return
 
         self.current_activity = target_activity
+        self.current_lyrics = lyrics
+        self.current_lyric_index = current_lyric_index
 
         await self.bot.change_presence(
             activity=discord.Activity(
