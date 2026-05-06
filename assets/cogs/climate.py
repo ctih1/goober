@@ -232,11 +232,11 @@ OUTDOOR_HUMIDITY_TRESHOLDS: Dict[int, TresholdValue] = {
         "label": "Dry",
         "emoji": "🟡"
     },
-    50: {
+    40: {
         "label": "Comfortable",
         "emoji": "🟢"
     },
-    65: {
+    69: {
         "label": "Slightly humid",
         "emoji": "🟢"
     },

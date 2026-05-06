@@ -129,7 +129,6 @@ class SyncConnector:
             
         try:
             bot_name = name_override or settings['name']
-            time.sleep(random.random())
             self.client.send(f"event={event};ref={message_id};channel={channel_id};name={bot_name}")
             logger.info("Sent packet, waiting for response")
             result = self.client.recv() 
