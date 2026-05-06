@@ -16,3 +16,5 @@ requests
 pytubefix
 python-slugify
 requests-async
+icalendar
+icalevents
