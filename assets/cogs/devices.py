@@ -20,9 +20,10 @@ default_settings: SettingsType = {
     "devices": {}
 }
 
-class Example(commands.Cog): 
+class Devices(commands.Cog): 
     def __init__(self, bot: discord.ext.commands.Bot):
         self.bot: discord.ext.commands.Bot = bot
+        self.description = "📱|Cog that shows which devices are currently connected to your network"
 
 
     @commands.command()
@@ -68,4 +69,4 @@ class Example(commands.Cog):
 
 
 async def setup(bot):
-    await bot.add_cog(Example(bot))
+    await bot.add_cog(Devices(bot))

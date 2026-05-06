@@ -48,7 +48,7 @@ class BaseCommands(commands.Cog):
             ],
             "Administration": ["stats", "retrain", "setlanguage", "add_owner", "remove_owner", "blacklist_user", "unblacklist_user", "restart", "force_update"],
             "Cog management": ["enable", "load", "unload", "disable", "reload", "listcogs"],
-            "Synchub": ["synchub_test", "synchub_connect", "synchub_stats"]
+            "Synchub": ["synchub_test", "synchub_connect", "synchub_stats", "st"]
         }
 
         cog_commands: Dict[str, List[str]] = {}
