@@ -1,8 +1,8 @@
 import discord
 from discord.ext import commands
 from discord.ext.commands import Context
-import requests
-from requests import Response
+import requests_async
+from requests_async import Response
 from modules.sentenceprocessing import send_message
 import os
 
@@ -21,23 +21,27 @@ class AIConnector(commands.Cog):
             person ="charles"
             content = content.replace("!charlie", "")
 
-        if "!expect" in content:
+        elif "!expect" in content:
             person ="expect"
             content = content.replace("!expect", "")
 
-        if "!rock" in content:
+        elif "!rock" in content:
             person ="rock"
             content = content.replace("!rock", "")
 
-        if "!compare" in content:
+        elif "!compare" in content:
             person = "compare"
             content = content.replace("!compare", "")
             comparing = True
+        
+        elif person != "":
+            await send_message(ctx, "No person nmaaed that bruh!")
+            return
 
         content = content.strip()
 
         async with ctx.typing():
-            response: Response = requests.post("http://192.168.32.88:3800/generate", json={"prompt": content, "person": person}, headers={
+            response: Response = await requests_async.post("http://192.168.32.88:3800/generate", json={"prompt": content, "person": person}, headers={
                 "X-Auth": os.environ.get("AI_KEY")
             })
         if response.status_code != 200:
