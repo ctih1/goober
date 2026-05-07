@@ -42,6 +42,8 @@ class AIConnector(commands.Cog):
             })
         if response.status_code != 200:
             await send_message(ctx, f"Failed to generateo: {response.status_code} {response.text}")
+            return
+        
         if comparing:
             json: dict = response.json()["generated"]
             await send_message(ctx, f"Charles: {json[0]}\n\nExpect: {json[1]}\n\nRock: {json[2]}\n\nRuotsin: {json[3]}\n\nAll: {json[4]}")
