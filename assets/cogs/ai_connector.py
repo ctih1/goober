@@ -40,6 +40,8 @@ class AIConnector(commands.Cog):
             response: Response = requests.post("http://192.168.32.88:3800/generate", json={"prompt": content, "person": person}, headers={
                 "X-Auth": os.environ.get("AI_KEY")
             })
+        if response.status_code != 200:
+            await send_message(ctx, f"Failed to generateo: {response.status_code} {response.text}")
         if comparing:
             json: dict = response.json()["generated"]
             await send_message(ctx, f"Charles: {json[0]}\n\nExpect: {json[1]}\n\nRock: {json[2]}\n\nRuotsin: {json[3]}\n\nAll: {json[4]}")
