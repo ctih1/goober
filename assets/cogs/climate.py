@@ -10,10 +10,12 @@ import time
 from modules.permission import requires_admin
 from modules.sentenceprocessing import send_message
 from modules.settings import instance as settings_manager
-from typing import TypedDict, Dict
+from typing import TypedDict, Dict, Literal
 import requests_async
 import logging
 import datetime
+
+ViewType = Literal["outdoors", "indoors"]
 
 class SettingsType(TypedDict):
     latitude: float
@@ -310,12 +312,28 @@ PRESSURE_TRESHOLS: Dict[int, TresholdValue] = {
 
 logger = logging.getLogger("goober")
 
+class ResendView(discord.ui.View):
+    def __init__(self, mode: ViewType, *, timeout: float | None = 180):
+        super().__init__(timeout=timeout)
+        self.mode: ViewType = mode
+    
+    @discord.ui.button(label="Refresh")
+    async def refresh_callback(self, interaction: discord.Interaction, _button: discord.ui.Button):
+        await interaction.response.defer()
+        if self.mode == "indoors":
+            embed = await Climate.generate_indoor_embed()
+        else:
+            embed = await Climate.generate_outdoor_embed()
+
+        await interaction.followup.send(embed=embed, view=self)
+
 class Climate(commands.Cog): 
     def __init__(self, bot: discord.ext.commands.Bot):
         self.bot: discord.ext.commands.Bot = bot
         self.description = "🌱|Monitor my indoor and outdoor climates"
 
-    def get_ranking(self, current_value: float, tresholds: Dict[int, TresholdValue]) -> TresholdValue:
+    @staticmethod
+    def get_ranking(current_value: float, tresholds: Dict[int, TresholdValue]) -> TresholdValue:
         """
         Gets the ranking (e.g good, bad, dangerous) for a given value
         """
@@ -333,14 +351,16 @@ class Climate(commands.Cog):
 
         return found_treshold
     
-    def format_embed(self, label: str, unit: str, value: float, treshold: Dict[int, TresholdValue]) -> dict:
-        ranking = self.get_ranking(value, treshold)
+    @staticmethod
+    def format_embed(label: str, unit: str, value: float, treshold: Dict[int, TresholdValue]) -> dict:
+        ranking = Climate.get_ranking(value, treshold)
         return {
             "name": f"{label} {ranking['emoji']}",
             "value": f"{round(value, 2)} {unit} (**{ranking['label']}**)"
         }
     
-    def parse_prometheus_format(self, lines: str) -> dict:
+    @staticmethod
+    def parse_prometheus_format(lines: str) -> dict:
         data = {}
         for line in lines.split("\n"):
             if line.startswith("#"): continue
@@ -351,7 +371,8 @@ class Climate(commands.Cog):
         
         return data
         
-    def get_sun_angle(self) -> float:
+    @staticmethod
+    def get_sun_angle() -> float:
         settings: SettingsType = settings_manager.get_plugin_settings("climate", default_settings)  # type: ignore
 
         now = datetime.datetime.now()
@@ -375,9 +396,31 @@ class Climate(commands.Cog):
 
         return result
         
+    @staticmethod
+    async def generate_outdoor_embed() -> discord.Embed:
+        res = await requests_async.get("http://192.168.32.2:7777/metrics")
+        data = Climate.parse_prometheus_format(res.text)
 
-    @commands.command()
-    async def indoors(self, ctx: commands.Context):
+        indoor_data = await requests_async.get("http://192.168.32.88:7778/data")
+
+        embed = discord.Embed(
+            title="Climate data",
+            description=f"Information about my outdoor climate"
+        )
+
+        pressure = indoor_data.json()["air_pressure"] * math.pow((1 - 119/44330), -5.225) 
+
+        embed.add_field(**Climate.format_embed("PM2.5", "µg/m³", data["mc2p5"], PM25_TRESHOLDS))
+        embed.add_field(**Climate.format_embed("PM10.0", "µg/m³", data["mc10p0"], PM100_TRESHOLDS))
+        embed.add_field(**Climate.format_embed("Temperature", "°C", data["temp"], OUTDOOR_TEMP_TRESHOLDS))
+        embed.add_field(**Climate.format_embed("Relative Humidity", "%", data["humidity"], OUTDOOR_HUMIDITY_TRESHOLDS))
+        embed.add_field(**Climate.format_embed("Air Pressure", "hPa", pressure, PRESSURE_TRESHOLS))
+        embed.add_field(**Climate.format_embed("Sun angle", "°", Climate.get_sun_angle(), SUN_POSITION_TRESHOLD))
+
+        return embed
+    
+    @staticmethod
+    async def generate_indoor_embed() -> discord.Embed:
         res = await requests_async.get("http://192.168.32.88:7778/data")
         data: IndoorData = res.json()
 
@@ -389,37 +432,24 @@ class Climate(commands.Cog):
         calculated_temp: float = data['scd40_temp'] - data['temperature_offset']
         air_humidity: float = (data["scd40_humidity"] + data["relative_humidity"]) / 2
 
-        embed.add_field(**self.format_embed("CO2", "PPM", data['carbon_dioxide'], CO2_TRESHOLDS))
-        embed.add_field(**self.format_embed("Temperature", "°C", calculated_temp, TEMP_TRESHOLDS))
-        embed.add_field(**self.format_embed("Relative Humidity", "%", air_humidity, HUMIDITY_TRESHOLDS))
-        embed.add_field(**self.format_embed("Air Resistance", "Ω", data['air_resistance'], RESISTANCE_TRESHOLDS))
+        embed.add_field(**Climate.format_embed("CO2", "PPM", data['carbon_dioxide'], CO2_TRESHOLDS))
+        embed.add_field(**Climate.format_embed("Temperature", "°C", calculated_temp, TEMP_TRESHOLDS))
+        embed.add_field(**Climate.format_embed("Relative Humidity", "%", air_humidity, HUMIDITY_TRESHOLDS))
+        embed.add_field(**Climate.format_embed("Air Resistance", "Ω", data['air_resistance'], RESISTANCE_TRESHOLDS))
 
         embed.set_footer(text=f"Last updated: {time.strftime('%H:%M:%S %d/%m/%Y', time.gmtime(data['last_update']))} (UTC)")
+        return embed
 
-        await send_message(ctx, embed=embed)
+    @commands.command()
+    async def indoors(self, ctx: commands.Context):
+        embed = await Climate.generate_indoor_embed()
+        await ctx.send(embed=embed, view=ResendView("indoors"))
+
 
     @commands.command()
     async def outdoors(self, ctx: commands.Context):
-        res = await requests_async.get("http://192.168.32.2:7777/metrics")
-        data = self.parse_prometheus_format(res.text)
-
-        indoor_data = await requests_async.get("http://192.168.32.88:7778/data")
-
-        embed = discord.Embed(
-            title="Climate data",
-            description=f"Information about my outdoor climate"
-        )
-
-        pressure = indoor_data.json()["air_pressure"] * math.pow((1 - 119/44330), -5.225) 
-
-        embed.add_field(**self.format_embed("PM2.5", "µg/m³", data["mc2p5"], PM25_TRESHOLDS))
-        embed.add_field(**self.format_embed("PM10.0", "µg/m³", data["mc10p0"], PM100_TRESHOLDS))
-        embed.add_field(**self.format_embed("Temperature", "°C", data["temp"], OUTDOOR_TEMP_TRESHOLDS))
-        embed.add_field(**self.format_embed("Relative Humidity", "%", data["humidity"], OUTDOOR_HUMIDITY_TRESHOLDS))
-        embed.add_field(**self.format_embed("Air Pressure", "hPa", pressure, PRESSURE_TRESHOLS))
-        embed.add_field(**self.format_embed("Sun angle", "°", self.get_sun_angle(), SUN_POSITION_TRESHOLD))
-
-        await send_message(ctx, embed=embed)
+        embed = await Climate.generate_outdoor_embed()
+        await ctx.send(embed=embed, view=ResendView("outdoors"))
 
     @requires_admin()
     @commands.command()
