@@ -313,7 +313,7 @@ PRESSURE_TRESHOLS: Dict[int, TresholdValue] = {
 logger = logging.getLogger("goober")
 
 class ResendView(discord.ui.View):
-    def __init__(self, mode: ViewType, *, timeout: float | None = 180):
+    def __init__(self, mode: ViewType, *, timeout: float | None = None):
         super().__init__(timeout=timeout)
         self.mode: ViewType = mode
     
