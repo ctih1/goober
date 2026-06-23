@@ -63,11 +63,7 @@ class SpotifyLarper(commands.Cog):
     @tasks.loop(seconds=5.0)
     async def status_update(self) -> None:
         hr_shown = time.time() - last_hr_update < 15
-        logger.info(str(time.time()) + " " + str(last_hr_update))
 
-        if not hr_shown and self.update_handled:
-            return
-        
         text = f"❤️{heartrate} | " if hr_shown else ""
 
         new_activity = deepcopy(self.discord_activity)
