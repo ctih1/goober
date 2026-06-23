@@ -1,7 +1,8 @@
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
 from discord import app_commands
-
+from copy import deepcopy
+import asyncio
 import discord.ext
 import discord.ext.commands
 import time
@@ -12,7 +13,8 @@ from modules.settings import instance as settings_manager
 from typing import TypedDict, List
 import logging
 from modules.helpers.lrclib import LRCAPI, LRCLIBFetchResponse, LRCLIBResponse
-
+from pulsoid_client import PulsoidClient
+import os
 
 logger = logging.getLogger("goober")
 
@@ -23,6 +25,9 @@ default_settings: SettingsType = {
     "followed_user": settings_manager.settings["bot"]["owner_ids"][0]
 }
 
+heartrate = 0
+last_hr_update = 0
+
 class SpotifyLarper(commands.Cog): 
     def __init__(self, bot: discord.ext.commands.Bot):
         self.bot: discord.ext.commands.Bot = bot
@@ -32,7 +37,45 @@ class SpotifyLarper(commands.Cog):
         self.current_lyrics: List[str] = []
         self.current_lyric_index: int = 0
 
+        self.update_handled = False
+        self.discord_activity: discord.Activity = discord.Activity(type=discord.ActivityType.listening, name="Not ready 2 larp")
+
+        self.pulsoid_client = PulsoidClient(
+            widget_id=os.environ["PULSOID_ID"],
+            callback_function=self.heartrate_update,
+            logger=logger
+        )
+
+        loop = asyncio.get_event_loop()
+        _ = loop.create_task(self.pulsoid_client.connect())
+
+        self.status_update.start()
+
         self.description = "📝|Sets the bot's RPC to be a random lyric from the song you're listening to"
+
+    @staticmethod
+    def heartrate_update(timestamp: int, bpm: int) -> None:
+        global heartrate, last_hr_update
+
+        last_hr_update = timestamp
+        heartrate = bpm
+
+    @tasks.loop(seconds=5.0)
+    async def status_update(self) -> None:
+        hr_shown = time.time() - last_hr_update < 15
+
+        if not hr_shown and self.update_handled:
+            return
+        
+        text = f"❤️{heartrate} | " if hr_shown else ""
+
+        new_activity = deepcopy(self.discord_activity)
+        new_activity.name = text + self.discord_activity.name # type: ignore
+
+        await self.bot.change_presence(
+            activity=new_activity
+        )
+        self.update_handled = True
 
 
     @requires_admin()
@@ -129,7 +172,7 @@ class SpotifyLarper(commands.Cog):
                 current_lyric_index = random.randint(0, len(lyrics)-1)
                 lyric = lyrics[current_lyric_index]
 
-                if len(lyric) > 5 and len(lyric) < 30 and len(set(lyric)) >= 4:
+                if len(lyric) > 5 and len(lyric) < 26 and len(set(lyric)) >= 4:
                     break
 
         if lyric == "":
@@ -140,12 +183,16 @@ class SpotifyLarper(commands.Cog):
         self.current_lyrics = lyrics
         self.current_lyric_index = current_lyric_index
 
-        await self.bot.change_presence(
-            activity=discord.Activity(
+        self.discord_activity = discord.Activity(
                 type=discord.ActivityType.listening,
                 name=f'"{lyric}"',
+                large_url=target_activity.album_cover_url,
+                timestamps={
+                    "start": round(time.time())
+                }
             )
-        )
+        
+        self.update_handled = False
 
         logger.info("Changed activity!")
 

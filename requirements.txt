@@ -19,3 +19,5 @@ requests-async
 icalendar
 icalevents
 recurring-ical-events
+aiohttp
+pulsoid_client
