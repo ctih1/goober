@@ -54,7 +54,7 @@ class Screentime(commands.Cog):
 
     @commands.command()
     async def screentime(self, ctx: commands.Context, user: discord.Member | None = None):
-        target = user.id or ctx.author.id
+        target = (None if not user else user.id)  or ctx.author.id
 
         rows = sorted(self.db.execute("SELECT * FROM presences WHERE user_id = ?", [target]), key=lambda row: row[2])
         
@@ -62,7 +62,7 @@ class Screentime(commands.Cog):
         total_time_online: int = 0
         for row in rows:
             (user_id, presence, time_) = row
-            if presence == "online" and not online_since:
+            if (presence in ["online", "dnd"]) and not online_since:
                 online_since = time_
             
             if (presence == "offline" or presence == "idle") and online_since:
