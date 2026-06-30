@@ -9,7 +9,7 @@ from modules.permission import requires_admin
 from modules.sentenceprocessing import send_message
 from modules.settings import instance as settings_manager
 from humanfriendly import format_timespan
-from typing import TypedDict, Dict
+from typing import TypedDict, Dict, List, Tuple
 from logging import getLogger
 
 logger = getLogger("goober")
@@ -30,6 +30,8 @@ class Screentime(commands.Cog):
         
     @commands.Cog.listener()
     async def on_presence_update(self, before: discord.Member, after: discord.Member) -> None:
+        if after.bot: return
+
         if after.id not in self.presence_map:
             self.presence_map[after.id] = after.status.value
         elif self.presence_map[after.id] == after.status.value:
@@ -45,6 +47,7 @@ class Screentime(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
         if isinstance(message.author, discord.User): return
+        if message.author.bot: return
 
         if message.author.status.value in ["offline", "invisible"]:
             self.users_db.execute("INSERT OR IGNORE INTO users(user_id, fake_offline_count) VALUES (?, ?)", [message.author.id, 0])
@@ -52,12 +55,8 @@ class Screentime(commands.Cog):
 
             self.users_db.commit()
 
-    @commands.command()
-    async def screentime(self, ctx: commands.Context, user: discord.Member | None = None):
-        target = (None if not user else user.id)  or ctx.author.id
-
-        rows = sorted(self.db.execute("SELECT * FROM presences WHERE user_id = ?", [target]), key=lambda row: row[2])
-        
+    @staticmethod
+    def get_total_screentime_seconds(rows: List[Tuple[int, str, int]]) -> int:
         online_since: int | None = None
         total_time_online: int = 0
         for row in rows:
@@ -68,11 +67,63 @@ class Screentime(commands.Cog):
             if (presence == "offline" or presence == "idle") and online_since:
                 total_time_online += time_ - online_since
                 online_since = None
-        
+
         if online_since:
             total_time_online += round(time.time()) - online_since
 
+        return total_time_online
+
+    @commands.command()
+    async def screentime(self, ctx: commands.Context, user: discord.Member | None = None):
+        target = (None if not user else user.id)  or ctx.author.id
+
+        rows = sorted(self.db.execute("SELECT * FROM presences WHERE user_id = ?", [target]), key=lambda row: row[2])
+        total_time_online = Screentime.get_total_screentime_seconds(rows)
+
         await send_message(ctx, format_timespan(total_time_online))
+
+    @commands.command()
+    async def screentime_leaderboard(self, ctx: commands.Context):
+        rows = self.db.execute("SELECT * FROM presences ORDER BY user_id, changed_at")
+
+        users: Dict[int, List[Tuple[int, str, int]]] = {}
+        for row in rows:
+            (user_id, presence, time_) = row
+            
+            if user_id not in users:
+                users[user_id] = []
+            
+            users[user_id].append((user_id, presence, time_))
+
+        embed = discord.Embed(title="Screentime leaderboard")
+
+        user_times = [(user_id, Screentime.get_total_screentime_seconds(rows)) for user_id, rows in users.items()]
+        user_times = sorted(user_times, key=lambda d: d[1], reverse=True)
+
+        for i, (user, time) in enumerate(user_times):
+            embed.add_field(name=f"", value=f"{i+1}. <@{user}>: {format_timespan(time)}")
+
+        await ctx.reply(embed=embed)
+
+    # @requires_admin()
+    # @commands.command()
+    # async def kill_larper(self, ctx: commands.Context, id: int):
+    #     self.db.execute("DELETE FROM presences WHERE user_id = ?", [id])
+    #     self.db.commit()
+    #     await ctx.reply(f"Larper <@{id}> killed")
+
+    @commands.command()
+    async def offline_larps(self, ctx: commands.Context, user: discord.Member | None = None):
+        target = (None if not user else user.id)  or ctx.author.id
+
+        rows = self.users_db.execute("SELECT * FROM users WHERE user_id = ?", [target])
+
+        for row in rows:
+            await ctx.reply(f"User has sent messages offline: {row[1]} times")
+            return
+        
+        await ctx.reply("No larps!")
+    
 
 async def setup(bot):
     await bot.add_cog(Screentime(bot))
