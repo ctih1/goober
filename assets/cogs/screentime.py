@@ -105,12 +105,16 @@ class Screentime(commands.Cog):
 
         await ctx.reply(embed=embed)
 
-    # @requires_admin()
-    # @commands.command()
-    # async def kill_larper(self, ctx: commands.Context, id: int):
-    #     self.db.execute("DELETE FROM presences WHERE user_id = ?", [id])
-    #     self.db.commit()
-    #     await ctx.reply(f"Larper <@{id}> killed")
+    @requires_admin()
+    @commands.command()
+    async def kill_larper(self, ctx: commands.Context, id: int, sure: str):
+        if sure != "i am totally sure":
+            await ctx.reply(f"Please add 'i am totally sure' to the end! Youre killing <@{id}>")
+            return
+        
+        self.db.execute("DELETE FROM presences WHERE user_id = ?", [id])
+        self.db.commit()
+        await ctx.reply(f"Larper <@{id}> killed")
 
     @commands.command()
     async def offline_larps(self, ctx: commands.Context, user: discord.Member | None = None):
