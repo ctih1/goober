@@ -107,11 +107,14 @@ class Screentime(commands.Cog):
 
     @requires_admin()
     @commands.command()
-    async def kill_larper(self, ctx: commands.Context, id: int, sure: str):
+    async def kill_larper(self, ctx: commands.Context, *args):
+        sure = " ".join(args[1:])
         if sure != "i am totally sure":
             await ctx.reply(f"Please add 'i am totally sure' to the end! Youre killing <@{id}>")
             return
         
+        id = int(args[0])
+
         self.db.execute("DELETE FROM presences WHERE user_id = ?", [id])
         self.db.commit()
         await ctx.reply(f"Larper <@{id}> killed")
