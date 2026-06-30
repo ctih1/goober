@@ -54,7 +54,7 @@ class Screentime(commands.Cog):
 
     @commands.command()
     async def screentime(self, ctx: commands.Context, user: discord.Member | None = None):
-        target = user or ctx.author.id
+        target = user.id or ctx.author.id
 
         rows = sorted(self.db.execute("SELECT * FROM presences WHERE user_id = ?", [target]), key=lambda row: row[2])
         
