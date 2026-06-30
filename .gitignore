@@ -20,3 +20,4 @@ tokens.env
 data/*
 .venv
 assets/images/cache
+*.db

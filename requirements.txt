@@ -21,3 +21,4 @@ icalevents
 recurring-ical-events
 aiohttp
 pulsoid_client
+humanfriendly

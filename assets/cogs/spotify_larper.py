@@ -15,6 +15,7 @@ import logging
 from modules.helpers.lrclib import LRCAPI, LRCLIBFetchResponse, LRCLIBResponse
 from pulsoid_client import PulsoidClient
 import os
+from modules.strava import instance as strava
 
 logger = logging.getLogger("goober")
 
@@ -63,11 +64,7 @@ class SpotifyLarper(commands.Cog):
     @tasks.loop(seconds=5.0)
     async def status_update(self) -> None:
         hr_shown = time.time() - last_hr_update < 15
-        logger.info(str(time.time()) + " " + str(last_hr_update))
 
-        if not hr_shown and self.update_handled:
-            return
-        
         text = f"❤️{heartrate} | " if hr_shown else ""
 
         new_activity = deepcopy(self.discord_activity)
@@ -106,6 +103,11 @@ class SpotifyLarper(commands.Cog):
 
 
         await send_message(ctx, embed=embed)
+
+    @commands.command()
+    async def larp_strava(self, ctx: commands.Context):
+        await strava.get_activities()
+        await ctx.send("ÄÄÄK")
 
     
     @commands.Cog.listener()
