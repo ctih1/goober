@@ -233,7 +233,7 @@ class BaseCommands(commands.Cog):
 
     @requires_admin()
     @commands.command()
-    async def synchub_test(self, ctx: commands.Context, message_id: str | None) -> None:
+    async def s_test(self, ctx: commands.Context, message_id: str | None) -> None:
         message_id = message_id or "0"
         status = sync_connector.can_react(int(message_id), 0)
 
@@ -241,16 +241,44 @@ class BaseCommands(commands.Cog):
 
     @requires_admin()
     @commands.command()
-    async def st(self, ctx: commands.Context, message_id: str | None, larp_num: str | None) -> None:
+    async def s_test_larp(self, ctx: commands.Context, message_id: str | None, larp_num: str | None) -> None:
         message_id = message_id or "0"
         status = sync_connector.can_event(int(message_id), 0, "test", name_override=larp_num)
 
         await send_message(ctx, f"Allowed to react to message {message_id}? **{'YES' if status else 'NO'}** (connection to {settings['bot']['sync_hub']['url']} active? {'yes' if sync_connector.connected else 'no'})")
 
+    @commands.command()
+    async def s_events(self, ctx: commands.Context) -> None:
+        await ctx.reply("convert, breaking_news, react, and some other ones ion know")
+
+    @commands.command()
+    async def s_blame(self, ctx: commands.Context, event: str):
+        reference = ctx.message.reference
+
+        if not reference:
+            await ctx.reply("Please send reply to a message and run this command.")
+            return
+        
+        if not isinstance(reference.resolved, discord.DeletedReferencedMessage):
+            reference = (None if not reference.resolved else reference.resolved.reference) or reference
+
+        if not reference or not reference.message_id:
+            await ctx.reply("Something went catastrophically wrong duuud")
+            return
+        
+        embed = discord.Embed(title="Synchub command blame")
+        embed.add_field(name="Target message", value=reference.jump_url, inline=False)
+        embed.add_field(name="Synchub event", value=f"`event`", inline=False)
+
+        r = sync_connector.get_blame(message_id=reference.message_id, channel_id=reference.channel_id, event=event)
+
+        embed.add_field(name="Blame", value=r, inline=False)
+
+        await ctx.reply(embed=embed)
 
     @requires_admin()
     @commands.command()
-    async def synchub_connect(self, ctx: commands.Context) -> None:
+    async def s_connect(self, ctx: commands.Context) -> None:
         await send_message(ctx, "Trying to connect...")
         
         connected = sync_connector.try_to_connect()
@@ -262,7 +290,7 @@ class BaseCommands(commands.Cog):
     
     @requires_admin()
     @commands.command()
-    async def synchub_stats(self, ctx: commands.Context) -> None:
+    async def s_stats(self, ctx: commands.Context) -> None:
         connected = sync_connector.get_connected()
         await ctx.send(connected)
 

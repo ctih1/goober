@@ -43,7 +43,7 @@ class SyncConnector:
 
         return self.connected
 
-    def get_connected(self, retry_depth: int = 0) -> str:
+    def get_string_response(self, event: str, message_id: int, channel_id: int, command: str, retry_depth: int = 0) -> str:
         if not settings["bot"]["sync_hub"]["enabled"]:
             logger.info("Skipping sync hub check")
             return "not enabled"
@@ -63,7 +63,7 @@ class SyncConnector:
                 return "reconnect failed"
         
         try:
-            self.client.send(f"event=get;ref=stats;channel=0;name={settings['name']}")
+            self.client.send(f"event={event};ref={message_id};channel={channel_id};command={command};name={settings['name']}")
             return str(self.client.recv())
         except Exception as e:
             logger.debug(e)
@@ -76,9 +76,14 @@ class SyncConnector:
 
             logger.info("Managed to reconnect to sync hub! Retrying requests")
             self.connected = True
-            return self.get_connected(retry_depth=retry_depth+1)
+            return self.get_string_response(command=command,event=event, channel_id=channel_id, message_id=message_id, retry_depth=retry_depth+1)
     
-
+    def get_connected(self) -> str:
+        return self.get_string_response("get", 0, 0, "")
+    
+    def get_blame(self, message_id: int, channel_id: int, event: str) -> str:
+        return self.get_string_response(event=event, message_id=message_id, channel_id=channel_id, command="blame")
+    
 
     def can_react(self, message_id: int, channel_id: int) -> bool:
         """
