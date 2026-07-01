@@ -189,9 +189,13 @@ class SpotifyLarper(commands.Cog):
         self.discord_activity = discord.Activity(
                 type=discord.ActivityType.listening,
                 name=f'"{lyric}"',
+                state=f"{target_activity.artist}: {target_activity.title}",
+                party={
+                    "size": 12
+                },
                 large_url=target_activity.album_cover_url,
                 timestamps={
-                    "start": round(time.time())
+                    "start": round(time.time()*1000)
                 }
             )
         

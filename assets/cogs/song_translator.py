@@ -19,6 +19,7 @@ import math
 import os
 import shutil
 import asyncio
+from humanfriendly import format_timespan
 
 logger = logging.getLogger("goober")
 
@@ -195,7 +196,7 @@ class SongTranslator(commands.Cog):
         for i, match in enumerate(matches, start=1):
             styling = "**" if match["syncedLyrics"] else ""
 
-            response_string +=  f"""{styling} {i}. {match["artistName"]} - {match["trackName"]} {styling} ({match["duration"]}s {f"starts @ {self.get_first_lyric_time(match['syncedLyrics'])}s" if styling else ""})\n"""
+            response_string +=  f"""{styling} {i}. {match["artistName"]} - {match["trackName"]} {styling} ({format_timespan(match["duration"])} {f"starts @ {self.get_first_lyric_time(match['syncedLyrics'])}s" if styling else ""})\n"""
 
         await message.edit(content=f"Found matches. **Bolded entries are time synced**. Reply with the number:\n\n{response_string}")
 
