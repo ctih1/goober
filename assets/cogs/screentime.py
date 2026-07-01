@@ -11,11 +11,15 @@ from modules.settings import instance as settings_manager
 from humanfriendly import format_timespan
 from typing import TypedDict, Dict, List, Tuple
 from logging import getLogger
+from functools import lru_cache
+from datetime import datetime, timedelta
+from datetime import time as dt_time
 
 logger = getLogger("goober")
 
 class Screentime(commands.Cog): 
     def __init__(self, bot: discord.ext.commands.Bot):
+        self.description = "📱|View screentime of members on the server"
         self.bot: discord.ext.commands.Bot = bot
         self.db = sqlite3.connect("presence.db")
         self.users_db = sqlite3.connect("users.db")
@@ -56,11 +60,13 @@ class Screentime(commands.Cog):
             self.users_db.commit()
 
     @staticmethod
-    def get_total_screentime_seconds(rows: List[Tuple[int, str, int]]) -> int:
+    @lru_cache(typed=False)
+    def get_total_screentime_seconds(rows: Tuple[Tuple[int, str, int]], since: int = 0) -> int:
         online_since: int | None = None
         total_time_online: int = 0
         for row in rows:
             (user_id, presence, time_) = row
+            if time_ < since: continue
             if (presence in ["online", "dnd"]) and not online_since:
                 online_since = time_
             
@@ -75,12 +81,24 @@ class Screentime(commands.Cog):
 
     @commands.command()
     async def screentime(self, ctx: commands.Context, user: discord.Member | None = None):
-        target = (None if not user else user.id)  or ctx.author.id
+        target_user = user or ctx.author
+        target = target_user.id
 
-        rows = sorted(self.db.execute("SELECT * FROM presences WHERE user_id = ?", [target]), key=lambda row: row[2])
+        start = time.time()
+
+        rows = tuple(sorted(self.db.execute("SELECT * FROM presences WHERE user_id = ?", [target]), key=lambda row: row[2]))
         total_time_online = Screentime.get_total_screentime_seconds(rows)
+        today = Screentime.get_total_screentime_seconds(rows, datetime.combine(datetime.today(), dt_time.min).timestamp())
+        seven_days = Screentime.get_total_screentime_seconds(rows, datetime.combine(datetime.today() - timedelta(days=7), dt_time.min).timestamp())
 
-        await send_message(ctx, format_timespan(total_time_online))
+        embed = discord.Embed(title="Screentime")
+        embed.add_field(name="Total", value=format_timespan(total_time_online))
+        embed.add_field(name="Today", value=format_timespan(today))
+        embed.add_field(name="Last 7 days", value=format_timespan(seven_days))
+        embed.set_footer(text=f"Processed for {(time.time() - start):.3f}s")
+        embed.set_author(name=target_user.name, icon_url=(None if not target_user.avatar else target_user.avatar.url))
+
+        await send_message(ctx, embed=embed)
 
     @commands.command()
     async def screentime_leaderboard(self, ctx: commands.Context):
@@ -97,7 +115,7 @@ class Screentime(commands.Cog):
 
         embed = discord.Embed(title="Screentime leaderboard")
 
-        user_times = [(user_id, Screentime.get_total_screentime_seconds(rows)) for user_id, rows in users.items()]
+        user_times = [(user_id, Screentime.get_total_screentime_seconds(tuple(rows))) for user_id, rows in users.items()]
         user_times = sorted(user_times, key=lambda d: d[1], reverse=True)
 
         for i, (user, time) in enumerate(user_times):
@@ -109,11 +127,12 @@ class Screentime(commands.Cog):
     @commands.command()
     async def kill_larper(self, ctx: commands.Context, *args):
         sure = " ".join(args[1:])
+        id = int(args[0])
+        
         if sure != "i am totally sure":
             await ctx.reply(f"Please add 'i am totally sure' to the end! Youre killing <@{id}>")
             return
         
-        id = int(args[0])
 
         self.db.execute("DELETE FROM presences WHERE user_id = ?", [id])
         self.db.commit()
