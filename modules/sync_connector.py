@@ -79,7 +79,7 @@ class SyncConnector:
             return self.get_string_response(command=command,event=event, channel_id=channel_id, message_id=message_id, retry_depth=retry_depth+1)
     
     def get_connected(self) -> str:
-        return self.get_string_response("get", 0, 0, "")
+        return self.get_string_response("get", 0, 0, "get")
     
     def get_blame(self, message_id: int, channel_id: int, event: str) -> str:
         return self.get_string_response(event=event, message_id=message_id, channel_id=channel_id, command="blame")
