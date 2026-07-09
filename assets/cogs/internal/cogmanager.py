@@ -5,15 +5,17 @@ import discord.ext.commands
 from modules.permission import requires_admin
 from modules.settings import instance as settings_manager
 from modules.globalvars import available_cogs
+import logging
 
 settings = settings_manager.settings
 
 
 COG_PREFIX = "assets.cogs."
 
+logger = logging.getLogger("goober")
 
 class CogManager(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot: commands.Bot):
         self.bot = bot
 
     @requires_admin()
@@ -90,7 +92,7 @@ class CogManager(commands.Cog):
 
     @requires_admin()
     @commands.command()
-    async def reload(self, ctx, cog_name: str | None = None):
+    async def reload(self, ctx: commands.Context, cog_name: str | None = None):
         if cog_name is None:
             await ctx.send("Please provide the cog name to reload.")
             return
@@ -99,6 +101,24 @@ class CogManager(commands.Cog):
             await self.bot.unload_extension(COG_PREFIX + cog_name)
             await self.bot.load_extension(COG_PREFIX + cog_name)
             await ctx.send(f"Reloaded cog `{cog_name}` successfully.")
+        except discord.ext.commands.ExtensionNotLoaded as e:
+            logger.warning("Trying to find command...")
+            found_cog: bool = False
+            for _cog_name, cog in self.bot.cogs.items():
+                for command in cog.get_commands():
+                    if cog_name != command.name: continue
+                    
+                    await self.bot.unload_extension(COG_PREFIX + _cog_name.lower())
+                    await self.bot.load_extension(COG_PREFIX + _cog_name.lower())
+
+                    await ctx.send(f"Reloaded cog `{_cog_name.lower()}` successfully. Specify the real name next time retard.")
+                    found_cog = True
+                    break
+                
+                if found_cog: break
+
+            if not found_cog:
+                await ctx.send(f"Could not find cog or command `{cog_name}`")
         except Exception as e:
             await ctx.send(f"Error reloading cog `{cog_name}`: {e}")
 
