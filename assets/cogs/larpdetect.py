@@ -80,7 +80,7 @@ class LarpDetect(commands.Cog):
             await ctx.reply("KILL YOURSELF")
             return
         
-        if target.id not in self.larp_data:
+        if str(target.id) not in self.larp_data:
             self.larp_data[str(target.id)] = {
                 "nationality": "Unknown",
                 "extra": []
