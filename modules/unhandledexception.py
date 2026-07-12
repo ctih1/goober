@@ -47,7 +47,7 @@ async def handle_exception_with_context(ctx: Context, exc_type: Exception, exc_v
         await send_message(ctx, embed=embed)
         return
 
-    if exc_type == discord.ext.commands.errors.UserNotFound:
+    if exc_type == discord.ext.commands.errors.UserNotFound or exc_type == discord.ext.commands.errors.MemberNotFound:
         embed = discord.Embed(color=0xfc1c03)
         embed.title = "User not found"
         embed.description = f"{exc_value}"
