@@ -10,6 +10,7 @@ from discord.ext.commands import Context
 import logging
 from modules.sentenceprocessing import send_message
 import asyncio
+import discord.ext.commands.errors
 
 settings = settings_manager.settings
 logger = logging.getLogger("goober")
@@ -29,7 +30,31 @@ def handle_exception(exc_type, exc_value, exc_traceback, *, context: str | None 
         logger.error(f"Context: {context}")
 
 
-async def handle_exception_with_context(ctx: Context, exc_type, exc_value, exc_traceback, *, context: str | None = None):
+async def handle_exception_with_context(ctx: Context, exc_type: Exception, exc_value, exc_traceback, *, context: str | None = None):
+    if exc_type == discord.ext.commands.errors.CommandNotFound:
+        embed = discord.Embed(color=0xfc1c03)
+        embed.title = "Command not found"
+        embed.description = f"{exc_value}"
+
+        await send_message(ctx, embed=embed)
+        return
+
+    if exc_type == discord.ext.commands.errors.ArgumentParsingError:
+        embed = discord.Embed(color=0xfc1c03)
+        embed.title = "Invalid input"
+        embed.description = f"{exc_value}"
+
+        await send_message(ctx, embed=embed)
+        return
+
+    if exc_type == discord.ext.commands.errors.UserNotFound:
+        embed = discord.Embed(color=0xfc1c03)
+        embed.title = "User not found"
+        embed.description = f"{exc_value}"
+
+        await send_message(ctx, embed=embed)
+        return
+     
     handle_exception(exc_type, exc_value, exc_traceback, context=context)
 
     embed = discord.Embed(color=0xfc1c03)
