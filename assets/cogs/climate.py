@@ -429,7 +429,7 @@ class Climate(commands.Cog):
             description=f"Information about my indoor climate"
         )
 
-        calculated_temp: float = data['scd40_temp'] - data['temperature_offset']
+        calculated_temp: float = data['scd40_temp'] - (data['temperature_offset'] / 2)
         air_humidity: float = (data["scd40_humidity"] + data["relative_humidity"]) / 2
 
         embed.add_field(**Climate.format_embed("CO2", "PPM", data['carbon_dioxide'], CO2_TRESHOLDS))
