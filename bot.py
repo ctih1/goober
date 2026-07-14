@@ -125,6 +125,7 @@ if not markov_model:
 
 generated_sentences: Set[str] = set()
 used_words: Set[str] = set()
+cog_load_times: Dict[str, float] = {}
 
 
 async def load_cogs_from_folder(bot: commands.Bot, folder_name="assets/cogs"):
@@ -141,11 +142,23 @@ async def load_cogs_from_folder(bot: commands.Bot, folder_name="assets/cogs"):
         module_path = folder_name.replace("/", ".").replace("\\", ".") + f".{cog_name}"
 
         try:
+            start = time.time()
             await bot.load_extension(module_path)
-            logger.info(f"{k.loaded_cog()} {cog_name}")
+            logger.info(f"Loaded cog {cog_name} in {time.time()-start:.3f}s")
+
+            cog_load_times[cog_name] = time.time()-start
         except Exception as e:
             logger.error(f"{k.cog_fail()} {cog_name} {e}")
-            traceback.print_exc()    
+            traceback.print_exc()
+
+
+    strang = ""
+    for name, _time in sorted(cog_load_times.items(), key=lambda i: i[1], reverse=True):
+        strang += f"{name}: {_time:.4f}s\n"
+
+    os.environ["BOT_LAUNCH_DEBUG_SHIT"] = strang
+    
+
 
 # Event: Called when the bot is ready
 @bot.event

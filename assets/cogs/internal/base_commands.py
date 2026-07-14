@@ -275,6 +275,10 @@ class BaseCommands(commands.Cog):
 
         await ctx.reply(embed=embed)
 
+    @commands.command()
+    async def debug(self, ctx: commands.Context):
+        await ctx.reply(f'```\n{os.environ["BOT_LAUNCH_DEBUG_SHIT"]}\n```')
+
     @requires_admin()
     @commands.command()
     async def s_connect(self, ctx: commands.Context) -> None:
