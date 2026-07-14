@@ -102,6 +102,8 @@ class Screentime(commands.Cog):
 
     @commands.command()
     async def screentime_leaderboard(self, ctx: commands.Context):
+        start = time.time()
+
         rows = self.db.execute("SELECT * FROM presences ORDER BY user_id, changed_at")
 
         users: Dict[int, List[Tuple[int, str, int]]] = {}
@@ -118,9 +120,10 @@ class Screentime(commands.Cog):
         user_times = [(user_id, Screentime.get_total_screentime_seconds(tuple(rows))) for user_id, rows in users.items()]
         user_times = sorted(user_times, key=lambda d: d[1], reverse=True)
 
-        for i, (user, time) in enumerate(user_times):
-            embed.add_field(name=f"", value=f"{i+1}. <@{user}>: {format_timespan(time)}")
+        for i, (user, _time) in enumerate(user_times):
+            embed.add_field(name=f"", value=f"{i+1}. <@{user}>: {format_timespan(_time)}")
 
+        embed.set_footer(text=f"Processing took {(time.time()-start):.3f}s")
         await ctx.reply(embed=embed)
 
     @requires_admin()
