@@ -53,7 +53,7 @@ class Screentime(commands.Cog):
         if isinstance(message.author, discord.User): return
         if message.author.bot: return
 
-        if message.author.status.value in ["offline", "invisible"]:
+        if message.author.status.value in ["offline", "invisible", "idle"]:
             self.users_db.execute("INSERT OR IGNORE INTO users(user_id, fake_offline_count) VALUES (?, ?)", [message.author.id, 0])
             self.users_db.execute("UPDATE users SET fake_offline_count = fake_offline_count + 1 WHERE user_id = ?", [message.author.id])
 
