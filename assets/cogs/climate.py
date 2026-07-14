@@ -10,10 +10,12 @@ import time
 from modules.permission import requires_admin
 from modules.sentenceprocessing import send_message
 from modules.settings import instance as settings_manager
-from typing import TypedDict, Dict, Literal
+from typing import TypedDict, Dict, Literal, List, Tuple
 import requests_async
 import logging
 import datetime
+import requests_async
+import json
 
 ViewType = Literal["outdoors", "indoors"]
 
@@ -343,7 +345,6 @@ class Climate(commands.Cog):
         }
 
         for value, treshold in sorted(tresholds.items(), key=lambda item: item[0]):
-            logger.info(str(current_value) + " " +  str(value))
             if current_value < value:
                 break
             
@@ -352,33 +353,43 @@ class Climate(commands.Cog):
         return found_treshold
     
     @staticmethod
-    def format_embed(label: str, unit: str, value: float, treshold: Dict[int, TresholdValue]) -> dict:
-        ranking = Climate.get_ranking(value, treshold)
+    def format_embed(label: str, unit: str, value: Tuple[float, float] | Tuple[float, ...], treshold: Dict[int, TresholdValue]) -> dict:
+        ranking = Climate.get_ranking(value[1], treshold)
         return {
             "name": f"{label} {ranking['emoji']}",
-            "value": f"{round(value, 2)} {unit} (**{ranking['label']}**)"
+            "value": f"{'▲' if value[1] > value[0] else '▼'} {round(value[1], 2)} {unit} (**{ranking['label']}**)"
         }
     
     @staticmethod
-    def parse_prometheus_format(lines: str) -> dict:
-        data = {}
-        for line in lines.split("\n"):
-            if line.startswith("#"): continue
-            if len(line) < 3: continue
-            key, value = line.split(" ")
+    async def get_prometheus_data(datapoints: List[str]) -> Dict[str, Tuple[float, float]]:
+        """Gets prometheus data and returns a tuple of [30m ago, now]"""
 
-            data[key.strip()] = float(value.strip())
+        values: Dict[str, Tuple[float,float]] = {}
+        offset_json: dict = (await requests_async.get(f"http://192.168.32.88:9999/api/v1/query?query={{__name__=~\"{'|'.join(datapoints)}\"}}+offset+30m")).json()
+        now_json: dict = (await requests_async.get(f"http://192.168.32.88:9999/api/v1/query?query={{__name__=~\"{'|'.join(datapoints)}\"}}")).json()
         
-        return data
+        logger.info(json.dumps(offset_json, indent=4))
+        for data in now_json["data"]["result"]:
+            offset_data = [obj for obj in offset_json["data"]["result"] if obj["metric"]["__name__"] == data["metric"]["__name__"]]
+
+            if len(offset_data) != 1:
+                logger.warning(f"Weird match with {data}")
+                values[data["metric"]["__name__"]] = (float(data["value"][1]), float(data["value"][1]))
+                
+
+            values[data["metric"]["__name__"]] = (float(offset_data[0]["value"][1]), float(data["value"][1]))
+
+
+        return values
+
         
     @staticmethod
-    def get_sun_angle() -> float:
+    def get_sun_angle(at: datetime.datetime) -> float:
         settings: SettingsType = settings_manager.get_plugin_settings("climate", default_settings)  # type: ignore
 
-        now = datetime.datetime.now()
-        hour = now.hour + now.minute / 60 + now.second / 3600
+        hour = at.hour + at.minute / 60 + at.second / 3600
         solar_hour = hour + (settings["longtitude"] - 45) / 15
-        nth_day_of_year = (now - datetime.datetime(now.year, 1, 1)).days + 1
+        nth_day_of_year = (at - datetime.datetime(at.year, 1, 1)).days + 1
         declination = math.radians(23.445 * math.sin(math.radians((360 / 365.25) * (nth_day_of_year - 81))))
         hour_angle = math.radians(15 * (solar_hour - 12))
 
@@ -398,46 +409,44 @@ class Climate(commands.Cog):
         
     @staticmethod
     async def generate_outdoor_embed() -> discord.Embed:
-        res = await requests_async.get("http://192.168.32.2:7777/metrics")
-        data = Climate.parse_prometheus_format(res.text)
-
-        indoor_data = await requests_async.get("http://192.168.32.88:7778/data")
+        data = await Climate.get_prometheus_data(["mc2p5", "mc10p0", "temp", "humidity", "climate_pressure"])
 
         embed = discord.Embed(
             title="Climate data",
             description=f"Information about my outdoor climate"
         )
 
-        pressure = indoor_data.json()["air_pressure"] * math.pow((1 - 119/44330), -5.225) 
+        logger.info(data)
+
+        pressure = tuple([data["climate_pressure"][i] * math.pow((1 - 119/44330), -5.225) for i in range(2)])
 
         embed.add_field(**Climate.format_embed("PM2.5", "µg/m³", data["mc2p5"], PM25_TRESHOLDS))
         embed.add_field(**Climate.format_embed("PM10.0", "µg/m³", data["mc10p0"], PM100_TRESHOLDS))
         embed.add_field(**Climate.format_embed("Temperature", "°C", data["temp"], OUTDOOR_TEMP_TRESHOLDS))
         embed.add_field(**Climate.format_embed("Relative Humidity", "%", data["humidity"], OUTDOOR_HUMIDITY_TRESHOLDS))
         embed.add_field(**Climate.format_embed("Air Pressure", "hPa", pressure, PRESSURE_TRESHOLS))
-        embed.add_field(**Climate.format_embed("Sun angle", "°", Climate.get_sun_angle(), SUN_POSITION_TRESHOLD))
-
+        embed.add_field(**Climate.format_embed("Sun angle", "°", (Climate.get_sun_angle(datetime.datetime.now() - datetime.timedelta(minutes=30)) ,Climate.get_sun_angle(datetime.datetime.now())), SUN_POSITION_TRESHOLD))
+        embed.set_footer(text="▲: value increasing, ▼: value decreasing")
         return embed
     
     @staticmethod
     async def generate_indoor_embed() -> discord.Embed:
-        res = await requests_async.get("http://192.168.32.88:7778/data")
-        data: IndoorData = res.json()
+        data = await Climate.get_prometheus_data(["climate_carbon_dioxide", "climate_temp_adjusted", "climate_temp", "climate_scd40_temp", "climate_relative_humidity", "climate_scd40_humidity", "climate_air_resistance"])
 
         embed = discord.Embed(
             title="Climate data",
             description=f"Information about my indoor climate"
         )
 
-        calculated_temp: float = data['scd40_temp'] - (data['temperature_offset'] / 2)
-        air_humidity: float = (data["scd40_humidity"] + data["relative_humidity"]) / 2
+        calculated_temp = tuple([data['climate_scd40_temp'][i] - ((data["climate_temp"][i] - data['climate_temp_adjusted'][i]) / 2) for i in range(2)])
+        air_humidity = tuple([(data["climate_scd40_humidity"][i] + data["climate_relative_humidity"][i]) / 2 for i in range(2)])
 
-        embed.add_field(**Climate.format_embed("CO2", "PPM", data['carbon_dioxide'], CO2_TRESHOLDS))
+        embed.add_field(**Climate.format_embed("CO2", "PPM", data['climate_carbon_dioxide'], CO2_TRESHOLDS))
         embed.add_field(**Climate.format_embed("Temperature", "°C", calculated_temp, TEMP_TRESHOLDS))
         embed.add_field(**Climate.format_embed("Relative Humidity", "%", air_humidity, HUMIDITY_TRESHOLDS))
-        embed.add_field(**Climate.format_embed("Air Resistance", "Ω", data['air_resistance'], RESISTANCE_TRESHOLDS))
+        embed.add_field(**Climate.format_embed("Air Resistance", "Ω", data['climate_air_resistance'], RESISTANCE_TRESHOLDS))
+        embed.set_footer(text="▲: value increasing, ▼: value decreasing")
 
-        embed.set_footer(text=f"Last updated: {time.strftime('%H:%M:%S %d/%m/%Y', time.gmtime(data['last_update']))} (UTC)")
         return embed
 
     @commands.command()
