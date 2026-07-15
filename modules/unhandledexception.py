@@ -30,7 +30,7 @@ def handle_exception(exc_type, exc_value, exc_traceback, *, context: str | None 
         logger.error(f"Context: {context}")
 
 
-async def handle_exception_with_context(ctx: Context, exc_type: Exception, exc_value, exc_traceback, *, context: str | None = None):
+async def handle_exception_with_context(ctx: Context, exc_type: type[Exception], exc_value, exc_traceback, *, context: str | None = None):
     if exc_type == discord.ext.commands.errors.CommandNotFound:
         embed = discord.Embed(color=0xfc1c03)
         embed.title = "Command not found"

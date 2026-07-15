@@ -321,6 +321,7 @@ class ResendView(discord.ui.View):
     
     @discord.ui.button(label="Refresh")
     async def refresh_callback(self, interaction: discord.Interaction, _button: discord.ui.Button):
+        logger.info("Refresh received")
         await interaction.response.defer()
         if self.mode == "indoors":
             embed = await Climate.generate_indoor_embed()
@@ -448,14 +449,12 @@ class Climate(commands.Cog):
     @commands.command()
     async def indoors(self, ctx: commands.Context):
         embed = await Climate.generate_indoor_embed()
-        embed.set_author(name=ctx.author.name, icon_url=(None if ctx.author.avatar is None else ctx.author.avatar.url))
         await ctx.send(embed=embed, view=ResendView("indoors"))
 
 
     @commands.command()
     async def outdoors(self, ctx: commands.Context):
         embed = await Climate.generate_outdoor_embed()
-        embed.set_author(name=ctx.author.name, icon_url=(None if ctx.author.avatar is None else ctx.author.avatar.url))
         await ctx.send(embed=embed, view=ResendView("outdoors"))
 
     @requires_admin()
