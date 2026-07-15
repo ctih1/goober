@@ -327,9 +327,6 @@ class ResendView(discord.ui.View):
         else:
             embed = await Climate.generate_outdoor_embed()
 
-        embed.set_author(name=interaction.user.name, icon_url=(None if interaction.user.avatar is None else interaction.user.avatar.url))
-
-
         await interaction.followup.send(embed=embed, view=self)
 
 class Climate(commands.Cog): 
@@ -380,7 +377,6 @@ class Climate(commands.Cog):
                 
 
             values[data["metric"]["__name__"]] = (float(offset_data[0]["value"][1]), float(data["value"][1]))
-
 
         return values
 
