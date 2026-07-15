@@ -327,6 +327,9 @@ class ResendView(discord.ui.View):
         else:
             embed = await Climate.generate_outdoor_embed()
 
+        embed.set_author(name=interaction.user.name, icon_url=(None if interaction.user.avatar is None else interaction.user.avatar.url))
+
+
         await interaction.followup.send(embed=embed, view=self)
 
 class Climate(commands.Cog): 
@@ -368,7 +371,6 @@ class Climate(commands.Cog):
         offset_json: dict = (await requests_async.get(f"http://192.168.32.88:9999/api/v1/query?query={{__name__=~\"{'|'.join(datapoints)}\"}}+offset+30m")).json()
         now_json: dict = (await requests_async.get(f"http://192.168.32.88:9999/api/v1/query?query={{__name__=~\"{'|'.join(datapoints)}\"}}")).json()
         
-        logger.info(json.dumps(offset_json, indent=4))
         for data in now_json["data"]["result"]:
             offset_data = [obj for obj in offset_json["data"]["result"] if obj["metric"]["__name__"] == data["metric"]["__name__"]]
 
@@ -412,11 +414,9 @@ class Climate(commands.Cog):
         data = await Climate.get_prometheus_data(["mc2p5", "mc10p0", "temp", "humidity", "climate_pressure"])
 
         embed = discord.Embed(
-            title="Climate data",
+            title="Outdoor climate data",
             description=f"Information about my outdoor climate"
         )
-
-        logger.info(data)
 
         pressure = tuple([data["climate_pressure"][i] * math.pow((1 - 119/44330), -5.225) for i in range(2)])
 
@@ -434,7 +434,7 @@ class Climate(commands.Cog):
         data = await Climate.get_prometheus_data(["climate_carbon_dioxide", "climate_temp_adjusted", "climate_temp", "climate_scd40_temp", "climate_relative_humidity", "climate_scd40_humidity", "climate_air_resistance"])
 
         embed = discord.Embed(
-            title="Climate data",
+            title="Indoor climate data",
             description=f"Information about my indoor climate"
         )
 
@@ -452,12 +452,14 @@ class Climate(commands.Cog):
     @commands.command()
     async def indoors(self, ctx: commands.Context):
         embed = await Climate.generate_indoor_embed()
+        embed.set_author(name=ctx.author.name, icon_url=(None if ctx.author.avatar is None else ctx.author.avatar.url))
         await ctx.send(embed=embed, view=ResendView("indoors"))
 
 
     @commands.command()
     async def outdoors(self, ctx: commands.Context):
         embed = await Climate.generate_outdoor_embed()
+        embed.set_author(name=ctx.author.name, icon_url=(None if ctx.author.avatar is None else ctx.author.avatar.url))
         await ctx.send(embed=embed, view=ResendView("outdoors"))
 
     @requires_admin()

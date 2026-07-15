@@ -13,7 +13,6 @@ logger = logging.getLogger("goober")
 
 AvailableModes = Literal["r", "s"]
 
-
 class FileSync(commands.Cog):
     def __init__(self, bot):
         self.bot: discord.Client = bot
