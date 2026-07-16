@@ -42,7 +42,7 @@ class LarpDetect(commands.Cog):
         channel_id = message.channel.id
 
         if channel_id not in self.chat_context:
-            self.chat_context[channel_id] = deque(maxlen=12)
+            self.chat_context[channel_id] = deque(maxlen=18)
 
         self.chat_context[channel_id].append({"author": message.author.id, "content": message.content})
 

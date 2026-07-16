@@ -148,7 +148,7 @@ class Screentime(commands.Cog):
         rows = self.users_db.execute("SELECT * FROM users WHERE user_id = ?", [target])
 
         for row in rows:
-            await ctx.reply(f"User has sent messages offline: {row[1]} times")
+            await ctx.reply(f"User has sent messages offline or while in idle: {row[1]} times")
             return
         
         await ctx.reply("No larps!")
