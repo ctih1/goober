@@ -132,7 +132,7 @@ class SongTranslator(commands.Cog):
     
         await message.edit(content="Burning lyrics onto video...")
 
-        command = f'{os.environ.get("FFMPEG_PATH", "ffmpeg")} -i {video_path} {os.environ.get("FFMPEG_ARGS", "")} -vf "subtitles=filename={subtitle_path}" {final_path}'
+        command = f'{os.environ.get("FFMPEG_PATH", "ffmpeg")} -y -i {video_path} {os.environ.get("FFMPEG_ARGS", "")} -vf "subtitles=filename={subtitle_path}" {final_path}'
         logger.info(command)
         code = os.system(command)
         if code != 0:
