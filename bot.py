@@ -18,6 +18,8 @@ logger.addHandler(console_handler)
 logger.addHandler(file_handler)
 
 logger.info("Starting...")
+
+
 def build_keys():
     logger.info("Building keys")
     key_compiler.build_result(
@@ -29,6 +31,7 @@ def build_keys():
     )
     logger.info("Built keys!")
 
+
 build_keys()
 
 import os
@@ -38,14 +41,7 @@ import traceback
 import tempfile
 import shutil
 import sys
-from typing import (
-    List,
-    Dict,
-    Literal,
-    Set,
-    Optional,
-    TypedDict
-)
+from typing import List, Dict, Literal, Set, Optional, TypedDict
 import logging
 from modules.prestartchecks import start_checks
 import modules.keys as k
@@ -82,6 +78,8 @@ from modules.image import gen_demotivator
 
 sys.excepthook = handle_exception
 tracemalloc.start()
+
+
 class MessageMetadata(TypedDict):
     user_id: str
     user_name: str
@@ -91,6 +89,7 @@ class MessageMetadata(TypedDict):
     channel_name: str
     message: str
     timestamp: float
+
 
 os.makedirs("data", exist_ok=True)
 
@@ -146,18 +145,16 @@ async def load_cogs_from_folder(bot: commands.Bot, folder_name="assets/cogs"):
             await bot.load_extension(module_path)
             logger.info(f"Loaded cog {cog_name} in {time.time()-start:.3f}s")
 
-            cog_load_times[cog_name] = time.time()-start
+            cog_load_times[cog_name] = time.time() - start
         except Exception as e:
             logger.error(f"{k.cog_fail()} {cog_name} {e}")
             traceback.print_exc()
-
 
     strang = ""
     for name, _time in sorted(cog_load_times.items(), key=lambda i: i[1], reverse=True):
         strang += f"{name}: {_time:.4f}s\n"
 
     os.environ["BOT_LAUNCH_DEBUG_SHIT"] = strang
-    
 
 
 # Event: Called when the bot is ready
@@ -188,7 +185,6 @@ async def on_ready() -> None:
 
     if not settings["bot"]["misc"]["activity"]["content"]:
         return
-
 
     activities: Dict[ActivityType, discord.ActivityType] = {
         "listening": discord.ActivityType.listening,
@@ -274,7 +270,7 @@ async def demotivator(ctx: commands.Context) -> None:
         shutil.copy(fallback_image, temp_input)
         input_path = temp_input
 
-    output_path: Optional[str] = await gen_demotivator(input_path) # type: ignore
+    output_path: Optional[str] = await gen_demotivator(input_path)  # type: ignore
 
     if output_path is None or not os.path.isfile(output_path):
         if temp_input and os.path.exists(temp_input):
@@ -316,13 +312,10 @@ async def on_message(message: discord.Message) -> None:
     if not settings["bot"]["user_training"]:
         return
 
-    
-    if (
-        settings["bot"]["misc"]["block_profanity"] and 
-        profanity.contains_profanity(message.content)
+    if settings["bot"]["misc"]["block_profanity"] and profanity.contains_profanity(
+        message.content
     ):
         return
-
 
     formatted_message: str = append_mentions_to_18digit_integer(message.content)
     cleaned_message: str = preprocess_message(formatted_message)
@@ -365,7 +358,6 @@ async def on_message(message: discord.Message) -> None:
         if not sync_connector.can_react(message.id, message.channel.id):
             logger.info("Sync hub determined that this instance cannot react")
             return
-        
 
         emoji = random.choice(EMOJIS)
         try:

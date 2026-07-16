@@ -10,19 +10,22 @@ from typing import TypedDict, Dict, List, Any, Deque
 from google import genai
 import json
 import logging
-from collections import deque 
+from collections import deque
 
 logger = logging.getLogger("goober")
 
 ChannelId = int
 
+
 class LarpDict(TypedDict):
     nationality: str
     extra: List[str]
 
+
 class ChatMessage(TypedDict):
     author: int
     content: str
+
 
 class LarpDetect(commands.Cog):
     def __init__(self, bot: commands.Bot):
@@ -44,16 +47,20 @@ class LarpDetect(commands.Cog):
         if channel_id not in self.chat_context:
             self.chat_context[channel_id] = deque(maxlen=18)
 
-        self.chat_context[channel_id].append({"author": message.author.id, "content": message.content})
+        self.chat_context[channel_id].append(
+            {"author": message.author.id, "content": message.content}
+        )
 
     @commands.command()
     async def is_larping(self, ctx: commands.Context, *args):
         reference = ctx.message.reference
 
         if not reference:
-            await ctx.reply("Reply to something bruh you're the larper for not knowing how to use ts")
-            return  
-        
+            await ctx.reply(
+                "Reply to something bruh you're the larper for not knowing how to use ts"
+            )
+            return
+
         message = reference.resolved
         if isinstance(message, discord.DeletedReferencedMessage) or not message:
             await ctx.reply("Accused has deleted their message, assuming to be larper.")
@@ -63,14 +70,17 @@ class LarpDetect(commands.Cog):
 
         logger.info("Prompting AI")
 
-        appropriate_message_targets = [msg["content"] for msg in self.chat_context[ctx.channel.id] if msg["author"] == message.author.id]
+        appropriate_message_targets = [
+            msg["content"]
+            for msg in self.chat_context[ctx.channel.id]
+            if msg["author"] == message.author.id
+        ]
         logger.info(str(appropriate_message_targets))
 
         async with ctx.typing():
             response = self.ai_client.models.generate_content(
                 model="gemini-3.1-flash-lite",
-                config={
-                    "system_instruction": f"""
+                config={"system_instruction": f"""
                     You are an expert behavioral analyst detecting 'LARPing' (acting as though one is knowledgeable or immersed in a culture/topic without genuine experience).
 
                     CRITICAL LOGIC:
@@ -103,26 +113,20 @@ class LarpDetect(commands.Cog):
                     {appropriate_message_targets}
                     ```
 
-                    """
-                },
-                contents=f"Check this sentence for larping: \"{message.content}\". Additional note from the user who requested this operation: \"{' '.join(args)}\"."
+                    """},
+                contents=f"Check this sentence for larping: \"{message.content}\". Additional note from the user who requested this operation: \"{' '.join(args)}\".",
             )
 
-
         await ctx.reply(response.text)
-
 
     @commands.command()
     async def add_larp_data(self, ctx: commands.Context, target: discord.Member, *args):
         if ctx.channel.id != 1319031098336084010:
             await ctx.reply("KILL YOURSELF")
             return
-        
+
         if str(target.id) not in self.larp_data:
-            self.larp_data[str(target.id)] = {
-                "nationality": "Unknown",
-                "extra": []
-            }
+            self.larp_data[str(target.id)] = {"nationality": "Unknown", "extra": []}
 
         self.larp_data[str(target.id)]["extra"].append(" ".join(args))
 
@@ -130,6 +134,7 @@ class LarpDetect(commands.Cog):
             json.dump(self.larp_data, f, indent=4)
 
         await ctx.reply("Added larp data")
+
 
 async def setup(bot):
     await bot.add_cog(LarpDetect(bot))

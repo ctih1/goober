@@ -26,7 +26,6 @@ import json
 import time
 import markovify
 
-
 logger = logging.getLogger("goober")
 from modules.settings import instance as settings_manager
 

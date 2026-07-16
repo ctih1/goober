@@ -8,7 +8,6 @@ class Eightball(commands.Cog):
         self.bot = bot
         self.description = "🎱|It is certainly an 8-ball"
 
-
     @commands.command()
     async def eightball(self, ctx):
         answer = random.choice(

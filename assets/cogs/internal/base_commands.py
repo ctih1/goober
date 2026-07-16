@@ -24,6 +24,7 @@ OS_STRING = f"{platform.system() if platform.system() != 'Darwin' else 'macOS'} 
 
 logger = logging.getLogger("goober")
 
+
 class BaseCommands(commands.Cog):
     def __init__(self, bot):
         self.bot: discord.ext.commands.Bot = bot
@@ -46,8 +47,25 @@ class BaseCommands(commands.Cog):
                 "demotivator",
                 "help",
             ],
-            "Administration": ["stats", "retrain", "setlanguage", "add_owner", "remove_owner", "blacklist_user", "unblacklist_user", "restart", "force_update"],
-            "Cog management": ["enable", "load", "unload", "disable", "reload", "listcogs"],
+            "Administration": [
+                "stats",
+                "retrain",
+                "setlanguage",
+                "add_owner",
+                "remove_owner",
+                "blacklist_user",
+                "unblacklist_user",
+                "restart",
+                "force_update",
+            ],
+            "Cog management": [
+                "enable",
+                "load",
+                "unload",
+                "disable",
+                "reload",
+                "listcogs",
+            ],
         }
 
         cog_commands: Dict[str, List[str]] = {}
@@ -55,31 +73,43 @@ class BaseCommands(commands.Cog):
             "Administration": "🛠️|Commands meant for stuff like stuff",
             "Cog management": "💼|Commands for managing cogs",
             "Synchub": "📨|Commands for managing Sync hub",
-            "General": "🌐|General commands for stuff"
+            "General": "🌐|General commands for stuff",
         }
 
         for cog_name, cog in self.bot.cogs.items():
             for command in cog.get_commands():
-                if any([command.name in commands for commands in list(command_categories.values())]): continue
+                if any(
+                    [
+                        command.name in commands
+                        for commands in list(command_categories.values())
+                    ]
+                ):
+                    continue
 
                 if cog_commands.get(cog_name) is None:
                     cog_commands[cog_name] = []
-                
+
                 cog_commands[cog_name].append(command.name)
             category_descriptions[cog_name] = cog.description
 
-
         for category, commands_list in (command_categories | cog_commands).items():
             commands_in_category: str = "\n".join(
-                [f"{settings['bot']['prefix']}**{command}**" for command in commands_list]
+                [
+                    f"{settings['bot']['prefix']}**{command}**"
+                    for command in commands_list
+                ]
             )
-            description = category_descriptions.get(category, 'No description')
+            description = category_descriptions.get(category, "No description")
             emoji = ""
             if "|" in description:
                 emoji, description = description.split("|", 1)
 
-            embed_value = f"{description}\n\n{commands_in_category}\n‌" # don't remove zero width non joiner since it adds spacing
-            embed.add_field(name=f"{emoji} {category}", value=embed_value, inline=(False if layout == "v" else True))
+            embed_value = f"{description}\n\n{commands_in_category}\n‌"  # don't remove zero width non joiner since it adds spacing
+            embed.add_field(
+                name=f"{emoji} {category}",
+                value=embed_value,
+                inline=(False if layout == "v" else True),
+            )
         await send_message(ctx, embed=embed)
 
     @requires_admin()
@@ -118,14 +148,11 @@ class BaseCommands(commands.Cog):
             color=discord.Colour(0x000000),
         )
 
-        embed.add_field(
-            name=k.system_info(),
-            value=k.os_info(OS_STRING)
-        )
+        embed.add_field(name=k.system_info(), value=k.os_info(OS_STRING))
 
         embed.add_field(
             name=k.command_about_embed_field1(),
-            value=settings['name'],
+            value=settings["name"],
             inline=False,
         )
 
@@ -141,9 +168,7 @@ class BaseCommands(commands.Cog):
         total_memory = memory_info.total / (1024**3)
         used_memory = memory_info.used / (1024**3)
 
-
         cpu_name = cpuinfo.get_cpu_info()["brand_raw"]
-
 
         with open(memory_file, "r") as file:
             line_count: int = sum(1 for _ in file)
@@ -159,16 +184,18 @@ class BaseCommands(commands.Cog):
             inline=False,
         )
 
-        mem_used_by_process = psutil.Process().memory_info().rss / 1024 **2
+        mem_used_by_process = psutil.Process().memory_info().rss / 1024**2
 
-        embed.add_field(name="Instance", value=f"Memory usage: {round(mem_used_by_process)}mb")
+        embed.add_field(
+            name="Instance", value=f"Memory usage: {round(mem_used_by_process)}mb"
+        )
 
         embed.add_field(
             name=k.system_info(),
             value=f"""
                     {k.memory_usage(used=round(used_memory,2), total=round(total_memory,2), percent=round(used_memory/total_memory * 100))}
                     {k.cpu_info(cpu_name)}
-                """
+                """,
         )
 
         embed.add_field(
@@ -191,7 +218,6 @@ class BaseCommands(commands.Cog):
             inline=False,
         )
 
-
         await send_message(ctx, embed=embed)
 
     @requires_admin()
@@ -206,7 +232,6 @@ class BaseCommands(commands.Cog):
         await ctx.send("Forcefully updating...")
         updater.force_update()
         os.execv(sys.executable, [sys.executable] + sys.argv)
-        
 
     @requires_admin()
     @commands.command()
@@ -236,15 +261,25 @@ class BaseCommands(commands.Cog):
         message_id = message_id or "0"
         status = sync_connector.can_react(int(message_id), 0)
 
-        await send_message(ctx, f"Allowed to react to message {message_id}? {'yes' if status else 'no'} (connection to {settings['bot']['sync_hub']['url']} active? {'yes' if sync_connector.connected else 'no'})")
+        await send_message(
+            ctx,
+            f"Allowed to react to message {message_id}? {'yes' if status else 'no'} (connection to {settings['bot']['sync_hub']['url']} active? {'yes' if sync_connector.connected else 'no'})",
+        )
 
     @requires_admin()
     @commands.command()
-    async def s_test_larp(self, ctx: commands.Context, message_id: str | None, larp_num: str | None) -> None:
+    async def s_test_larp(
+        self, ctx: commands.Context, message_id: str | None, larp_num: str | None
+    ) -> None:
         message_id = message_id or "0"
-        status = sync_connector.can_event(int(message_id), 0, "test", name_override=larp_num)
+        status = sync_connector.can_event(
+            int(message_id), 0, "test", name_override=larp_num
+        )
 
-        await send_message(ctx, f"Allowed to react to message {message_id}? **{'YES' if status else 'NO'}** (connection to {settings['bot']['sync_hub']['url']} active? {'yes' if sync_connector.connected else 'no'})")
+        await send_message(
+            ctx,
+            f"Allowed to react to message {message_id}? **{'YES' if status else 'NO'}** (connection to {settings['bot']['sync_hub']['url']} active? {'yes' if sync_connector.connected else 'no'})",
+        )
 
     @commands.command()
     async def s_events(self, ctx: commands.Context) -> None:
@@ -257,19 +292,25 @@ class BaseCommands(commands.Cog):
         if not reference:
             await ctx.reply("Please send reply to a message and run this command.")
             return
-        
+
         if not isinstance(reference.resolved, discord.DeletedReferencedMessage):
-            reference = (None if not reference.resolved else reference.resolved.reference) or reference
+            reference = (
+                None if not reference.resolved else reference.resolved.reference
+            ) or reference
 
         if not reference or not reference.message_id:
             await ctx.reply("Something went catastrophically wrong duuud")
             return
-        
+
         embed = discord.Embed(title="Synchub command blame")
         embed.add_field(name="Target message", value=reference.jump_url, inline=False)
         embed.add_field(name="Synchub event", value=f"`event`", inline=False)
 
-        r = sync_connector.get_blame(message_id=reference.message_id, channel_id=reference.channel_id, event=event)
+        r = sync_connector.get_blame(
+            message_id=reference.message_id,
+            channel_id=reference.channel_id,
+            event=event,
+        )
 
         embed.add_field(name="Blame", value=r, inline=False)
 
@@ -283,19 +324,19 @@ class BaseCommands(commands.Cog):
     @commands.command()
     async def s_connect(self, ctx: commands.Context) -> None:
         await send_message(ctx, "Trying to connect...")
-        
+
         connected = sync_connector.try_to_connect()
         if connected:
             await send_message(ctx, "Succesfully connected to sync hub!")
         else:
             await send_message(ctx, "Failed to connect to sync hub")
 
-    
     @requires_admin()
     @commands.command()
     async def s_stats(self, ctx: commands.Context) -> None:
         connected = sync_connector.get_connected()
         await ctx.send(connected)
+
 
 async def setup(bot: discord.ext.commands.Bot):
     print("Setting up base_commands")

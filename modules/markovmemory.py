@@ -68,7 +68,7 @@ def train_markov_model(memory, additional_data=None) -> markovify.NewlineText | 
 # Save the Markov model to a pickle file
 def save_markov_model(model):
     filename = settings["bot"]["active_model"]
-    
+
     with open(filename, "wb") as f:
         pickle.dump(model, f)
     logger.info(f"Markov model saved to {filename}.")

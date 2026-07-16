@@ -13,6 +13,7 @@ logger = logging.getLogger("goober")
 
 AvailableModes = Literal["r", "s"]
 
+
 class FileSync(commands.Cog):
     def __init__(self, bot):
         self.bot: discord.Client = bot
@@ -20,7 +21,6 @@ class FileSync(commands.Cog):
         self.peer_id = None
         self.awaiting_file = False
         self.description = "🛜|Send and receive files between bots"
-
 
     @requires_admin()
     @commands.command()

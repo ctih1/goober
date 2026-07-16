@@ -6,9 +6,11 @@ import logging
 
 logger = logging.getLogger("goober")
 
+
 class CredCache(BaseModel):
     access_token: str
     expires_at: int
+
 
 class StravaApi:
     def __init__(self) -> None:
@@ -24,26 +26,30 @@ class StravaApi:
     async def refresh_access_token(self) -> CredCache:
         url = f"https://www.strava.com/api/v3/oauth/token?client_id={self.client_id}&client_secret={self.client_secret}&grant_type=refresh_token&refresh_token={self.refresh_token}"
 
-        res = await requests_async.post(url, headers={
-            "Content-Type": "application/json"
-        })
+        res = await requests_async.post(
+            url, headers={"Content-Type": "application/json"}
+        )
 
         if res.status_code != 200:
             raise ValueError(f"Invalid response! {res.text}")
-        
+
         jason = res.json()
-        self.cred_cache = CredCache(access_token=jason["access_token"], expires_at=jason["expires_at"])
+        self.cred_cache = CredCache(
+            access_token=jason["access_token"], expires_at=jason["expires_at"]
+        )
 
         return self.cred_cache
-    
+
     async def get_activities(self) -> None:
         if not self.cred_cache:
             self.cred_cache = await self.refresh_access_token()
 
-        res = await requests_async.get("https://www.strava.com/api/v3/athlete/activities?per_page=10", headers={
-            "Authorization": f"Bearer {self.cred_cache.access_token}"
-        })
+        res = await requests_async.get(
+            "https://www.strava.com/api/v3/athlete/activities?per_page=10",
+            headers={"Authorization": f"Bearer {self.cred_cache.access_token}"},
+        )
 
         logger.info(json.dumps(res.json(), indent=2))
+
 
 instance = StravaApi()

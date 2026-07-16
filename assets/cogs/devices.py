@@ -13,18 +13,20 @@ from modules.settings import instance as settings_manager
 from typing import TypedDict, Dict
 import os
 
+
 class SettingsType(TypedDict):
     devices: Dict[str, str]
 
-default_settings: SettingsType = {
-    "devices": {}
-}
 
-class Devices(commands.Cog): 
+default_settings: SettingsType = {"devices": {}}
+
+
+class Devices(commands.Cog):
     def __init__(self, bot: discord.ext.commands.Bot):
         self.bot: discord.ext.commands.Bot = bot
-        self.description = "📱|Cog that shows which devices are currently connected to your network"
-
+        self.description = (
+            "📱|Cog that shows which devices are currently connected to your network"
+        )
 
     @commands.command()
     async def devices(self, ctx: commands.Context):
@@ -34,13 +36,17 @@ class Devices(commands.Cog):
             color=discord.Color.blue(),
         )
 
-        settings: SettingsType = settings_manager.get_plugin_settings("devices", default_settings) # type: ignore
+        settings: SettingsType = settings_manager.get_plugin_settings("devices", default_settings)  # type: ignore
 
         for device, ip in settings["devices"].items():
             is_up = os.system(f"ping -c 1 -i 0.2 {ip}") == 0
             stauts_emoji: str = "✅" if is_up else "❌"
 
-            embed.add_field(name=f"{device} {stauts_emoji} ", value=f"`{ip}` **{'UP' if is_up else 'DOWN'}**", inline=True) 
+            embed.add_field(
+                name=f"{device} {stauts_emoji} ",
+                value=f"`{ip}` **{'UP' if is_up else 'DOWN'}**",
+                inline=True,
+            )
 
         await send_message(ctx, embed=embed)
 
@@ -50,7 +56,7 @@ class Devices(commands.Cog):
         ip = args[-1]
         device_name = " ".join(args[:-1])
 
-        settings: SettingsType = settings_manager.get_plugin_settings("devices", default_settings) # type: ignore
+        settings: SettingsType = settings_manager.get_plugin_settings("devices", default_settings)  # type: ignore
         settings["devices"][str(device_name)] = ip
         settings_manager.set_plugin_setting("devices", settings)
 
@@ -61,7 +67,7 @@ class Devices(commands.Cog):
     async def remove_device(self, ctx: commands.Context, *args):
         device_name = " ".join(args)
 
-        settings: SettingsType = settings_manager.get_plugin_settings("devices", default_settings) # type: ignore
+        settings: SettingsType = settings_manager.get_plugin_settings("devices", default_settings)  # type: ignore
         del settings["devices"][str(device_name)]
         settings_manager.set_plugin_setting("devices", settings)
 
