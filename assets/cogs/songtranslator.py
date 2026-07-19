@@ -195,6 +195,7 @@ class SongTranslator(commands.Cog):
         total_size = stream.filesize
         bytes_downloaded = total_size - bytes_remaining
 
+        logger.debug(f"{bytes_downloaded}/{total_size}")
         asyncio.run(
             self.update_progress_message(
                 f"{round(bytes_downloaded/1024)}kb of {round(total_size/1024)}kb"
