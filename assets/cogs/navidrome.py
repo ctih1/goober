@@ -18,7 +18,7 @@ import slugify
 import os
 import time
 import base64
-from assets.cogs.song_translator import default_settings, SettingsType
+from assets.cogs.songtranslator import default_settings, SettingsType
 
 logger = logging.getLogger("goober")
 
