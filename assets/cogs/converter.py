@@ -315,18 +315,21 @@ class Converter(commands.Cog):
         if message.author.bot:
             return
 
+        logger.debug(f"Received message {message.content}")
+
         found_units_dict: Dict[int, ConvertedValue] = {}
 
         for regex, conversion_func in self.regexes.items():
             matches: Iterator[re.Match] | None = regex.finditer(message.content)
 
             if not matches:
+                logger.debug("No matches found")
                 continue
+
             for match in matches:
-                logger.info(match.groups())
+                logger.info(f"Match groups: {match.groups()}")
                 match_string: str = "".join(match.groups()).strip()
 
-                logger.debug(match.groups())
                 if match_string in settings.get("blacklisted_words"):
                     logger.info(
                         f"Skipping match {match_string} due to it being blacklisted"
@@ -346,16 +349,20 @@ class Converter(commands.Cog):
                     value = conversion_func(float(match.groups()[0].replace(",", ".")))
 
                 if value is not None:
+                    logger.info(f"Found {match.start()} = {value}")
                     found_units_dict[match.start()] = value
 
         unit_list: List[tuple[int, ConvertedValue]] = list(found_units_dict.items())
         sorted_units = [val[1] for val in sorted(unit_list, key=lambda val: val[0])]
 
-        if len(sorted_units) > 0 and synchub.can_convert(
-            message.id, message.channel.id
-        ):
+        if len(sorted_units) == 0:
+            logger.debug("No units found")
+            return
+        if synchub.can_convert(message.id, message.channel.id):
             logger.info("Synchub agreed")
             await message.reply(self.__format_response(sorted_units))
+        else:
+            logger.info("Synchub disagreed")
 
     @requires_admin()
     @commands.command()

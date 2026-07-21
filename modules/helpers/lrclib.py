@@ -31,12 +31,24 @@ class LRCAPI:
     @staticmethod
     async def search_song(search_string: str) -> List[LRCLIBResponse]:
         logger.info("Searching for song lyrics...")
-        response = await requests_async.get(
-            f"https://lrclib.net/api/search?q={slugify(search_string, separator='+')}"
-        )
-        matches: List[LRCLIBResponse] = response.json()
+        response = None
 
-        return matches
+        try:
+            response = await requests_async.get(
+                f"https://lrclib.net/api/search?q={slugify(search_string, separator='+')}"
+            )
+            matches: List[LRCLIBResponse] = response.json()
+            return matches
+
+        except Exception as e:
+            if response:
+                logger.error(
+                    f"Failed to get lyrics, {response.status_code}, {response.text}"
+                )
+            else:
+                logger.error("Failed to get lyrics response")
+                logger.error(e)
+            return []
 
     @staticmethod
     async def fetch_song(

@@ -50,7 +50,7 @@ class Screentime(commands.Cog):
         elif self.presence_map[after.id] == after.status.value:
             return
 
-        logger.info("Updating status DB")
+        logger.debug("Updating status DB")
 
         self.db.execute(
             "INSERT INTO presences VALUES(?, ?, ?)",
