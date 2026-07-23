@@ -326,7 +326,7 @@ class SongTranslator(commands.Cog):
             synced_lyrics = song["syncedLyrics"]
             lyrics = song["plainLyrics"]
 
-            if view_info == "?":
+            if view_info:
                 await message.reply(content=synced_lyrics.split("\n")[0])
                 return
 
