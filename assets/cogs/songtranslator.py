@@ -176,9 +176,7 @@ class SongTranslator(commands.Cog):
         else:
             await message.edit(content="Moving video...")
             shutil.move(final_path, f"data/cdn/{video_id}_sub.mp4")
-            await message.reply(
-                content=f"https://homecdn.frii.site/vids/{video_id}_sub.mp4"
-            )
+            await message.reply(content=f"https://cdn.ctih1.fi/vids/{video_id}_sub.mp4")
 
     def get_first_lyric_time(self, lyrics: str) -> str:
         return lyrics.split("\n")[0].split("]", 1)[0].replace("[", "")
