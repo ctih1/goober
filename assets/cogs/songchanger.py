@@ -13,7 +13,6 @@ class SongChanger(commands.Cog):
         self.bot = bot
         self.description = "🎧|Changes the bot's 'Listening to' status"
 
-
     def get_local_version():
         if os.path.exists(LOCAL_VERSION_FILE):
             with open(LOCAL_VERSION_FILE, "r") as f:
@@ -41,17 +40,18 @@ class SongChanger(commands.Cog):
     @commands.command()
     async def change_activity(self, ctx, type: str | None, *string):
         if type not in get_args(ActivityType):
-            await ctx.send(f"Type needs to be one of the following: {', '.join(get_args(ActivityType))}")
-            return 
-        
-        settings_manager.settings["bot"]["misc"]["activity"] = { # type: ignore
+            await ctx.send(
+                f"Type needs to be one of the following: {', '.join(get_args(ActivityType))}"
+            )
+            return
+
+        settings_manager.settings["bot"]["misc"]["activity"] = {  # type: ignore
             "type": type,
-            "content": ' '.join(string)
+            "content": " ".join(string),
         }
 
         settings_manager.commit()
 
-            
         activities: Dict[ActivityType, discord.ActivityType] = {
             "listening": discord.ActivityType.listening,
             "playing": discord.ActivityType.playing,
@@ -63,7 +63,7 @@ class SongChanger(commands.Cog):
         await self.bot.change_presence(
             activity=discord.Activity(
                 type=activities.get(
-                    settings_manager.settings["bot"]["misc"]["activity"]["type"], # type: ignore
+                    settings_manager.settings["bot"]["misc"]["activity"]["type"],  # type: ignore
                     discord.ActivityType.unknown,
                 ),
                 name=settings_manager.settings["bot"]["misc"]["activity"]["content"],
@@ -71,6 +71,7 @@ class SongChanger(commands.Cog):
         )
 
         await ctx.send("Changed activity!")
+
 
 async def setup(bot):
     await bot.add_cog(SongChanger(bot))

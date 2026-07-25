@@ -15,8 +15,10 @@ settings = settings_manager.settings
 class PermissionError(Exception):
     pass
 
+
 def is_admin(id: int) -> bool:
     return id in settings["bot"]["owner_ids"]
+
 
 def requires_admin():
     async def wrapper(ctx: discord.ext.commands.Context):

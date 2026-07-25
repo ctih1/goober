@@ -14,6 +14,7 @@ COG_PREFIX = "assets.cogs."
 
 logger = logging.getLogger("goober")
 
+
 class CogManager(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
@@ -96,7 +97,7 @@ class CogManager(commands.Cog):
         if cog_name is None:
             await ctx.send("Please provide the cog name to reload.")
             return
-        
+
         try:
             await self.bot.unload_extension(COG_PREFIX + cog_name)
             await self.bot.load_extension(COG_PREFIX + cog_name)
@@ -106,16 +107,20 @@ class CogManager(commands.Cog):
             found_cog: bool = False
             for _cog_name, cog in self.bot.cogs.items():
                 for command in cog.get_commands():
-                    if cog_name != command.name: continue
-                    
+                    if cog_name != command.name:
+                        continue
+
                     await self.bot.unload_extension(COG_PREFIX + _cog_name.lower())
                     await self.bot.load_extension(COG_PREFIX + _cog_name.lower())
 
-                    await ctx.send(f"Reloaded cog `{_cog_name.lower()}` successfully. Specify the real name next time retard.")
+                    await ctx.send(
+                        f"Reloaded cog `{_cog_name.lower()}` successfully. Specify the real name next time retard."
+                    )
                     found_cog = True
                     break
-                
-                if found_cog: break
+
+                if found_cog:
+                    break
 
             if not found_cog:
                 await ctx.send(f"Could not find cog or command `{cog_name}`")

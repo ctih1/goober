@@ -24,15 +24,16 @@ import logging
 
 logger = logging.getLogger("goober")
 
+
 def perform_ocr(image_path: str, reader: easyocr.Reader) -> List[Tuple[List[int], str]]:
     logger.info("Performing OCR")
     # Perform OCR on the image
-    result = reader.readtext(image_path, width_ths = 0.8,  decoder="wordbeamsearch")
+    result = reader.readtext(image_path, width_ths=0.8, decoder="wordbeamsearch")
 
     # Extract text and bounding boxes from the OCR result
-    extracted_text_boxes = [(entry[0], entry[1]) for entry in result if entry[2] > 0.4] # type: ignore
+    extracted_text_boxes = [(entry[0], entry[1]) for entry in result if entry[2] > 0.4]  # type: ignore
 
-    return extracted_text_boxes # type: ignore
+    return extracted_text_boxes  # type: ignore
 
 
 def get_font(image, text, width, height):
@@ -51,7 +52,6 @@ def get_font(image, text, width, height):
 
         # Create new font
         new_font = ImageFont.truetype("assets/fonts/TNR.ttf", size=size)
-        
 
         # Calculate bbox for version 8.0.0
         new_box = draw.textbbox((0, 0), text, font=new_font)
@@ -91,15 +91,17 @@ def add_discoloration(color, strength):
 
 
 def get_background_color(image, x_min, y_min, x_max, y_max):
-    image = image.convert('RGBA')  # Handle transparency
+    image = image.convert("RGBA")  # Handle transparency
 
     margin = 10
-    edge_region = image.crop((
-        max(x_min - margin, 0),
-        max(y_min - margin, 0),
-        min(x_max + margin, image.width),
-        min(y_max + margin, image.height),
-    ))
+    edge_region = image.crop(
+        (
+            max(x_min - margin, 0),
+            max(y_min - margin, 0),
+            min(x_max + margin, image.width),
+            min(y_max + margin, image.height),
+        )
+    )
 
     pixels = list(edge_region.getdata())
     opaque_pixels = [pixel[:3] for pixel in pixels if pixel[3] > 0]
@@ -108,6 +110,7 @@ def get_background_color(image, x_min, y_min, x_max, y_max):
         background_color = (255, 255, 255)  # fallback if all pixels are transparent
     else:
         from collections import Counter
+
         most_common = Counter(opaque_pixels).most_common(1)[0][0]
         background_color = most_common
 
@@ -182,27 +185,29 @@ def replace_text_with_translation(image_path, translated_texts, text_boxes):
 
 
 # Initialize the OCR reader
-reader = easyocr.Reader(["sv", "it", "mt", "fr", "en"], model_storage_directory="data/models")
-
+reader = easyocr.Reader(
+    ["sv", "it", "mt", "fr", "en"], model_storage_directory="data/models"
+)
 
 
 def deepl_translate(texts: List[str]) -> List[str]:
     logger.info("Getting DEEPL translatins")
-    res = requests.post("https://api-free.deepl.com/v2/translate",
-                        json={
-                            "text": [f"<root>{text}</root>" for text in texts],
-                            "target_lang": "EN",
-                            "tag_handling": "xml",
-                            "tag_handling_version": "v2",
-                            "split_sentences": "off"
-                        },
-                        headers={
-                            "Authorization": "DeepL-Auth-Key " + os.environ["DEEPL_KEY"],
-                            "Content-Type": "application/json"
-                        })
+    res = requests.post(
+        "https://api-free.deepl.com/v2/translate",
+        json={
+            "text": [f"<root>{text}</root>" for text in texts],
+            "target_lang": "EN",
+            "tag_handling": "xml",
+            "tag_handling_version": "v2",
+            "split_sentences": "off",
+        },
+        headers={
+            "Authorization": "DeepL-Auth-Key " + os.environ["DEEPL_KEY"],
+            "Content-Type": "application/json",
+        },
+    )
 
     logger.info(res.json())
-
 
     return [obj["text"] for obj in res.json()["translations"]]
 
@@ -215,7 +220,6 @@ class Translator(commands.Cog):
         self.bot: discord.ext.commands.Bot = bot
         self.description = "🔣|OCR image translator"
 
-
     # A command which requires the executor to be an admin, and takes a discord user as an argument
     @requires_admin()  # from modules.permission import requires_admin
     @commands.command()
@@ -225,14 +229,17 @@ class Translator(commands.Cog):
         attachment = ctx.message.attachments[0]
         aspect_ratio = (attachment.width or 1) / (attachment.height or 1)
 
-        if aspect_ratio < 1.0: # vertical
+        if aspect_ratio < 1.0:  # vertical
             height = min(SIZE, attachment.width or SIZE)
-            width = round(height*aspect_ratio)
+            width = round(height * aspect_ratio)
         else:
             width = min(SIZE, attachment.width or SIZE)
-            height = round(width/aspect_ratio)
+            height = round(width / aspect_ratio)
 
-        image_url = attachment.proxy_url+f"{'' if attachment.proxy_url.endswith('&') else '&'}width={width}&height={height}"
+        image_url = (
+            attachment.proxy_url
+            + f"{'' if attachment.proxy_url.endswith('&') else '&'}width={width}&height={height}"
+        )
         logger.info(f"Fetching attachment {image_url}   ")
         image_res = requests.get(image_url)
 
@@ -240,55 +247,73 @@ class Translator(commands.Cog):
             f.write(image_res.content)
 
         await send_message(ctx, "OCR time! This might take a bit")
-        extracted_text_boxes = perform_ocr("assets/images/cache/translaton_target.png", reader)
+        extracted_text_boxes = perform_ocr(
+            "assets/images/cache/translaton_target.png", reader
+        )
 
         texts_to_translate = [extracted_text_boxes[0][1]]
-        
+
         print(extracted_text_boxes)
-        last_box_bottom = extracted_text_boxes[0][0][3][1] # type: ignore
-        last_box_height = abs(extracted_text_boxes[0][0][3][1] -  extracted_text_boxes[0][0][0][1]) # type: ignore
+        last_box_bottom = extracted_text_boxes[0][0][3][1]  # type: ignore
+        last_box_height = abs(extracted_text_boxes[0][0][3][1] - extracted_text_boxes[0][0][0][1])  # type: ignore
 
         for i in range(1, len(extracted_text_boxes)):
-            processed_text = extracted_text_boxes[i][1].replace("\n", "").replace("<", "").replace(">", "")
+            processed_text = (
+                extracted_text_boxes[i][1]
+                .replace("\n", "")
+                .replace("<", "")
+                .replace(">", "")
+            )
 
-            this_box_bottom = extracted_text_boxes[i][0][3][1] # type: ignore
-            this_box_top = extracted_text_boxes[i][0][0][1] # type: ignore
-            this_box_height = abs(extracted_text_boxes[i][0][3][1] -  extracted_text_boxes[i][0][0][1]) # type: ignore
+            this_box_bottom = extracted_text_boxes[i][0][3][1]  # type: ignore
+            this_box_top = extracted_text_boxes[i][0][0][1]  # type: ignore
+            this_box_height = abs(extracted_text_boxes[i][0][3][1] - extracted_text_boxes[i][0][0][1])  # type: ignore
 
-            
-            y_diff =  abs(this_box_top - last_box_bottom)
-            height_diff = abs(last_box_height-this_box_height)
+            y_diff = abs(this_box_top - last_box_bottom)
+            height_diff = abs(last_box_height - this_box_height)
 
-            logger.info(f"Difference: {y_diff} ({this_box_top}, {last_box_bottom}) and {height_diff} ({this_box_height}, {last_box_height})")
-            if y_diff <= 16 and height_diff < 16: # type: ignore
+            logger.info(
+                f"Difference: {y_diff} ({this_box_top}, {last_box_bottom}) and {height_diff} ({this_box_height}, {last_box_height})"
+            )
+            if y_diff <= 16 and height_diff < 16:  # type: ignore
                 texts_to_translate[-1] += "<sep/>" + processed_text
             else:
                 texts_to_translate.append(processed_text)
 
             last_box_bottom = this_box_bottom
             last_box_height = this_box_height
-        
+
         logger.info(texts_to_translate)
 
         await send_message(ctx, "Translating stuff...")
         # Translate texts
         translated_texts = deepl_translate(texts_to_translate)
-        
+
         processed_list = []
 
         for translation in translated_texts:
-            processed_list.extend([trans.replace("<root>", "").replace("</root>", "") for trans in translation.split("<sep/>")])
+            processed_list.extend(
+                [
+                    trans.replace("<root>", "").replace("</root>", "")
+                    for trans in translation.split("<sep/>")
+                ]
+            )
 
         logger.info(processed_list)
         logger.info([data[1] for data in extracted_text_boxes])
-        logger.info(f"{len(processed_list)} vs {len(translated_texts)} vs {len(extracted_text_boxes)}")
+        logger.info(
+            f"{len(processed_list)} vs {len(translated_texts)} vs {len(extracted_text_boxes)}"
+        )
 
         # Replace text with translated text
-        image = replace_text_with_translation("assets/images/cache/translaton_target.png", processed_list,
-                                              extracted_text_boxes)
-        
+        image = replace_text_with_translation(
+            "assets/images/cache/translaton_target.png",
+            processed_list,
+            extracted_text_boxes,
+        )
+
         image.save("assets/images/cache/translation.png", "png")
-        
+
         with open("assets/images/cache/translation.png", "rb") as f:
             await send_message(ctx, "Done", file=discord.File(f))
 

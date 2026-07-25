@@ -55,11 +55,10 @@ class BreakingNews(commands.Cog):
 
         if not message.content.lower().startswith("breaking news:"):
             return
-        
+
         if not sync_hub.can_breaking_news(message.id, message.channel.id):
             logger.debug("Sync hub denied breaking news request")
             return
-            
 
         texts = re.split("breaking news:", message.content, flags=re.IGNORECASE)
 
@@ -70,7 +69,7 @@ class BreakingNews(commands.Cog):
                 await message.reply("No news specified and model not found!")
                 return False
 
-            text = text or self.model.make_sentence(max_chars=50, tries=50) #type: ignore
+            text = text or self.model.make_sentence(max_chars=50, tries=50)  # type: ignore
             path = self.__insert_text(text)
         except IndexError:
             if self.model is None:

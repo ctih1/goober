@@ -19,7 +19,6 @@ class StatsCog(commands.Cog):
         self.messages_per_hour = defaultdict(int)
         self.description = "✍|Spyware to see who's been chatting the most"
 
-
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.author.bot:

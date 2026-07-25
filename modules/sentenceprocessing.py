@@ -15,6 +15,7 @@ import logging
 logger = logging.getLogger("goober")
 nlp: spacy.language.Language | None = None
 
+
 def check_resources():
     global nlp
     try:
@@ -40,7 +41,7 @@ def is_positive(sentence):
     if nlp is None:
         logger.error("NLP Not loaded! Defaulting to positivity 0")
         return 0
-    
+
     doc = nlp(sentence)
     sentiment_score = doc._.polarity  # from spacytextblob
 
@@ -78,7 +79,7 @@ async def send_message(
     else:
         sent_message = await ctx.send(content=message)
 
-    return sent_message # type: ignore
+    return sent_message  # type: ignore
 
 
 def append_mentions_to_18digit_integer(message):
@@ -92,7 +93,7 @@ def preprocess_message(message):
     if nlp is None:
         logger.error("NLP Not loaded! Quitting")
         quit(1)
-    
+
     doc = nlp(message)
     tokens = [token.text for token in doc if token.is_alpha or token.is_digit]
     return " ".join(tokens)

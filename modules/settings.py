@@ -9,9 +9,11 @@ logger = logging.getLogger("goober")
 
 ActivityType = Literal["listening", "playing", "streaming", "competing", "watching"]
 
+
 class SyncHub(TypedDict):
     url: str
     enabled: bool
+
 
 class Activity(TypedDict):
     content: str
@@ -104,11 +106,13 @@ class Settings:
             logger.warning("Adding sync hub settings")
             self.settings["bot"]["sync_hub"] = {
                 "enabled": True,
-                "url": "ws://goober.frii.site"
-            } 
+                "url": "ws://goober.frii.site",
+            }
 
         if not self.settings.get("bot", {}).get("active_model"):
-            logger.warning("active_model missing! Replacing with backwards compatible one")
+            logger.warning(
+                "active_model missing! Replacing with backwards compatible one"
+            )
             self.settings["bot"]["active_model"] = "markov_model.pkl"
 
         self.commit()

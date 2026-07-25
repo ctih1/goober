@@ -22,7 +22,6 @@ class FileSync(commands.Cog):
         self.awaiting_file = False
         self.description = "🛜|Send and receive files between bots"
 
-
     @requires_admin()
     @commands.command()
     async def syncfile(self, ctx: commands.Context, mode: str, peer: discord.User):

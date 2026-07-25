@@ -8,13 +8,16 @@ import random
 logger = logging.getLogger("goober")
 settings = settings_manager.settings
 
+
 class SyncConnector:
     def __init__(self, url: str):
         self.connected: bool = False
         self.url = url
         self.client: websocket.WebSocket | None = None
 
-        self.connection_thread: threading.Thread = threading.Thread(target=self.try_to_connect)
+        self.connection_thread: threading.Thread = threading.Thread(
+            target=self.try_to_connect
+        )
         self.connection_thread.start()
 
     def __connect(self) -> bool:
@@ -30,9 +33,9 @@ class SyncConnector:
             logger.debug(e)
             logger.debug(e.strerror)
             return False
-        
+
         return True
-    
+
     def try_to_connect(self) -> bool:
         if self.__connect():
             logger.info("Connected to sync hub!")
@@ -43,15 +46,22 @@ class SyncConnector:
 
         return self.connected
 
-    def get_string_response(self, event: str, message_id: int, channel_id: int, command: str, retry_depth: int = 0) -> str:
+    def get_string_response(
+        self,
+        event: str,
+        message_id: int,
+        channel_id: int,
+        command: str,
+        retry_depth: int = 0,
+    ) -> str:
         if not settings["bot"]["sync_hub"]["enabled"]:
             logger.info("Skipping sync hub check")
             return "not enabled"
-        
+
         if not self.client:
             logger.error("Client not connected")
             return "not connected"
-        
+
         if retry_depth > 2:
             return "too many attempts1"
 
@@ -61,9 +71,11 @@ class SyncConnector:
                 logger.info("Succesfully reconnected!")
             else:
                 return "reconnect failed"
-        
+
         try:
-            self.client.send(f"event={event};ref={message_id};channel={channel_id};command={command};name={settings['name']}")
+            self.client.send(
+                f"event={event};ref={message_id};channel={channel_id};command={command};name={settings['name']}"
+            )
             return str(self.client.recv())
         except Exception as e:
             logger.debug(e)
@@ -76,14 +88,21 @@ class SyncConnector:
 
             logger.info("Managed to reconnect to sync hub! Retrying requests")
             self.connected = True
-            return self.get_string_response(command=command,event=event, channel_id=channel_id, message_id=message_id, retry_depth=retry_depth+1)
-    
+            return self.get_string_response(
+                command=command,
+                event=event,
+                channel_id=channel_id,
+                message_id=message_id,
+                retry_depth=retry_depth + 1,
+            )
+
     def get_connected(self) -> str:
         return self.get_string_response("get", 0, 0, "get")
-    
+
     def get_blame(self, message_id: int, channel_id: int, event: str) -> str:
-        return self.get_string_response(event=event, message_id=message_id, channel_id=channel_id, command="blame")
-    
+        return self.get_string_response(
+            event=event, message_id=message_id, channel_id=channel_id, command="blame"
+        )
 
     def can_react(self, message_id: int, channel_id: int) -> bool:
         """
@@ -92,7 +111,6 @@ class SyncConnector:
 
         return self.can_event(message_id, channel_id, "react")
 
-    
     def can_breaking_news(self, message_id: int, channel_id: int) -> bool:
         """
         Checks if goober can send a breaking news alert
@@ -102,8 +120,15 @@ class SyncConnector:
 
     def can_convert(self, message_id: int, channel_id: int) -> bool:
         return self.can_event(message_id, channel_id, "convert")
-        
-    def can_event(self, message_id: int, channel_id: int, event: str, name_override: str | None = None, retry_depth: int = 0) -> bool:
+
+    def can_event(
+        self,
+        message_id: int,
+        channel_id: int,
+        event: str,
+        name_override: str | None = None,
+        retry_depth: int = 0,
+    ) -> bool:
         """
         Checks if goober can send a breaking news alert
         """
@@ -113,30 +138,34 @@ class SyncConnector:
         if not settings["bot"]["sync_hub"]["enabled"]:
             logger.info("Skipping sync hub check")
             return True
-        
+
         if retry_depth > 2:
             logger.error("Too many retries. Returning false")
             return False
-        
+
         if not self.client:
             logger.error("Client not connected")
             return False
-        
+
         if not self.connected:
             logger.warning("Not connected to sync hub.. Trying to reconnect")
             if self.try_to_connect():
                 logger.info("Succesfully reconnected!")
             else:
                 return False
-        
+
         if name_override:
-            logger.warning("Synchub is using a name override. This is meant for debugging")
-            
+            logger.warning(
+                "Synchub is using a name override. This is meant for debugging"
+            )
+
         try:
-            bot_name = name_override or settings['name']
-            self.client.send(f"event={event};ref={message_id};channel={channel_id};name={bot_name}")
+            bot_name = name_override or settings["name"]
+            self.client.send(
+                f"event={event};ref={message_id};channel={channel_id};name={bot_name}"
+            )
             logger.info("Sent packet, waiting for response")
-            result = self.client.recv() 
+            result = self.client.recv()
             logger.info(f"Received response {result}")
             return result == "unhandled"
         except Exception as e:
@@ -150,7 +179,9 @@ class SyncConnector:
 
             logger.info("Managed to reconnect to sync hub! Retrying requests")
             self.connected = True
-            return self.can_event(message_id, channel_id, event, retry_depth=retry_depth+1)
-    
+            return self.can_event(
+                message_id, channel_id, event, retry_depth=retry_depth + 1
+            )
+
 
 instance = SyncConnector(settings["bot"]["sync_hub"]["url"])
