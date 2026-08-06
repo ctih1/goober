@@ -17,8 +17,6 @@ from zoneinfo._common import ZoneInfoNotFoundError
 logger = logging.getLogger("goober")
 settings = settings_manager.settings
 
-TIMEZONES = {642441889181728810: ZoneInfo("Europe/Helsinki")}
-
 
 class SettingsType(TypedDict):
     timezones: Dict[
@@ -29,10 +27,13 @@ class SettingsType(TypedDict):
 DEFAULT_SETTINGS: SettingsType = {"timezones": {}}  # type: ignore
 
 
-def convert_time(match: tuple[str, ...], tz: ZoneInfo) -> int:
+def convert_time(match: tuple[str, ...], tz: ZoneInfo) -> int | None:
     hour = int(match[0].strip())
     minutes = 0 if not match[3] else int(match[3].strip())
     meridiem = "" if not match[4] else match[4].lower().strip()
+
+    if not match[1] and not match[4]:
+        return None
 
     hour += 12 if meridiem == "pm" else 0
 
@@ -116,16 +117,16 @@ class Timezones(commands.Cog):
                 logger.info(f"Match groups: {match.groups()}")
 
                 try:
-                    timestamps.append(
-                        conversion_func(
-                            match.groups(),
-                            ZoneInfo(
-                                settings["timezones"].get(
-                                    str(message.author.id), "Europe/Helsinki"
-                                )
-                            ),
-                        )
+                    val = conversion_func(
+                        match.groups(),
+                        ZoneInfo(
+                            settings["timezones"].get(
+                                str(message.author.id), "Europe/Helsinki"
+                            )
+                        ),
                     )
+                    if val:
+                        timestamps.append(val)
                 except Exception as e:
                     logger.warn(e)
 
