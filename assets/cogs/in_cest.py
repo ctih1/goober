@@ -129,8 +129,14 @@ class Timezones(commands.Cog):
                 except Exception as e:
                     logger.warn(e)
 
-        if timestamps:
+        if not timestamps:
+            return
+
+        if synchub.can_timezone(message.id, message.channel.id):
+            logger.debug("Synchub accepted")
             await message.reply(self.__format_response(timestamps))
+        else:
+            logger.info("Synchub denied")
 
 
 async def setup(bot):

@@ -121,6 +121,9 @@ class SyncConnector:
     def can_convert(self, message_id: int, channel_id: int) -> bool:
         return self.can_event(message_id, channel_id, "convert")
 
+    def can_timezone(self, message_id: int, channel_id: int) -> bool:
+        return self.can_event(message_id, channel_id, "times")
+
     def can_event(
         self,
         message_id: int,
