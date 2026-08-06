@@ -65,6 +65,8 @@ class LarpDetect(commands.Cog):
                     "kill",
                     "fuck",
                     "omg",
+                    "slow",
+                    "bad",
                 ]
             ):
                 response = self.ai_client.models.generate_content(
