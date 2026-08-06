@@ -53,7 +53,7 @@ class LarpDetect(commands.Cog):
 
         try:
             if message.reference.cached_message.author.id == self.bot.user.id and any(
-                content in message.content
+                content in message.content.lower()
                 for content in [
                     "retard",
                     "stupid",
