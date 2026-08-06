@@ -65,6 +65,10 @@ Grams: Unit = {"name": "Gram", "shorthand": " g"}
 
 Ounces: Unit = {"name": "Ounce", "shorthand": " oz"}
 
+FluidOunces: Unit = {"name": "Fluid Ounce", "shorthand": " fl oz"}
+
+MilliLiter: Unit = {"name": "Milliliter", "shorthand": " ml"}
+
 
 Reactions = [
     "btw :nerd:",
@@ -211,6 +215,30 @@ class Converters:
             "imperial": None,
         }
 
+    @staticmethod
+    def from_millimeters(value: float) -> ConvertedValue:
+        return Converters.from_centimeters(value / 10)
+
+    @staticmethod
+    def from_milliliters(value: float) -> ConvertedValue:
+        return {
+            "metric": None if value < 1000 else {"unit": Liters, "value": value / 1000},
+            "imperial": {"unit": FluidOunces, "value": value * 0.0338},
+        }
+
+    @staticmethod
+    def from_fluid_ounces(value: float) -> ConvertedValue:
+        return {
+            "metric": {"unit": MilliLiter, "value": value * 29.57},
+            "imperial": (
+                None if value < 128 else {"unit": Gallons, "value": value * 0.0078125}
+            ),
+        }
+
+    @staticmethod
+    def from_yards(value: float) -> ConvertedValue:
+        return {"metric": {"unit": Meters, "value": value * 0.9144}, "imperial": None}
+
 
 class Converter(commands.Cog):
     def __init__(self, bot):
@@ -233,7 +261,11 @@ class Converter(commands.Cog):
                 re.IGNORECASE,
             ): Converters.from_centimeters,
             re.compile(
-                r'(?:\s|^)(-?[0-9(.?|,?)]+)\s?("|in|inches)(\s|$)', re.IGNORECASE
+                r"(?:\s|^)(-?[0-9(.?|,?)]+)\s?(mm|millimeter|millimeters)(\s|$)",
+                re.IGNORECASE,
+            ): Converters.from_millimeters,
+            re.compile(
+                r'(?:\s|^)(-?[0-9(.?|,?)]+)\s?("|inch|inches)(\s|$)', re.IGNORECASE
             ): Converters.from_inches,
             re.compile(
                 r"(?:\s|^)(-?[0-9(.?|,?)]+)\s?(mi\.|mi|miles|mile)(\s|$)", re.IGNORECASE
@@ -272,8 +304,16 @@ class Converter(commands.Cog):
                 r"(?:\s|^)(-?[0-9(.?|,?)]+)\s?(grams|gram|g)(\s|$)"
             ): Converters.from_grams,
             re.compile(
-                r"(?:\s|^)(-?[0-9(.?|,?)]+)\s?(oz|ounce|ounces)(\s|$)", re.IGNORECASE
-            ): Converters.from_ounces,
+                r"(?:\s|^)(-?[0-9(.?|,?)]+)\s?(fl oz|fluid ounce|fluid ounces)(\s|$)",
+                re.IGNORECASE,
+            ): Converters.from_fluid_ounces,
+            re.compile(
+                r"(?:\s|^)(-?[0-9(.?|,?)]+)\s?(ml|milliliter|milliliters)(\s|$)",
+                re.IGNORECASE,
+            ): Converters.from_milliliters,
+            re.compile(
+                r"(?:\s|^)(-?[0-9(.?|,?)]+)\s?(yd|yard|yards)(\s|$)", re.IGNORECASE
+            ): Converters.from_yards,
         }
 
     def __format_response(self, converted_values: List[ConvertedValue]) -> str:
