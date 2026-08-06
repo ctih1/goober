@@ -54,7 +54,18 @@ class LarpDetect(commands.Cog):
         try:
             if message.reference.cached_message.author.id == self.bot.user.id and any(
                 content in message.content
-                for content in ["retard", "stupid", "idiot", "dummy", "fag"]
+                for content in [
+                    "retard",
+                    "stupid",
+                    "idiot",
+                    "dummy",
+                    "fag",
+                    "shut",
+                    "quiet",
+                    "kill",
+                    "fuck",
+                    "omg",
+                ]
             ):
                 response = self.ai_client.models.generate_content(
                     model="gemini-3.1-flash-lite",
