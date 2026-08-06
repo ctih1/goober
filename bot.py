@@ -3,6 +3,14 @@ from modules.logger import GooberFormatter
 from modules import key_compiler
 import tracemalloc
 
+try:
+    import ctypes
+
+    kernel32 = ctypes.windll.kernel32
+    kernel32.SetConsoleMode(kernel32.GetStdHandle(-10), 0x0004)
+except Exception as e:
+    pass
+
 logger = logging.getLogger("goober")
 logger.setLevel(logging.DEBUG)
 
