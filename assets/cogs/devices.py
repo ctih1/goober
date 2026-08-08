@@ -1,4 +1,6 @@
 import os
+import subprocess
+import platform
 from typing import Dict, TypedDict
 
 import discord
@@ -70,6 +72,12 @@ class Devices(commands.Cog):
 
         await send_message(ctx, f"Removed device {device_name}")
 
+    @requires_admin()
+    @commands.command()
+    async def ping_device(self, ctx: commands.Context, ip: str):
+
+        res = subprocess.run(f"ping {'-n 4' if platform.system() == 'Windows' else '-c 4'} {ip}", shell=True, encoding="utf-8", stdout=subprocess.PIPE)
+        await send_message(ctx, f"```bash\n{res.stdout or ''}\n{res.stderr or ''}\n```")
 
 async def setup(bot):
     await bot.add_cog(Devices(bot))

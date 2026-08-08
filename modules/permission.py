@@ -18,10 +18,12 @@ class PermissionError(Exception):
 def is_admin(id: int) -> bool:
     return id in settings["bot"]["owner_ids"]
 
+def can_access(id: int, command: str) -> bool:
+    return command in settings["bot"]["user_permissions"].get(str(id), {})
 
 def requires_admin():
     async def wrapper(ctx: discord.ext.commands.Context):
-        if not is_admin(ctx.author.id):
+        if not is_admin(ctx.author.id) and (ctx.command and not can_access(ctx.author.id, ctx.command.qualified_name)):
             await ctx.send(
                 "You don't have the necessary permissions to run this command!"
             )

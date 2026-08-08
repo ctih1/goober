@@ -87,6 +87,63 @@ class PermissionManager(commands.Cog):
 
     @requires_admin()
     @commands.command()
+    async def grant_command(self, ctx: commands.Context, member: discord.Member, command: str):
+        if str(member.id) not in settings["bot"]["user_permissions"]:
+            settings["bot"]["user_permissions"][str(member.id)] = []
+
+        settings["bot"]["user_permissions"][str(member.id)].append(command)
+        settings_manager.add_admin_log_event(
+            {
+                "action": "add",
+                "author": ctx.author.id,
+                "change": "granted_command",
+                "messageId": ctx.message.id,
+                "target": f"{member.id}, {command}",
+            }
+        )
+        settings_manager.commit()
+
+        embed = discord.Embed(
+            title="Command Permissions",
+            description=f"Gave {member.name} access to {command}",
+            color=discord.Color.blue(),
+        )
+
+        await ctx.send(embed=embed)
+
+    @requires_admin()
+    @commands.command()
+    async def revoke_command(self, ctx: commands.Context, member: discord.Member, command: str):
+        if str(member.id) not in settings["bot"]["user_permissions"]:
+            settings["bot"]["user_permissions"][str(member.id)] = []
+
+        try:
+            settings["bot"]["user_permissions"][str(member.id)].remove(command)
+        except ValueError as _e:
+            await ctx.reply("User did not have that permission!")
+            return
+
+        settings_manager.add_admin_log_event(
+            {
+                "action": "del",
+                "author": ctx.author.id,
+                "change": "granted_command",
+                "messageId": ctx.message.id,
+                "target": f"{member.id}, {command}",
+            }
+        )
+        settings_manager.commit()
+
+        embed = discord.Embed(
+            title="Command Permissions",
+            description=f"Revoked {member.name} access to {command}",
+            color=discord.Color.blue(),
+        )
+
+        await ctx.send(embed=embed)
+
+    @requires_admin()
+    @commands.command()
     async def unblacklist_user(self, ctx: commands.Context, member: discord.Member):
         try:
             settings["bot"]["blacklisted_users"].remove(member.id)

@@ -32,6 +32,7 @@ class MiscBotOptions(TypedDict):
 class BotSettings(TypedDict):
     prefix: str
     owner_ids: List[int]
+    user_permissions: Dict[str, List[str]]
     blacklisted_users: List[int]
     user_training: bool
     allow_show_mem_command: bool
@@ -58,7 +59,7 @@ class AdminLogEvent(TypedDict):
     author: int
     target: str | int
     action: Literal["del", "add", "set"]
-    change: Literal["owner_ids", "blacklisted_users", "enabled_cogs"]
+    change: Literal["owner_ids", "blacklisted_users", "enabled_cogs", "granted_command"]
 
 
 class Settings:
@@ -77,11 +78,7 @@ class Settings:
         self.settings: SettingsType
         self.original_settings: SettingsType
 
-        with open(self.path, "r", encoding="utf-8") as f:
-            self.__kv_store: dict = json.load(f)
-
-        self.settings = SettingsType(self.__kv_store)  # type: ignore
-        self.original_settings = copy.deepcopy(self.settings)
+        self.reload_settings()
 
         self.log_path: str = os.path.join(".", "settings", "admin_logs.json")
 
@@ -116,6 +113,10 @@ class Settings:
                 "active_model missing! Replacing with backwards compatible one"
             )
             self.settings["bot"]["active_model"] = "markov_model.pkl"
+
+        if not self.settings.get("bot", {}).get("user_permissions"):
+            logger.warning("User permissions missing! Creating empty dict")
+            self.settings["bot"]["user_permissions"] = {}
 
         self.commit()
 
