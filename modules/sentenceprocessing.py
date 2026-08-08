@@ -8,6 +8,7 @@ import discord.ext.commands
 import spacy
 import spacy.lang
 from spacy.tokens import Doc
+from spacytextblob.spacytextblob import SpacyTextBlob
 
 import modules.keys as k
 from modules.globalvars import *
@@ -33,7 +34,6 @@ nlp_thread = threading.Thread(target=check_resources)
 nlp_thread.start()
 
 Doc.set_extension("polarity", getter=lambda doc: doc._.blob.polarity)
-
 
 def is_positive(sentence):
     nlp_thread.join()
@@ -70,7 +70,6 @@ async def send_message(
             return edit_message_reference
         except Exception as e:
             await ctx.send(f"{k.edit_fail()} {e}")
-            return None
 
     if embed:
         sent_message = await ctx.send(embed=embed, content=message)
