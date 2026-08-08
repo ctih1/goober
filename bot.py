@@ -350,7 +350,7 @@ async def on_message(message: discord.Message) -> None:
 
         if messages_recieved % 10 == 0:
             logger.info("Saving memory")
-            save_memory(memory)
+            await save_memory(memory)
 
     if len(message.content.strip().split()) < 1:
         logger.info("Skipping positivty checks due to message being too short")

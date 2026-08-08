@@ -5,6 +5,7 @@ import os
 import shutil
 from typing import Dict, List, TypedDict
 
+import aiofiles
 import discord
 import discord.ext
 import discord.ext.commands
@@ -148,8 +149,8 @@ class SongTranslator(commands.Cog):
         subtitle_path = os.path.join(path, "subtitles.srt")
         final_path = os.path.join(path, "final.mp4")
 
-        with open(subtitle_path, "w", encoding="utf-8") as f:
-            f.writelines(
+        async with aiofiles.open(subtitle_path, "w", encoding="utf-8") as f:
+            await f.writelines(
                 await self.turn_synced_to_srt(lyrics, video_length, offset, message)
             )
 
@@ -167,8 +168,8 @@ class SongTranslator(commands.Cog):
 
         if os.path.getsize(final_path) < 9.5 * 1024 * 1024:
             await message.edit(content="Sending video...")
-            with open(final_path, "rb") as f:
-                await message.reply(file=discord.File(f))
+            async with aiofiles.open(final_path, "rb") as f:
+                await message.reply(file=discord.File(await f.read()))
         else:
             await message.edit(content="Moving video...")
             shutil.move(final_path, f"data/cdn/{video_id}_sub.mp4")

@@ -60,7 +60,7 @@ class AILarper(commands.Cog):
 
     @commands.command()
     async def clear_larp(self, ctx: Context):
-        response: Response = await requests_async.post("http://192.168.32.2:6655/clear")
+        _response: Response = await requests_async.post("http://192.168.32.2:6655/clear")
         await send_message(ctx, "Cleared larp")
 
 

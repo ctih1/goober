@@ -6,6 +6,7 @@ import re
 import time
 from typing import List
 
+import aiofiles
 import discord
 import discord.ext
 import discord.ext.commands
@@ -50,8 +51,8 @@ class Markov(commands.Cog):
             return
 
         try:
-            with open(settings["bot"]["active_memory"], "r") as f:
-                memory: List[str] = json.load(f)
+            async with aiofiles.open(settings["bot"]["active_memory"], "r") as f:
+                memory: List[str] = json.loads(await f.read())
         except FileNotFoundError:
             await send_message(ctx, f"{k.command_markov_memory_not_found()}")
             return
@@ -84,7 +85,7 @@ class Markov(commands.Cog):
             ctx,
             f"{k.command_markov_retrain_successful(data_size)}",
             edit=True,
-            message_reference=processing_message_ref,
+            edit_message_reference=processing_message_ref,
         )
 
     @commands.command()

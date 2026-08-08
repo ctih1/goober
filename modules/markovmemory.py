@@ -3,6 +3,7 @@ import logging
 import os
 import pickle
 
+import aiofiles
 import markovify
 
 import modules.keys as k
@@ -44,8 +45,8 @@ def load_memory():
 
 
 # Save memory data to MEMORY_FILE
-def save_memory(memory):
-    with open(settings["bot"]["active_memory"], "w") as f:
+async def save_memory(memory):
+    async with aiofiles.open(settings["bot"]["active_memory"], "w") as f:
         json.dump(memory, f, indent=4)
 
 

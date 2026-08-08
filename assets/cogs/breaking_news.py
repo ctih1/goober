@@ -4,6 +4,7 @@ import re
 import time
 from textwrap import wrap
 
+import aiofiles
 import discord
 import markovify
 from discord.ext import commands
@@ -70,7 +71,7 @@ class BreakingNews(commands.Cog):
                 await message.reply("No news specified and model not found!")
                 return False
 
-            text = text or self.model.make_sentence(max_chars=50, tries=50)  # type: ignore
+            text = (text or self.model.make_sentence(max_chars=50, tries=50)) or "Failed to generate" # type: ignore
             path = self.__insert_text(text)
         except IndexError:
             if self.model is None:
@@ -82,8 +83,8 @@ class BreakingNews(commands.Cog):
             )
             await message.reply("You didn't specify any breaking news!")
 
-        with open(path, "rb") as f:
-            await message.reply(file=discord.File(f))
+        async with aiofiles.open(path, "rb") as f:
+            await message.reply(file=discord.File(await f.read()))
 
     @commands.command()
     async def breaking_news(self, ctx: commands.Context, *args):
@@ -97,8 +98,8 @@ class BreakingNews(commands.Cog):
             await ctx.send("Please supply a message!")
             return False
 
-        with open(self.__insert_text(message), "rb") as f:
-            await ctx.send(content="Breaking news!", file=discord.File(f))
+        async with aiofiles.open(self.__insert_text(message), "rb") as f:
+            await ctx.send(content="Breaking news!", file=discord.File(await f.read()))
 
     def __insert_text(self, text: str):
         start = time.time()

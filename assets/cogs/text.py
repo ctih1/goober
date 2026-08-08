@@ -2,6 +2,7 @@ import os
 import random
 from colorsys import hsv_to_rgb
 
+import aiofiles
 import discord
 import requests_async
 from discord.ext import commands
@@ -39,9 +40,9 @@ class Text(commands.Cog):
             await ctx.reply("Please send an image along w the message!")
             return
 
-        with open(os.path.join(self.cache, "artist.png"), "wb") as f:
+        async with aiofiles.open(os.path.join(self.cache, "artist.png"), "wb") as f:
             res = await requests_async.get(ctx.message.attachments[0].url)
-            f.write(res.content)
+            await f.write(res.content)
 
         image = Image.new("RGB", (512, 512), 0xFFFFFF)
         image.paste(

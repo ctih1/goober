@@ -1,5 +1,6 @@
 import platform
 
+import aiofiles
 import cpuinfo
 import discord
 import psutil
@@ -19,8 +20,8 @@ class Flex(commands.Cog):
 
         temp = -99.99
         if platform.system() == "Linux":
-            with open("/sys/class/thermal/thermal_zone0/temp") as f:
-                temp = int(f.read()) / 1000
+            async with aiofiles.open("/sys/class/thermal/thermal_zone0/temp") as f:
+                temp = int(await f.read()) / 1000
 
         embed = discord.Embed(
             title="Flex",

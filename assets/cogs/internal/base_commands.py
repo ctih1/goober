@@ -4,6 +4,7 @@ import platform
 import sys
 from typing import Dict, List
 
+import aiofiles
 import cpuinfo
 import discord
 import discord.ext
@@ -167,8 +168,8 @@ class BaseCommands(commands.Cog):
 
         cpu_name = cpuinfo.get_cpu_info()["brand_raw"]
 
-        with open(memory_file, "r") as file:
-            line_count: int = sum(1 for _ in file)
+        async with aiofiles.open(memory_file, "r") as file:
+            line_count: int = len(await file.readlines())
 
         embed: discord.Embed = discord.Embed(
             title=f"{k.command_stats_embed_title()}",
@@ -201,8 +202,8 @@ class BaseCommands(commands.Cog):
             inline=False,
         )
 
-        with open(settings["splash_text_loc"], "r") as f:
-            splash_text = "".join(f.readlines())
+        async with aiofiles.open(settings["splash_text_loc"], "r") as f:
+            splash_text = "".join(await f.readlines())
 
         embed.add_field(
             name=f"{k.command_stats_embed_field3name()}",
@@ -236,8 +237,8 @@ class BaseCommands(commands.Cog):
         if not settings["bot"]["allow_show_mem_command"]:
             return
 
-        with open(settings["bot"]["active_memory"], "rb") as f:
-            data: bytes = f.read()
+        async with aiofiles.open(settings["bot"]["active_memory"], "rb") as f:
+            data: bytes = await f.read()
 
         response = await requests_async.post(
             "https://litterbox.catbox.moe/resources/internals/api.php",
@@ -246,8 +247,8 @@ class BaseCommands(commands.Cog):
         )
 
         if response.status_code != 200:
-            with open(settings["bot"]["active_memory"], "rb") as f:
-                await send_message(ctx, file=discord.File(f))
+            async with aiofiles.open(settings["bot"]["active_memory"], "rb") as f:
+                await send_message(ctx, file=discord.File(await f.read()))
                 return
 
         await send_message(ctx, response.text)
