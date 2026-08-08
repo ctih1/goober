@@ -1,16 +1,9 @@
-import discord
-from discord.ext import commands
-from discord import app_commands
+from typing import List, TypedDict
 
+import discord
 import discord.ext
 import discord.ext.commands
-
-import random
-
-from modules.permission import requires_admin
-from modules.sentenceprocessing import send_message
-from modules.settings import instance as settings_manager
-from typing import TypedDict, List
+from discord.ext import commands
 
 
 class Reaction(TypedDict):

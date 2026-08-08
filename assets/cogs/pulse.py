@@ -1,7 +1,9 @@
-from discord.ext import commands
-import discord
-from collections import defaultdict, Counter
 import datetime
+from collections import Counter, defaultdict
+
+import discord
+from discord.ext import commands
+
 from modules.permission import requires_admin
 from modules.settings import instance as settings_manager
 

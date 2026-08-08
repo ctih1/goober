@@ -1,14 +1,16 @@
-import discord
-from discord.ext import commands
+import logging
+import random
 import re
 from collections.abc import Callable, Iterator
-from typing import Dict, TypedDict, Any, List
-from modules.settings import instance as settings_manager
+from copy import copy
+from typing import Any, Dict, List, TypedDict
+
+import discord
+from discord.ext import commands
+
 from modules.permission import requires_admin
 from modules.sentenceprocessing import send_message
-import random
-from copy import copy
-import logging
+from modules.settings import instance as settings_manager
 from modules.sync_connector import instance as synchub
 
 logger = logging.getLogger("goober")

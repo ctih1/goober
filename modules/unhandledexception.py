@@ -1,16 +1,14 @@
+import logging
 import sys
 import traceback
-import os
-from modules.settings import instance as settings_manager
-import logging
-from modules.globalvars import RED, RESET
-import modules.keys as k
+
 import discord
-from discord.ext.commands import Context
-import logging
-from modules.sentenceprocessing import send_message
-import asyncio
 import discord.ext.commands.errors
+from discord.ext.commands import Context
+
+import modules.keys as k
+from modules.sentenceprocessing import send_message
+from modules.settings import instance as settings_manager
 
 settings = settings_manager.settings
 logger = logging.getLogger("goober")

@@ -1,10 +1,9 @@
-import discord
-from discord.ext import commands
+import json
+
 import aiohttp
 from bs4 import BeautifulSoup
-import json
-import asyncio
-from urllib.parse import urljoin
+from discord.ext import commands
+
 from modules.permission import requires_admin
 from modules.settings import instance as settings_manager
 

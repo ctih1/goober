@@ -1,9 +1,10 @@
 import os
-import platform
-from typing import Callable, List
-from dotenv import load_dotenv
 import pathlib
-import subprocess
+import platform
+from collections.abc import Callable
+from typing import List
+
+from dotenv import load_dotenv
 
 env_path = pathlib.Path(__file__).parent.parent / ".env"
 load_dotenv(dotenv_path=env_path)

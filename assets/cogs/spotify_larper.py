@@ -1,20 +1,21 @@
-import discord
-from discord.ext import commands, tasks
-from discord import app_commands
-from copy import deepcopy
 import asyncio
+import logging
+import os
+import random
+import time
+from copy import deepcopy
+from typing import List, TypedDict
+
+import discord
 import discord.ext
 import discord.ext.commands
-import time
-import random
+from discord.ext import commands, tasks
+from pulsoid_client import PulsoidClient
+
+from modules.helpers.lrclib import LRCAPI, LRCLIBResponse
 from modules.permission import requires_admin
 from modules.sentenceprocessing import send_message
 from modules.settings import instance as settings_manager
-from typing import TypedDict, List
-import logging
-from modules.helpers.lrclib import LRCAPI, LRCLIBFetchResponse, LRCLIBResponse
-from pulsoid_client import PulsoidClient
-import os
 from modules.strava import instance as strava
 
 logger = logging.getLogger("goober")

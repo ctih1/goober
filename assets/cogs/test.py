@@ -1,4 +1,3 @@
-import discord
 from discord.ext import commands
 
 
@@ -8,7 +7,7 @@ class Test(commands.Cog):
 
     @commands.command()
     async def crash(self, ctx):
-        a = 0 / 0
+        a = 0 / 0 # noqa: F841
         await ctx.reply(None)
 
 

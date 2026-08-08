@@ -1,12 +1,13 @@
-import discord
+import json
+import os
+import random
+
+import requests_async
 from discord.ext import commands
 from discord.ext.commands import Context
-import requests_async
 from requests_async import Response
+
 from modules.sentenceprocessing import send_message
-import os
-import json
-import random
 
 
 class AILarper(commands.Cog):
@@ -60,7 +61,7 @@ class AILarper(commands.Cog):
     @commands.command()
     async def clear_larp(self, ctx: Context):
         response: Response = await requests_async.post("http://192.168.32.2:6655/clear")
-        await send_message(ctx, f"Cleared larp")
+        await send_message(ctx, "Cleared larp")
 
 
 async def setup(bot):

@@ -1,9 +1,14 @@
+import os
+import random
+import shutil
+import tempfile
+
 import discord
 from discord.ext import commands
-from modules.image import *
-from PIL import Image, ImageEnhance, ImageFilter, ImageOps, ImageChops, ImageColor
-import os, random, shutil, tempfile
+from PIL import Image, ImageChops, ImageEnhance, ImageFilter, ImageOps
+
 import modules.keys as k
+from modules.image import *
 
 
 async def deepfryimage(path):

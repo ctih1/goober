@@ -1,16 +1,16 @@
+import logging
 import re
-import discord.ext
-import discord.ext.commands
-import spacy.lang
-from modules.globalvars import *
-import spacy
-from spacy.tokens import Doc
-from spacytextblob.spacytextblob import SpacyTextBlob
-import discord
-import modules.keys as k
 import threading
 
-import logging
+import discord
+import discord.ext
+import discord.ext.commands
+import spacy
+import spacy.lang
+from spacy.tokens import Doc
+
+import modules.keys as k
+from modules.globalvars import *
 
 logger = logging.getLogger("goober")
 nlp: spacy.language.Language | None = None

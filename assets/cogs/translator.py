@@ -3,24 +3,20 @@ Adapted from https://github.com/boysugi20/python-image-translator
 Please check his project out, it's very cool!
 """
 
-from PIL import Image, ImageDraw, ImageFont
-import os, easyocr
-import discord
-from discord.ext import commands
-from discord import app_commands
+import logging
+import os
+from typing import List, Tuple
 
+import discord
 import discord.ext
 import discord.ext.commands
-
-import random
+import easyocr
+import requests
+from discord.ext import commands
+from PIL import Image, ImageDraw, ImageFont
 
 from modules.permission import requires_admin
 from modules.sentenceprocessing import send_message
-from modules.settings import instance as settings_manager
-from typing import TypedDict, List, Tuple
-import requests
-import math
-import logging
 
 logger = logging.getLogger("goober")
 

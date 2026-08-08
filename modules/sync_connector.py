@@ -1,9 +1,9 @@
-import websocket
-from modules.settings import instance as settings_manager
 import logging
 import threading
-import time
-import random
+
+import websocket
+
+from modules.settings import instance as settings_manager
 
 logger = logging.getLogger("goober")
 settings = settings_manager.settings

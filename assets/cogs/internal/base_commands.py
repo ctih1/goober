@@ -1,21 +1,23 @@
+import logging
 import os
+import platform
+import sys
 from typing import Dict, List
+
+import cpuinfo
 import discord
-from discord.ext import commands
 import discord.ext
 import discord.ext.commands
+import psutil
+import requests
+import requests_async
+from discord.ext import commands
+
 import modules.keys as k
+import updater
 from modules.permission import requires_admin
 from modules.sentenceprocessing import send_message
 from modules.settings import instance as settings_manager
-import requests
-import psutil
-import cpuinfo
-import sys
-import subprocess
-import updater
-import platform
-import logging
 from modules.sync_connector import instance as sync_connector
 
 settings = settings_manager.settings
@@ -78,12 +80,7 @@ class BaseCommands(commands.Cog):
 
         for cog_name, cog in self.bot.cogs.items():
             for command in cog.get_commands():
-                if any(
-                    [
-                        command.name in commands
-                        for commands in list(command_categories.values())
-                    ]
-                ):
+                if command.name in command_categories.values():
                     continue
 
                 if cog_commands.get(cog_name) is None:
@@ -156,7 +153,7 @@ class BaseCommands(commands.Cog):
             inline=False,
         )
 
-        embed.add_field(name="Github", value=f"https://github.com/gooberinc/goober")
+        embed.add_field(name="Github", value="https://github.com/gooberinc/goober")
         await send_message(ctx, embed=embed)
 
     @commands.command()
@@ -242,7 +239,7 @@ class BaseCommands(commands.Cog):
         with open(settings["bot"]["active_memory"], "rb") as f:
             data: bytes = f.read()
 
-        response = requests.post(
+        response = await requests_async.post(
             "https://litterbox.catbox.moe/resources/internals/api.php",
             data={"reqtype": "fileupload", "time": "1h"},
             files={"fileToUpload": data},
@@ -304,7 +301,7 @@ class BaseCommands(commands.Cog):
 
         embed = discord.Embed(title="Synchub command blame")
         embed.add_field(name="Target message", value=reference.jump_url, inline=False)
-        embed.add_field(name="Synchub event", value=f"`event`", inline=False)
+        embed.add_field(name="Synchub event", value="`event`", inline=False)
 
         r = sync_connector.get_blame(
             message_id=reference.message_id,

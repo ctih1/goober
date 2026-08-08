@@ -1,19 +1,13 @@
-import discord
-from discord.ext import commands
-from discord import app_commands
+import logging
+from typing import TypedDict
 
+import discord
 import discord.ext
 import discord.ext.commands
-
-import random
-
-from modules.permission import requires_admin
-from modules.sentenceprocessing import send_message
-from modules.settings import instance as settings_manager
-from typing import TypedDict
-import logging
-
 import unalix
+from discord.ext import commands
+
+from modules.settings import instance as settings_manager
 
 logger = logging.getLogger("goober")
 
@@ -54,7 +48,7 @@ class LinkCleaner(commands.Cog):
     @commands.command()
     async def clean(self, ctx: commands.Context, link: str | None):
         if link is None:
-            await ctx.send(f"Please specify a link!")
+            await ctx.send("Please specify a link!")
             return
 
         await ctx.reply(unalix.clear_url(link))

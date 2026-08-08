@@ -1,25 +1,23 @@
-import discord
-from discord.ext import commands
-import os
-import numpy as np
-import json
-import pickle
 import functools
-import re
+import json
+import os
+import pickle
 import time
-import asyncio
+
+import discord
+import numpy as np
 
 ready = True
 MODEL_MATCH_STRING = r"[0-9]{2}_[0-9]{2}_[0-9]{4}-[0-9]{2}_[0-9]{2}"
 
 try:
-    import tensorflow as tf
     import keras
-    from keras.preprocessing.text import Tokenizer
-    from keras.preprocessing.sequence import pad_sequences
-    from keras.models import Sequential, load_model
-    from keras.layers import Embedding, LSTM, Dense
+    import tensorflow as tf
     from keras.backend import clear_session
+    from keras.layers import LSTM, Dense, Embedding
+    from keras.models import Sequential, load_model
+    from keras.preprocessing.sequence import pad_sequences
+    from keras.preprocessing.text import Tokenizer
 
     if tf.config.list_physical_devices("GPU"):
         print("Using GPU acceleration")

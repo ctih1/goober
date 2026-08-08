@@ -1,16 +1,15 @@
-import discord
-from discord.ext import commands
-from discord import app_commands
+import random
+from typing import TypedDict
 
+import discord
 import discord.ext
 import discord.ext.commands
-
-import random
+from discord import app_commands
+from discord.ext import commands
 
 from modules.permission import requires_admin
 from modules.sentenceprocessing import send_message
 from modules.settings import instance as settings_manager
-from typing import TypedDict
 
 
 # Name according to your cog (e.g a random number generator -> RandomNumber)

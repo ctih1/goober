@@ -20,12 +20,11 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import os
-from typing import Dict, List, Literal
 import json
-import sys
 import logging
+import os
 import time
+from typing import Dict, List, Literal
 
 NOTICE = """
 # This file was automatically created from localization JSON files.

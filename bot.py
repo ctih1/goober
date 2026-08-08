@@ -1,14 +1,15 @@
 import logging
-from modules.logger import GooberFormatter
-from modules import key_compiler
 import tracemalloc
+
+from modules import key_compiler
+from modules.logger import GooberFormatter
 
 try:
     import ctypes
 
     kernel32 = ctypes.windll.kernel32
     kernel32.SetConsoleMode(kernel32.GetStdHandle(-10), 0x0004)
-except Exception as e:
+except Exception: # noqa: S110
     pass
 
 logger = logging.getLogger("goober")
@@ -42,21 +43,23 @@ def build_keys():
 
 build_keys()
 
+import logging
 import os
-import time
 import random
-import traceback
-import tempfile
 import shutil
 import sys
-from typing import List, Dict, Literal, Set, Optional, TypedDict
-import logging
-from modules.prestartchecks import start_checks
-import modules.keys as k
-import logging
-from watchdog.observers import Observer
+import tempfile
+import time
+import traceback
+from typing import Dict, List, Literal, Set, TypedDict
+
 from watchdog.events import FileSystemEventHandler
-from modules.settings import instance as settings_manager, ActivityType
+from watchdog.observers import Observer
+
+import modules.keys as k
+from modules.prestartchecks import start_checks
+from modules.settings import ActivityType
+from modules.settings import instance as settings_manager
 from modules.sync_connector import instance as sync_connector
 
 messages_recieved = 0
@@ -74,15 +77,13 @@ with open(settings["splash_text_loc"], "r", encoding="UTF-8") as f:
 start_checks()
 
 import discord
-from discord.ext import commands
-
 from better_profanity import profanity
 from discord.ext import commands
 
+from modules.image import gen_demotivator
 from modules.markovmemory import *
 from modules.sentenceprocessing import *
 from modules.unhandledexception import handle_exception, handle_exception_with_context
-from modules.image import gen_demotivator
 
 sys.excepthook = handle_exception
 tracemalloc.start()
@@ -170,7 +171,6 @@ async def load_cogs_from_folder(bot: commands.Bot, folder_name="assets/cogs"):
 async def on_ready() -> None:
     global launched
 
-    folder_name: str = "cogs"
     if launched:
         return
 
@@ -243,7 +243,7 @@ async def demotivator(ctx: commands.Context) -> None:
     assets_folder: str = "assets/images"
     temp_input: str | None = None
 
-    def get_random_asset_image() -> Optional[str]:
+    def get_random_asset_image() -> str | None:
         files: List[str] = [
             f
             for f in os.listdir(assets_folder)
@@ -262,7 +262,7 @@ async def demotivator(ctx: commands.Context) -> None:
                 await attachment.save(f)
             input_path: str = temp_input
         else:
-            fallback_image: Optional[str] = get_random_asset_image()
+            fallback_image: str | None = get_random_asset_image()
             if fallback_image is None:
                 await ctx.reply(k.no_image_available())
                 return
@@ -278,7 +278,7 @@ async def demotivator(ctx: commands.Context) -> None:
         shutil.copy(fallback_image, temp_input)
         input_path = temp_input
 
-    output_path: Optional[str] = await gen_demotivator(input_path)  # type: ignore
+    output_path: str | None = await gen_demotivator(input_path)  # type: ignore
 
     if output_path is None or not os.path.isfile(output_path):
         if temp_input and os.path.exists(temp_input):
@@ -295,7 +295,7 @@ async def demotivator(ctx: commands.Context) -> None:
 # Event: Called on every message
 @bot.event
 async def on_message(message: discord.Message) -> None:
-    global memory, markov_model, messages_recieved
+    global messages_recieved
 
     messages_recieved += 1
     EMOJIS = [
@@ -394,7 +394,8 @@ async def block_blacklisted(ctx: commands.Context) -> bool:
                 await ctx.followup.send(k.blacklisted(), ephemeral=True)
         else:
             await ctx.send(k.blacklisted_user(), ephemeral=True)
-    except:
+    except Exception as e:
+        logger.warning(e)
         return False
 
     return True
@@ -420,7 +421,7 @@ class OnMyWatch:
         try:
             while True:
                 time.sleep(5)
-        except:
+        except Exception as _e:
             self.observer.stop()
             print("Observer Stopped")
 
@@ -430,7 +431,7 @@ class OnMyWatch:
 class Handler(FileSystemEventHandler):
     def on_any_event(self, event):
         if event.is_directory:
-            return None
+            return
 
         elif event.event_type == "modified":
             build_keys()

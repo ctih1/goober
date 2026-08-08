@@ -1,24 +1,21 @@
-import discord
-from discord.ext import commands
-from discord import app_commands
-
-import discord.ext
-import discord.ext.commands
-
-import random
 import asyncio
-from modules.permission import requires_admin
-from modules.sentenceprocessing import send_message
-from modules.settings import instance as settings_manager
-from typing import TypedDict, Dict, List, Union, Literal
-from pytubefix import AsyncYouTube, Search, YouTube, innertube
+import base64
 import logging
-import requests_async
-import slugify
 import os
 import time
-import base64
-from assets.cogs.songtranslator import default_settings, SettingsType
+from typing import Dict, List, Literal, TypedDict
+
+import discord
+import discord.ext
+import discord.ext.commands
+import requests_async
+import slugify
+from discord.ext import commands
+from pytubefix import AsyncYouTube, innertube
+
+from assets.cogs.songtranslator import default_settings
+from modules.sentenceprocessing import send_message
+from modules.settings import instance as settings_manager
 
 logger = logging.getLogger("goober")
 
@@ -71,7 +68,7 @@ class NaviDrome(commands.Cog):
 
     @commands.command()
     async def song(self, ctx: commands.Context, *args):
-        message: discord.Message = await send_message(ctx, message=f"Searching...")
+        message: discord.Message = await send_message(ctx, message="Searching...")
 
         res = await requests_async.get(
             f"https://inv.thepixora.com/api/v1/search?q={slugify.slugify(' '.join(args))}&page=0&sort=relevance&type=video"

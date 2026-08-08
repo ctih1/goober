@@ -1,8 +1,9 @@
-import requests_async
-import os
-from pydantic import BaseModel
 import json
 import logging
+import os
+
+import requests_async
+from pydantic import BaseModel
 
 logger = logging.getLogger("goober")
 

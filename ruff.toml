@@ -36,7 +36,14 @@ target-version = "py310"
 ignore=[
     "UP006", # e.g. use dict instead of Dict for typing
     "DTZ001", # specify timezone
-    "DTZ005" # specify timezone
+    "DTZ005", # specify timezone
+    "DTZ003", # don't use datetime.utcnow()
+    "DTZ002", # don't use datetime.today()
+    "BLE001", # except Exception as
+    "LOG015", # logger.critical
+    "F401", # untyped libs
+    "UP035", # typing.(type) is deprecated, use (type) instead
+    "PLR1722", # use sys.exit() instead of quit
 ]
 
 

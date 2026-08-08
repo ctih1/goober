@@ -1,16 +1,12 @@
-import discord
-from discord.ext import commands
-from PIL import Image, ImageDraw, ImageFont
-import requests_async
-from modules.sentenceprocessing import send_message
-from modules.permission import requires_admin
-import os
-from colorsys import hsv_to_rgb
-from typing import TypedDict, Dict, List, Any, Deque
-from google import genai
 import json
 import logging
+import os
 from collections import deque
+from typing import Deque, Dict, List, TypedDict
+
+import discord
+from discord.ext import commands
+from google import genai
 
 logger = logging.getLogger("goober")
 
@@ -100,7 +96,7 @@ class LarpDetect(commands.Cog):
                 )
 
                 await message.reply(response.text)
-        except Exception as e:
+        except Exception:
             pass
 
     @commands.command()

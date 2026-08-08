@@ -1,9 +1,11 @@
-import json
-import os
-from typing import Dict, List, Literal, Mapping, Any, TypedDict
-from modules.keys import Language
-import logging
 import copy
+import json
+import logging
+import os
+from collections.abc import Mapping
+from typing import Any, Dict, List, Literal, TypedDict
+
+from modules.keys import Language
 
 logger = logging.getLogger("goober")
 

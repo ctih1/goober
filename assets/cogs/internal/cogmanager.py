@@ -1,11 +1,13 @@
+import logging
+
 import discord
-from discord.ext import commands
 import discord.ext
 import discord.ext.commands
+from discord.ext import commands
+
+from modules.globalvars import available_cogs
 from modules.permission import requires_admin
 from modules.settings import instance as settings_manager
-from modules.globalvars import available_cogs
-import logging
 
 settings = settings_manager.settings
 
@@ -102,7 +104,7 @@ class CogManager(commands.Cog):
             await self.bot.unload_extension(COG_PREFIX + cog_name)
             await self.bot.load_extension(COG_PREFIX + cog_name)
             await ctx.send(f"Reloaded cog `{cog_name}` successfully.")
-        except discord.ext.commands.ExtensionNotLoaded as e:
+        except discord.ext.commands.ExtensionNotLoaded:
             logger.warning("Trying to find command...")
             found_cog: bool = False
             for _cog_name, cog in self.bot.cogs.items():

@@ -1,19 +1,20 @@
-from modules.globalvars import *
-import time
-import os
-import sys
-import subprocess
-import sysconfig
-import ast
-import json
-import re
-from spacy.util import is_package
 import importlib.metadata
+import json
 import logging
+import os
+import re
+import subprocess
+import sys
+import sysconfig
+import threading
+import time
+
+from spacy.util import is_package
+
 import modules.keys as k
+from modules.globalvars import *
 from modules.settings import instance as settings_manager
 from modules.sync_connector import instance as sync_hub
-import threading
 
 settings = settings_manager.settings
 
@@ -23,8 +24,8 @@ logger = logging.getLogger("goober")
 # import shutil
 psutilavaliable = True
 try:
-    import requests
     import psutil
+    import requests
 except ImportError:
     psutilavaliable = False
     logger.error(k.missing_requests_psutil())
@@ -272,9 +273,6 @@ def check_synchub():
         logger.info("Sync hub is conencted")
 
 
-beta = beta
-
-
 def start_checks():
     if settings["disable_checks"]:
         logger.warning(f"{k.checks_disabled()}")
@@ -306,7 +304,7 @@ def start_checks():
         sys.exit(1)
     if beta == True:
         logger.warning(
-            f"this build isnt finished yet, some things might not work as expected"
+            "this build isnt finished yet, some things might not work as expected"
         )
     else:
         pass

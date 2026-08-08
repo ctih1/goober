@@ -1,12 +1,18 @@
+import json
+import logging
 import os
 import random
 import re
-import discord
-from discord.ext import commands
+import time
+from typing import List
 
+import discord
 import discord.ext
 import discord.ext.commands
+import markovify
+from discord.ext import commands
 
+import modules.keys as k
 from modules.markovmemory import (
     load_markov_model,
     save_markov_model,
@@ -19,12 +25,6 @@ from modules.sentenceprocessing import (
     rephrase_for_coherence,
     send_message,
 )
-import modules.keys as k
-import logging
-from typing import List, Optional, Set
-import json
-import time
-import markovify
 
 logger = logging.getLogger("goober")
 from modules.settings import instance as settings_manager

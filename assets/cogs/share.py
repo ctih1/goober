@@ -1,16 +1,14 @@
-import discord
-from discord.ext import commands
-from discord import app_commands
+import random
+from typing import List, TypedDict
 
+import discord
 import discord.ext
 import discord.ext.commands
-
-import random
+from discord.ext import commands
 
 from modules.permission import requires_admin
 from modules.sentenceprocessing import send_message
 from modules.settings import instance as settings_manager
-from typing import TypedDict, List
 
 
 class SettingsType(TypedDict):
@@ -46,7 +44,7 @@ class Share(commands.Cog):
 
         settings["medias"].append(link)
         settings_manager.set_plugin_setting("share", settings)
-        await send_message(ctx, message=f"Added media!")
+        await send_message(ctx, message="Added media!")
 
     @requires_admin()
     @commands.command()
@@ -68,7 +66,7 @@ class Share(commands.Cog):
         settings["medias"].remove(link)
         settings_manager.set_plugin_setting("share", settings)
 
-        await send_message(ctx, message=f"Removed media!")
+        await send_message(ctx, message="Removed media!")
 
     @commands.command()
     async def send_media(self, ctx: commands.Context):

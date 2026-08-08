@@ -1,7 +1,8 @@
 import os
+
+import aiohttp
 import discord
 from discord.ext import commands, tasks
-import aiohttp
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -70,11 +71,10 @@ class LastFmCog(commands.Cog):
             f"http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks"
             f"&user={LASTFM_USERNAME}&api_key={LASTFM_API_KEY}&format=json&limit=1"
         )
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url) as resp:
-                if resp.status != 200:
-                    return None
-                data = await resp.json()
+        async with aiohttp.ClientSession() as session, session.get(url) as resp:
+            if resp.status != 200:
+                return None
+            data = await resp.json()
 
         recenttracks = data.get("recenttracks", {}).get("track", [])
         if not recenttracks:

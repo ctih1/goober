@@ -1,19 +1,19 @@
-import discord
-from discord.ext import commands
-from discord import app_commands
-import time
-import discord.ext
-import discord.ext.commands
 import sqlite3
-from modules.permission import requires_admin
-from modules.sentenceprocessing import send_message
-from modules.settings import instance as settings_manager
-from humanfriendly import format_timespan
-from typing import TypedDict, Dict, List, Tuple
-from logging import getLogger
-from functools import lru_cache
+import time
 from datetime import datetime, timedelta
 from datetime import time as dt_time
+from functools import lru_cache
+from logging import getLogger
+from typing import Dict, List, Tuple
+
+import discord
+import discord.ext
+import discord.ext.commands
+from discord.ext import commands
+from humanfriendly import format_timespan
+
+from modules.permission import requires_admin
+from modules.sentenceprocessing import send_message
 
 logger = getLogger("goober")
 
@@ -87,7 +87,7 @@ class Screentime(commands.Cog):
         online_since: int | None = None
         total_time_online: int = 0
         for row in rows:
-            user_id, presence, time_ = row
+            _user_id, presence, time_ = row
             if time_ < since:
                 continue
             if (presence in ["online", "dnd"]) and not online_since:
@@ -165,7 +165,7 @@ class Screentime(commands.Cog):
 
         for i, (user, _time) in enumerate(user_times):
             embed.add_field(
-                name=f"", value=f"{i+1}. <@{user}>: {format_timespan(_time)}"
+                name="", value=f"{i+1}. <@{user}>: {format_timespan(_time)}"
             )
 
         embed.set_footer(text=f"Processing took {(time.time()-start):.3f}s")

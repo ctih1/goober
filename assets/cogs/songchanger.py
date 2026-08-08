@@ -1,11 +1,13 @@
+import os
+from typing import Dict, get_args
+
 import discord
 from discord.ext import commands
-from modules.globalvars import RED, GREEN, RESET, LOCAL_VERSION_FILE
-import os
-from modules.settings import ActivityType, instance as settings_manager
-from modules.permission import requires_admin
 
-from typing import get_args, Dict
+from modules.globalvars import GREEN, LOCAL_VERSION_FILE, RED, RESET
+from modules.permission import requires_admin
+from modules.settings import ActivityType
+from modules.settings import instance as settings_manager
 
 
 class SongChanger(commands.Cog):
@@ -34,7 +36,7 @@ class SongChanger(commands.Cog):
             )
             print(f"{GREEN}Changed song to {song}{RESET}")
         except Exception as e:
-            print(f"{RED}An error occurred while changing songs..: {str(e)}{RESET}")
+            print(f"{RED}An error occurred while changing songs..: {e!s}{RESET}")
 
     @requires_admin()
     @commands.command()

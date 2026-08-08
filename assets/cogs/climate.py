@@ -1,21 +1,17 @@
-import discord
-from discord.ext import commands
-from discord import app_commands
+import datetime
+import logging
+import math
+from typing import Dict, List, Literal, Tuple, TypedDict
 
+import discord
 import discord.ext
 import discord.ext.commands
-import math
-import random
-import time
+import requests_async
+from discord.ext import commands
+
 from modules.permission import requires_admin
 from modules.sentenceprocessing import send_message
 from modules.settings import instance as settings_manager
-from typing import TypedDict, Dict, Literal, List, Tuple
-import requests_async
-import logging
-import datetime
-import requests_async
-import json
 
 ViewType = Literal["outdoors", "indoors"]
 

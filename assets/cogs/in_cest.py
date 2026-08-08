@@ -1,18 +1,16 @@
-import discord
-from discord.ext import commands
-import re
-from collections.abc import Callable, Iterator
-from typing import Dict, TypedDict, Any, List
-from modules.settings import instance as settings_manager
-from modules.permission import requires_admin
-from modules.sentenceprocessing import send_message
-import random
-from copy import copy
-import logging
-from modules.sync_connector import instance as synchub
 import datetime
+import logging
+import re
+from collections.abc import Iterator
+from typing import Dict, List, TypedDict
 from zoneinfo import ZoneInfo
 from zoneinfo._common import ZoneInfoNotFoundError
+
+import discord
+from discord.ext import commands
+
+from modules.settings import instance as settings_manager
+from modules.sync_connector import instance as synchub
 
 logger = logging.getLogger("goober")
 settings = settings_manager.settings
@@ -128,7 +126,7 @@ class Timezones(commands.Cog):
                     if val:
                         timestamps.append(val)
                 except Exception as e:
-                    logger.warn(e)
+                    logger.warning(e)
 
         if not timestamps:
             return

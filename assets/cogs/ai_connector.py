@@ -1,10 +1,11 @@
-import discord
+import os
+
+import requests_async
 from discord.ext import commands
 from discord.ext.commands import Context
-import requests_async
 from requests_async import Response
+
 from modules.sentenceprocessing import send_message
-import os
 
 
 class AIConnector(commands.Cog):

@@ -1,8 +1,5 @@
-import subprocess
-import time
-import sys
-import os
 import logging
+import subprocess
 
 logger = logging.getLogger("goober")
 

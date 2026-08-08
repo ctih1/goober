@@ -1,10 +1,12 @@
-import os
 import json
-import markovify
-import pickle
-from modules.globalvars import *
 import logging
+import os
+import pickle
+
+import markovify
+
 import modules.keys as k
+from modules.globalvars import *
 from modules.settings import instance as settings_manager
 
 settings = settings_manager.settings

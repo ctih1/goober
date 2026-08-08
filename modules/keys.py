@@ -4,7 +4,8 @@
 
 #fmt: off
 
-from typing import Literal, List
+from typing import List, Literal
+
 Language=Literal['en', 'es', 'fi', 'fr', 'it']
 languages: List[Language] = ['en', 'es', 'fi', 'fr', 'it']
 default_lang: Language | str='en'

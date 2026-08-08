@@ -1,23 +1,20 @@
-import discord
-from discord.ext import commands
-from discord import app_commands
+import datetime
+import logging
+from typing import Dict, TypedDict
 from zoneinfo import ZoneInfo
+
+import discord
 import discord.ext
 import discord.ext.commands
-
-import random
+import icalendar
+import recurring_ical_events
+import requests
+from discord.ext import commands
+from icalendar import Calendar
 
 from modules.permission import requires_admin
 from modules.sentenceprocessing import send_message
 from modules.settings import instance as settings_manager
-from typing import TypedDict, Dict
-
-import icalendar
-from icalendar import Calendar
-import recurring_ical_events
-import datetime
-import requests
-import logging
 
 logger = logging.getLogger("goober")
 

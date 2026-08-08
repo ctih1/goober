@@ -1,19 +1,17 @@
-import aiohttp.web_response
-import discord
-from discord.ext import commands, tasks
 import asyncio
-from aiohttp import web
-import psutil
-import os
 import json
-from datetime import datetime
-import time
-import aiohttp
+import os
 import re
-from aiohttp import WSMsgType
-from modules.globalvars import VERSION_URL
 import sys
-import subprocess
+import time
+from datetime import datetime
+
+import discord
+import psutil
+from aiohttp import WSMsgType, web
+from discord.ext import commands, tasks
+
+from modules.globalvars import VERSION_URL
 
 
 class GooberWeb(commands.Cog):

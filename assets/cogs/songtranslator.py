@@ -1,26 +1,22 @@
-import discord
-from discord.ext import commands
-from discord import app_commands
-
-import discord.ext
-import discord.ext.commands
-
-import random
-from modules.permission import is_admin, requires_admin
-from modules.sentenceprocessing import send_message
-from modules.settings import instance as settings_manager
-from modules.helpers.lrclib import LRCAPI, LRCLIBResponse
-from typing import TypedDict, Dict, List, Any
-import time
-from pytubefix import AsyncYouTube, innertube, Stream
-import requests
+import asyncio
 import logging
 import math
 import os
 import shutil
-import asyncio
-from humanfriendly import format_timespan
+from typing import Dict, List, TypedDict
+
+import discord
+import discord.ext
+import discord.ext.commands
 import requests_async
+from discord.ext import commands
+from humanfriendly import format_timespan
+from pytubefix import AsyncYouTube, Stream, innertube
+
+from modules.helpers.lrclib import LRCAPI, LRCLIBResponse
+from modules.permission import is_admin, requires_admin
+from modules.sentenceprocessing import send_message
+from modules.settings import instance as settings_manager
 
 logger = logging.getLogger("goober")
 
@@ -267,7 +263,7 @@ class SongTranslator(commands.Cog):
         matches = await LRCAPI.search_song(" ".join(args[1:]))
 
         if len(matches) == 0:
-            await message.edit(content=f"No lyrics available!")
+            await message.edit(content="No lyrics available!")
             return
 
         response_string = ""

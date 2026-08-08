@@ -1,17 +1,14 @@
-import discord
-from discord.ext import commands
-from discord import app_commands
+import os
+from typing import Dict, TypedDict
 
+import discord
 import discord.ext
 import discord.ext.commands
-
-import random
+from discord.ext import commands
 
 from modules.permission import requires_admin
 from modules.sentenceprocessing import send_message
 from modules.settings import instance as settings_manager
-from typing import TypedDict, Dict
-import os
 
 
 class SettingsType(TypedDict):
@@ -32,7 +29,7 @@ class Devices(commands.Cog):
     async def devices(self, ctx: commands.Context):
         embed = discord.Embed(
             title="Devices",
-            description=f"List of devices and if they are connected to my local network",
+            description="List of devices and if they are connected to my local network",
             color=discord.Color.blue(),
         )
 

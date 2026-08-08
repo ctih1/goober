@@ -1,15 +1,16 @@
-from typing import List
-import discord
-from discord.ext import commands
-import markovify
-from PIL import Image, ImageDraw, ImageFont
-import os
-from modules.markovmemory import load_markov_model
-from textwrap import wrap
 import logging
-from modules.settings import instance as settings_manager
+import os
 import re
 import time
+from textwrap import wrap
+
+import discord
+import markovify
+from discord.ext import commands
+from PIL import Image, ImageDraw, ImageFont
+
+from modules.markovmemory import load_markov_model
+from modules.settings import instance as settings_manager
 from modules.sync_connector import instance as sync_hub
 
 logger = logging.getLogger("goober")

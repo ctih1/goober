@@ -1,8 +1,9 @@
-import discord
-from discord.ext import commands
-import cpuinfo
-import psutil
 import platform
+
+import cpuinfo
+import discord
+import psutil
+from discord.ext import commands
 
 
 class Flex(commands.Cog):

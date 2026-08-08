@@ -1,7 +1,8 @@
-from slugify import slugify
-from typing import TypedDict, List
-import requests_async
 import logging
+from typing import List, TypedDict
+
+import requests_async
+from slugify import slugify
 
 logger = logging.getLogger("goober")
 
@@ -56,7 +57,7 @@ class LRCAPI:
     ) -> LRCLIBFetchResponse:
         logger.info("Fetching song lyrics..")
         response = await requests_async.get(
-            f"https://lrclib.net/api/get",
+            "https://lrclib.net/api/get",
             params={
                 "track_name": slugify(track_name, separator="+"),
                 "artist_name": slugify(artist_name, separator="+"),

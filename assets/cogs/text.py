@@ -1,11 +1,13 @@
+import os
+import random
+from colorsys import hsv_to_rgb
+
 import discord
+import requests_async
 from discord.ext import commands
 from PIL import Image, ImageDraw, ImageFont
-import requests_async
+
 from modules.sentenceprocessing import send_message
-import os
-from colorsys import hsv_to_rgb
-import random
 
 
 class Text(commands.Cog):
@@ -95,7 +97,7 @@ class Text(commands.Cog):
 
     @commands.command()
     async def tzu(self, ctx: commands.Context, *args):
-        quote: str = " ".join(args)
+        _quote: str = " ".join(args)
 
         await ctx.reply(None)
 

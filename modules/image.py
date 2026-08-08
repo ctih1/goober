@@ -1,10 +1,8 @@
 import os
 import re
-import random
-import shutil
-import tempfile
-from typing import Optional, List
-from PIL import Image, ImageDraw, ImageFont, ImageOps
+
+from PIL import Image, ImageDraw, ImageFont
+
 from modules.markovmemory import load_markov_model
 from modules.sentenceprocessing import (
     improve_sentence_coherence,
@@ -203,7 +201,7 @@ async def gen_demotivator(input_image_path, max_attempts=5):
             draw_text_with_outline(draw, title, tx, ty, title_font)
 
             bbox = draw.textbbox((0, 0), subtitle, font=sub_font)
-            sxw, sxh = bbox[2] - bbox[0], bbox[3] - bbox[1]
+            sxw, _sxh = bbox[2] - bbox[0], bbox[3] - bbox[1]
             sx = (landscape_w - sxw) // 2
             sy = ty + txh + int(caption_h * 0.05)
             for ox, oy in [(-1, -1), (1, -1), (-1, 1), (1, 1)]:

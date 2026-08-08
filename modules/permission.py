@@ -1,11 +1,10 @@
-from functools import wraps
-import discord
+import logging
 
+import discord
 import discord.ext
 import discord.ext.commands
 
 from modules.settings import instance as settings_manager
-import logging
 
 logger = logging.getLogger("goober")
 
