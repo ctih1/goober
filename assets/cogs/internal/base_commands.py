@@ -228,8 +228,7 @@ class BaseCommands(commands.Cog):
     @commands.command()
     async def force_update(self, ctx: commands.Context):
         await ctx.send("Forcefully updating...")
-        updater.force_update()
-        os.execv(sys.executable, [sys.executable] + sys.argv)
+        await ctx.send(updater.force_update())
 
     @requires_admin()
     @commands.command()
