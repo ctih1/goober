@@ -137,6 +137,14 @@ PRESSURE_TRESHOLS: Dict[int, TresholdValue] = {
     1025: {"label": "Very high pressure", "emoji": "🟣"},
 }
 
+DEW_POINT_TRESHOLDS: Dict[int, TresholdValue] = {
+    -50: {"label": "Comfortable", "emoji": "🔵"},
+    10: {"label": "Comfortable", "emoji": "🟢"},
+    14: {"label": "Ok", "emoji": "🟡"},
+    18: {"label": "Uncomfortable", "emoji": "🟠"},
+    20: {"label": "Oppressive", "emoji": "🔴"},
+}
+
 logger = logging.getLogger("goober")
 
 
@@ -270,8 +278,11 @@ class Climate(commands.Cog):
 
         embed = discord.Embed(
             title="Outdoor climate data",
-            description=f"Information about my outdoor climate",
+            description="Information about my outdoor climate",
         )
+
+        temp_dew_point = tuple([(17.27*data["temp"][i])/(237.7+data["temp"][i])+math.log(data["humidity"][i]/100) for i in range(2)])
+        dew_point = tuple([(237.7*temp_dew_point[i])/(17.27-temp_dew_point[i]) for i in range(2)])
 
         pressure = tuple(
             [
@@ -290,6 +301,9 @@ class Climate(commands.Cog):
             **Climate.format_embed(
                 "Temperature", "°C", data["temp"], OUTDOOR_TEMP_TRESHOLDS
             )
+        )
+        embed.add_field(
+            **Climate.format_embed("Dew Point", "°C", dew_point, DEW_POINT_TRESHOLDS)
         )
         embed.add_field(
             **Climate.format_embed(
@@ -331,7 +345,7 @@ class Climate(commands.Cog):
 
         embed = discord.Embed(
             title="Indoor climate data",
-            description=f"Information about my indoor climate",
+            description="Information about my indoor climate",
         )
 
         calculated_temp = tuple(
