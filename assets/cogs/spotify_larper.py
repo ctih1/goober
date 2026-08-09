@@ -124,6 +124,9 @@ class SpotifyLarper(commands.Cog):
     ) -> None:
         settings: SettingsType = settings_manager.get_plugin_settings("spotify_larper", default_settings)  # type: ignore
 
+        if before.activity and after.activity and before.activity.track_id == after.activity.track_id:
+           return
+
         if after.id != settings["followed_user"]:
             return
 
@@ -142,7 +145,7 @@ class SpotifyLarper(commands.Cog):
         if target_activity.track_id == self.last_song_id:
             return
 
-        if time.time() - self.last_request_time < 12:
+        if time.time() - self.last_request_time < 9:
             logger.debug("Request too close, skipping")
             return
 
@@ -153,7 +156,7 @@ class SpotifyLarper(commands.Cog):
         )
 
         if len(matches) == 0:
-            logger.info("Could not find lyrics")
+            logger.debug("Could not find lyrics")
 
         matched_lyrics: str = ""
         for match in matches:
@@ -166,12 +169,12 @@ class SpotifyLarper(commands.Cog):
                 break
 
         if not matched_lyrics:
-            logger.info("Could not find accurate lyrics")
+            logger.debug("Could not find accurate lyrics")
             return
 
         lyrics: List[str] = matched_lyrics.split("\n")
 
-        logger.info(f"Found song with {len(lyrics)} lyrics")
+        logger.debug(f"Found song with {len(lyrics)} lyrics")
         lyric: str = ""
         current_lyric_index = 0
 
@@ -194,7 +197,7 @@ class SpotifyLarper(commands.Cog):
                 logger.error(e)
                 current_lyric_index = 0
         else:
-            logger.info("Couldnt find suitable lyric, randomizing...")
+            logger.debug("Couldnt find suitable lyric, randomizing...")
             for _ in range(500):
                 current_lyric_index = random.randint(0, len(lyrics) - 1)
                 lyric = lyrics[current_lyric_index]
@@ -203,7 +206,7 @@ class SpotifyLarper(commands.Cog):
                     break
 
         if lyric == "":
-            logger.info("Could not find a good enough lyric, skipping")
+            logger.debug("Could not find a good enough lyric, skipping")
             return
 
         self.current_activity = target_activity

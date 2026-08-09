@@ -297,6 +297,8 @@ async def demotivator(ctx: commands.Context) -> None:
 async def on_message(message: discord.Message) -> None:
     global messages_recieved
 
+    logger.debug(f"{message}\n")
+
     messages_recieved += 1
     EMOJIS = [
         "\U0001f604",

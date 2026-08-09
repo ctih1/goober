@@ -36,22 +36,7 @@ nlp_thread.start()
 Doc.set_extension("polarity", getter=lambda doc: doc._.blob.polarity)
 
 def is_positive(sentence):
-    nlp_thread.join()
-
-    if nlp is None:
-        logger.error("NLP Not loaded! Defaulting to positivity 0")
-        return 0
-
-    doc = nlp(sentence)
-    sentiment_score = doc._.polarity  # from spacytextblob
-
-    debug_message = f"{k.sentence_positivity()} {sentiment_score}{RESET}"
-    logger.debug(debug_message)
-
-    return (
-        sentiment_score > 0.6
-    )  # had to raise the bar because it kept saying "death to jews" was fine and it kept reacting to them
-
+    return False
 
 async def send_message(
     ctx: discord.ext.commands.Context,

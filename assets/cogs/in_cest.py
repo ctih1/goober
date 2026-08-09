@@ -96,8 +96,6 @@ class Timezones(commands.Cog):
             "times", DEFAULT_SETTINGS
         )  # type: ignore
 
-        logger.debug(f"Received message {message.content}")
-
         timestamps: List[int] = []
 
         for regex, conversion_func in self.regexes.items():

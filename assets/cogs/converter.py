@@ -357,8 +357,6 @@ class Converter(commands.Cog):
         if message.author.bot:
             return
 
-        logger.debug(f"Received message {message.content}")
-
         found_units_dict: Dict[int, ConvertedValue] = {}
 
         for regex, conversion_func in self.regexes.items():

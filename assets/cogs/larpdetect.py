@@ -48,8 +48,11 @@ class LarpDetect(commands.Cog):
             {"author": message.author.id, "content": message.content}
         )
 
+        if not message.reference:
+            return
+
         try:
-            if message.reference.cached_message.author.id == self.bot.user.id and any(
+            if message.reference.cached_message.author.id == self.bot.user.id and any( # pyright: ignore
                 content in message.content.lower()
                 for content in [
                     "retard",
