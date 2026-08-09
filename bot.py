@@ -9,7 +9,7 @@ try:
 
     kernel32 = ctypes.windll.kernel32
     kernel32.SetConsoleMode(kernel32.GetStdHandle(-10), 0x0004)
-except Exception: # noqa: S110
+except Exception:  # noqa: S110
     pass
 
 logger = logging.getLogger("goober")
@@ -102,13 +102,11 @@ class MessageMetadata(TypedDict):
 
 os.makedirs("data", exist_ok=True)
 
-# Constants with type hints
 positive_gifs: List[str] = settings["bot"]["misc"]["positive_gifs"]
 currenthash: str = ""
 launched: bool = False
 slash_commands_enabled: bool = False
 
-# Set up Discord bot intents and create bot instance
 intents: discord.Intents = discord.Intents.default()
 intents.messages = True
 intents.message_content = True
@@ -140,10 +138,7 @@ async def load_cogs_from_folder(bot: commands.Bot, folder_name="assets/cogs"):
     for filename in [file for file in os.listdir(folder_name) if file.endswith(".py")]:
         cog_name: str = filename[:-3]
 
-        if (
-            "internal" not in folder_name
-            and cog_name not in settings["bot"]["enabled_cogs"]
-        ):
+        if "internal" not in folder_name and cog_name not in settings["bot"]["enabled_cogs"]:
             logger.debug(f"Skipping cog {cog_name} (not in enabled cogs)")
             continue
 
@@ -152,7 +147,7 @@ async def load_cogs_from_folder(bot: commands.Bot, folder_name="assets/cogs"):
         try:
             start = time.time()
             await bot.load_extension(module_path)
-            logger.info(f"Loaded cog {cog_name} in {time.time()-start:.3f}s")
+            logger.info(f"Loaded cog {cog_name} in {time.time() - start:.3f}s")
 
             cog_load_times[cog_name] = time.time() - start
         except Exception as e:
@@ -237,62 +232,6 @@ async def on_command_error(ctx: commands.Context, error: commands.CommandError) 
         )
 
 
-# New demotivator command
-@bot.hybrid_command(description="Generate a demotivator poster with two lines of text")
-async def demotivator(ctx: commands.Context) -> None:
-    assets_folder: str = "assets/images"
-    temp_input: str | None = None
-
-    def get_random_asset_image() -> str | None:
-        files: List[str] = [
-            f
-            for f in os.listdir(assets_folder)
-            if f.lower().endswith((".png", ".jpg", ".jpeg", ".webp"))
-        ]
-        if not files:
-            return None
-        return os.path.join(assets_folder, random.choice(files))
-
-    if ctx.message.attachments:
-        attachment: discord.Attachment = ctx.message.attachments[0]
-        if attachment.content_type and attachment.content_type.startswith("image/"):
-            ext: str = os.path.splitext(attachment.filename)[1]
-            temp_input = f"tempy{ext}"
-            with open(temp_input, "wb") as f:
-                await attachment.save(f)
-            input_path: str = temp_input
-        else:
-            fallback_image: str | None = get_random_asset_image()
-            if fallback_image is None:
-                await ctx.reply(k.no_image_available())
-                return
-            temp_input = tempfile.mktemp(suffix=os.path.splitext(fallback_image)[1])
-            shutil.copy(fallback_image, temp_input)
-            input_path = temp_input
-    else:
-        fallback_image = get_random_asset_image()
-        if fallback_image is None:
-            await ctx.reply(k.no_image_available())
-            return
-        temp_input = tempfile.mktemp(suffix=os.path.splitext(fallback_image)[1])
-        shutil.copy(fallback_image, temp_input)
-        input_path = temp_input
-
-    output_path: str | None = await gen_demotivator(input_path)  # type: ignore
-
-    if output_path is None or not os.path.isfile(output_path):
-        if temp_input and os.path.exists(temp_input):
-            os.remove(temp_input)
-        await ctx.reply("Failed to generate demotivator.")
-        return
-
-    await ctx.send(file=discord.File(output_path))
-
-    if temp_input and os.path.exists(temp_input):
-        os.remove(temp_input)
-
-
-# Event: Called on every message
 @bot.event
 async def on_message(message: discord.Message) -> None:
     global messages_recieved
@@ -300,14 +239,7 @@ async def on_message(message: discord.Message) -> None:
     logger.debug(f"{message}\n")
 
     messages_recieved += 1
-    EMOJIS = [
-        "\U0001f604",
-        "\U0001f44d",
-        "\U0001f525",
-        "\U0001f4af",
-        "\U0001f389",
-        "\U0001f60e",
-    ]  # originally was emojis but it would probably shit itself on systems without unicode so....
+
     if message.author.bot:
         return
 
@@ -354,35 +286,12 @@ async def on_message(message: discord.Message) -> None:
             logger.info("Saving memory")
             await save_memory(memory)
 
-    if len(message.content.strip().split()) < 1:
-        logger.info("Skipping positivty checks due to message being too short")
-        return
 
-    sentiment_score = is_positive(
-        message.content
-    )  # doesnt work but im scared to change the logic now please ignore
-    if sentiment_score > 0.8:
-        if not settings["bot"]["react_to_messages"]:
-            return
-
-        if not sync_connector.can_react(message.id, message.channel.id):
-            logger.info("Sync hub determined that this instance cannot react")
-            return
-
-        emoji = random.choice(EMOJIS)
-        try:
-            await message.add_reaction(emoji)
-        except Exception as e:
-            logger.info(f"Failed to react with emoji: {e}")
-
-
-# Event: Called on every interaction (slash command, etc.)
 @bot.event
 async def on_interaction(interaction: discord.Interaction) -> None:
     logger.info(f"{k.command_ran_s(interaction.user.name)} {interaction.user.name}")
 
 
-# Global check: Block blacklisted users from running commands
 @bot.check
 async def block_blacklisted(ctx: commands.Context) -> bool:
     if ctx.author.id not in settings["bot"]["blacklisted_users"]:
@@ -403,46 +312,34 @@ async def block_blacklisted(ctx: commands.Context) -> bool:
     return True
 
 
-# Helper: Improve sentence coherence (simple capitalization fix)
+async def command_handler(message: discord.Message) -> None:
+    reloading = False
+
+    if message.content.endswith("#r"):
+        reloading = True
+        message.content = message.content[:-2]
+
+    ctx = await bot.get_context(message)
+
+    if ctx.command:
+        logger.info(f"{message.author} ran {ctx.command.name}")
+        if reloading:
+            logger.debug("Reloading first...")
+            reload_command = bot.get_command("reload")
+            assert reload_command
+
+            await reload_command(ctx, cog_name=ctx.command.name)
+
+    await bot.invoke(ctx)
+
+
+bot.on_message = command_handler
+
+
 def improve_sentence_coherence(sentence: str) -> str:
-    # Capitalizes "i" to "I" in the sentence
     sentence = sentence.replace(" i ", " I ")
     return sentence
 
 
-class OnMyWatch:
-    watchDirectory = "assets/locales"
-
-    def __init__(self):
-        self.observer = Observer()
-
-    def run(self):
-        event_handler = Handler()
-        self.observer.schedule(event_handler, self.watchDirectory, recursive=True)
-        self.observer.start()
-        try:
-            while True:
-                time.sleep(5)
-        except Exception as _e:
-            self.observer.stop()
-            print("Observer Stopped")
-
-        self.observer.join()
-
-
-class Handler(FileSystemEventHandler):
-    def on_any_event(self, event):
-        if event.is_directory:
-            return
-
-        elif event.event_type == "modified":
-            build_keys()
-
-
-observer = Observer()
-observer.schedule(Handler(), "assets/locales")
-observer.start()
-
-# Start the bot
 if __name__ == "__main__":
     bot.run(os.environ.get("DISCORD_BOT_TOKEN", ""))

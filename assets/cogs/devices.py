@@ -1,6 +1,6 @@
 import os
-import subprocess
 import platform
+import subprocess
 from typing import Dict, TypedDict
 
 import discord
@@ -35,7 +35,9 @@ class Devices(commands.Cog):
             color=discord.Color.blue(),
         )
 
-        settings: SettingsType = settings_manager.get_plugin_settings("devices", default_settings)  # type: ignore
+        settings: SettingsType = settings_manager.get_plugin_settings(
+            "devices", default_settings
+        )  # type: ignore
 
         for device, ip in settings["devices"].items():
             is_up = os.system(f"ping -c 1 -i 0.2 {ip}") == 0
@@ -55,7 +57,9 @@ class Devices(commands.Cog):
         ip = args[-1]
         device_name = " ".join(args[:-1])
 
-        settings: SettingsType = settings_manager.get_plugin_settings("devices", default_settings)  # type: ignore
+        settings: SettingsType = settings_manager.get_plugin_settings(
+            "devices", default_settings
+        )  # type: ignore
         settings["devices"][str(device_name)] = ip
         settings_manager.set_plugin_setting("devices", settings)
 
@@ -66,7 +70,9 @@ class Devices(commands.Cog):
     async def remove_device(self, ctx: commands.Context, *args):
         device_name = " ".join(args)
 
-        settings: SettingsType = settings_manager.get_plugin_settings("devices", default_settings)  # type: ignore
+        settings: SettingsType = settings_manager.get_plugin_settings(
+            "devices", default_settings
+        )  # type: ignore
         del settings["devices"][str(device_name)]
         settings_manager.set_plugin_setting("devices", settings)
 
@@ -76,8 +82,14 @@ class Devices(commands.Cog):
     @commands.command()
     async def ping_device(self, ctx: commands.Context, ip: str):
 
-        res = subprocess.run(f"ping {'-n 4' if platform.system() == 'Windows' else '-c 4'} {ip}", shell=True, encoding="utf-8", stdout=subprocess.PIPE)
+        res = subprocess.run(
+            f"ping {'-n 4' if platform.system() == 'Windows' else '-c 4'} {ip}",
+            shell=True,
+            encoding="utf-8",
+            stdout=subprocess.PIPE,
+        )
         await send_message(ctx, f"```bash\n{res.stdout or ''}\n{res.stderr or ''}\n```")
+
 
 async def setup(bot):
     await bot.add_cog(Devices(bot))

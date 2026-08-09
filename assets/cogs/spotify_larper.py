@@ -58,7 +58,9 @@ class SpotifyLarper(commands.Cog):
 
         self.status_update.start()
 
-        self.description = "📝|Sets the bot's RPC to be a random lyric from the song you're listening to"
+        self.description = (
+            "📝|Sets the bot's RPC to be a random lyric from the song you're listening to"
+        )
 
     @staticmethod
     def heartrate_update(timestamp: int, bpm: int) -> None:
@@ -82,7 +84,9 @@ class SpotifyLarper(commands.Cog):
     @requires_admin()
     @commands.command()
     async def follow(self, ctx: commands.Context, user: discord.Member):
-        settings: SettingsType = settings_manager.get_plugin_settings("spotify_larper", default_settings)  # type: ignore
+        settings: SettingsType = settings_manager.get_plugin_settings(
+            "spotify_larper", default_settings
+        )  # type: ignore
         settings["followed_user"] = user.id
         settings_manager.set_plugin_setting("spotify_larper", settings)
 
@@ -119,13 +123,17 @@ class SpotifyLarper(commands.Cog):
         await ctx.send("ÄÄÄK")
 
     @commands.Cog.listener()
-    async def on_presence_update(
-        self, before: discord.Member, after: discord.Member
-    ) -> None:
-        settings: SettingsType = settings_manager.get_plugin_settings("spotify_larper", default_settings)  # type: ignore
+    async def on_presence_update(self, before: discord.Member, after: discord.Member) -> None:
+        settings: SettingsType = settings_manager.get_plugin_settings(
+            "spotify_larper", default_settings
+        )  # type: ignore
 
-        if before.activity and after.activity and before.activity.track_id == after.activity.track_id:
-           return
+        if (
+            before.activity
+            and after.activity
+            and before.activity.created_at == after.activity.created_at
+        ):
+            return
 
         if after.id != settings["followed_user"]:
             return
@@ -162,8 +170,7 @@ class SpotifyLarper(commands.Cog):
         for match in matches:
             if (
                 target_activity.artist.lower() in match["artistName"].lower()
-                or abs(match["duration"] - target_activity.duration.total_seconds())
-                < 10
+                or abs(match["duration"] - target_activity.duration.total_seconds()) < 10
             ):
                 matched_lyrics = match["plainLyrics"]
                 break
@@ -181,10 +188,7 @@ class SpotifyLarper(commands.Cog):
         suitable_lyrics = [
             lyric
             for lyric in lyrics
-            if len(lyric) > 5
-            and len(lyric) < 30
-            and len(set(lyric)) > 4
-            and "?" in lyric
+            if len(lyric) > 5 and len(lyric) < 30 and len(set(lyric)) > 4 and "?" in lyric
         ]
 
         if len(suitable_lyrics) >= 1:
