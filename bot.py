@@ -328,7 +328,7 @@ async def command_handler(message: discord.Message) -> None:
             reload_command = bot.get_command("reload")
             assert reload_command
 
-            await reload_command(ctx, cog_name=ctx.command.name)
+            await reload_command(ctx, cog_name=ctx.command.name, force="yes")
 
     await bot.invoke(ctx)
 

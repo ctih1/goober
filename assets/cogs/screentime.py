@@ -39,9 +39,7 @@ class Screentime(commands.Cog):
         self.presence_map: Dict[int, str] = {}
 
     @commands.Cog.listener()
-    async def on_presence_update(
-        self, before: discord.Member, after: discord.Member
-    ) -> None:
+    async def on_presence_update(self, before: discord.Member, after: discord.Member) -> None:
         if after.bot:
             return
 
@@ -50,7 +48,7 @@ class Screentime(commands.Cog):
         elif self.presence_map[after.id] == after.status.value:
             return
 
-        logger.debug("Updating status DB")
+        logger.debug(f"{after.name}: {before.status.value} -> {after.status.value}")
 
         self.db.execute(
             "INSERT INTO presences VALUES(?, ?, ?)",
@@ -68,6 +66,9 @@ class Screentime(commands.Cog):
             return
 
         if message.author.status.value in ["offline", "invisible", "idle"]:
+            logger.info(
+                f"{message.author.name} sent message while {message.author.status.value}"
+            )
             self.users_db.execute(
                 "INSERT OR IGNORE INTO users(user_id, fake_offline_count) VALUES (?, ?)",
                 [message.author.id, 0],
@@ -103,9 +104,7 @@ class Screentime(commands.Cog):
         return total_time_online
 
     @commands.command()
-    async def screentime(
-        self, ctx: commands.Context, user: discord.Member | None = None
-    ):
+    async def screentime(self, ctx: commands.Context, user: discord.Member | None = None):
         target_user = user or ctx.author
         target = target_user.id
 
@@ -123,9 +122,7 @@ class Screentime(commands.Cog):
         )
         seven_days = Screentime.get_total_screentime_seconds(
             rows,
-            datetime.combine(
-                datetime.today() - timedelta(days=7), dt_time.min
-            ).timestamp(),
+            datetime.combine(datetime.today() - timedelta(days=7), dt_time.min).timestamp(),
         )
 
         embed = discord.Embed(title="Screentime")
@@ -164,11 +161,9 @@ class Screentime(commands.Cog):
         user_times = sorted(user_times, key=lambda d: d[1], reverse=True)
 
         for i, (user, _time) in enumerate(user_times):
-            embed.add_field(
-                name="", value=f"{i+1}. <@{user}>: {format_timespan(_time)}"
-            )
+            embed.add_field(name="", value=f"{i + 1}. <@{user}>: {format_timespan(_time)}")
 
-        embed.set_footer(text=f"Processing took {(time.time()-start):.3f}s")
+        embed.set_footer(text=f"Processing took {(time.time() - start):.3f}s")
         await ctx.reply(embed=embed)
 
     @requires_admin()
@@ -188,9 +183,7 @@ class Screentime(commands.Cog):
         await ctx.reply(f"Larper <@{id}> killed")
 
     @commands.command()
-    async def offline_larps(
-        self, ctx: commands.Context, user: discord.Member | None = None
-    ):
+    async def offline_larps(self, ctx: commands.Context, user: discord.Member | None = None):
         target = (None if not user else user.id) or ctx.author.id
 
         rows = self.users_db.execute("SELECT * FROM users WHERE user_id = ?", [target])

@@ -95,7 +95,9 @@ class CogManager(commands.Cog):
 
     @requires_admin()
     @commands.command()
-    async def reload(self, ctx: commands.Context, cog_name: str | None = None):
+    async def reload(
+        self, ctx: commands.Context, cog_name: str | None = None, force: str | None = None
+    ):
         if cog_name is None:
             await ctx.send("Please provide the cog name to reload.")
             return
@@ -105,7 +107,8 @@ class CogManager(commands.Cog):
             await self.bot.load_extension(COG_PREFIX + cog_name)
             await ctx.send(f"Reloaded cog `{cog_name}` successfully.")
         except discord.ext.commands.ExtensionNotLoaded:
-            logger.warning("Trying to find command...")
+            if not force:
+                logger.warning("Trying to find command...")
             found_cog: bool = False
             for _cog_name, cog in self.bot.cogs.items():
                 for command in cog.get_commands():
@@ -116,7 +119,8 @@ class CogManager(commands.Cog):
                     await self.bot.load_extension(COG_PREFIX + _cog_name.lower())
 
                     await ctx.send(
-                        f"Reloaded cog `{_cog_name.lower()}` successfully. Specify the real name next time retard."
+                        f"Reloaded cog `{_cog_name.lower()}` successfully."
+                        + (" Specify the real name next time retard" if not force else "")
                     )
                     found_cog = True
                     break
