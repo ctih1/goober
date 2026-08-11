@@ -207,12 +207,12 @@ class Climate(commands.Cog):
         values: Dict[str, Tuple[float, float]] = {}
         offset_json: dict = (
             await requests_async.get(
-                f"http://192.168.32.88:9999/api/v1/query?query={{__name__=~\"{'|'.join(datapoints)}\"}}+offset+30m"
+                f'http://192.168.32.88:9999/api/v1/query?query={{__name__=~"{"|".join(datapoints)}"}}+offset+30m'
             )
         ).json()
         now_json: dict = (
             await requests_async.get(
-                f"http://192.168.32.88:9999/api/v1/query?query={{__name__=~\"{'|'.join(datapoints)}\"}}"
+                f'http://192.168.32.88:9999/api/v1/query?query={{__name__=~"{"|".join(datapoints)}"}}'
             )
         ).json()
 
@@ -239,7 +239,9 @@ class Climate(commands.Cog):
 
     @staticmethod
     def get_sun_angle(at: datetime.datetime) -> float:
-        settings: SettingsType = settings_manager.get_plugin_settings("climate", default_settings)  # type: ignore
+        settings: SettingsType = settings_manager.get_plugin_settings(
+            "climate", default_settings
+        )  # type: ignore
 
         hour = at.hour + at.minute / 60 + at.second / 3600
         solar_hour = hour + (settings["longtitude"] - 45) / 15
@@ -259,9 +261,7 @@ class Climate(commands.Cog):
         )
 
         if result > -1.0:
-            refraction = (
-                1.02 / math.tan(math.radians(result + 10.3 / (result + 5.11))) / 60
-            )
+            refraction = 1.02 / math.tan(math.radians(result + 10.3 / (result + 5.11))) / 60
             result += refraction
 
         return result
@@ -277,8 +277,16 @@ class Climate(commands.Cog):
             description="Information about my outdoor climate",
         )
 
-        temp_dew_point = tuple([(17.27*data["temp"][i])/(237.7+data["temp"][i])+math.log(data["humidity"][i]/100) for i in range(2)])
-        dew_point = tuple([(237.7*temp_dew_point[i])/(17.27-temp_dew_point[i]) for i in range(2)])
+        temp_dew_point = tuple(
+            [
+                (17.27 * data["temp"][i]) / (237.7 + data["temp"][i])
+                + math.log(data["humidity"][i] / 100)
+                for i in range(2)
+            ]
+        )
+        dew_point = tuple(
+            [(237.7 * temp_dew_point[i]) / (17.27 - temp_dew_point[i]) for i in range(2)]
+        )
 
         pressure = tuple(
             [
@@ -294,9 +302,7 @@ class Climate(commands.Cog):
             **Climate.format_embed("PM10.0", "µg/m³", data["mc10p0"], PM100_TRESHOLDS)
         )
         embed.add_field(
-            **Climate.format_embed(
-                "Temperature", "°C", data["temp"], OUTDOOR_TEMP_TRESHOLDS
-            )
+            **Climate.format_embed("Temperature", "°C", data["temp"], OUTDOOR_TEMP_TRESHOLDS)
         )
         embed.add_field(
             **Climate.format_embed("Dew Point", "°C", dew_point, DEW_POINT_TRESHOLDS)
@@ -353,11 +359,7 @@ class Climate(commands.Cog):
         )
         air_humidity = tuple(
             [
-                (
-                    data["climate_scd40_humidity"][i]
-                    + data["climate_relative_humidity"][i]
-                )
-                / 2
+                (data["climate_scd40_humidity"][i] + data["climate_relative_humidity"][i]) / 2
                 for i in range(2)
             ]
         )
@@ -371,9 +373,7 @@ class Climate(commands.Cog):
             **Climate.format_embed("Temperature", "°C", calculated_temp, TEMP_TRESHOLDS)
         )
         embed.add_field(
-            **Climate.format_embed(
-                "Relative Humidity", "%", air_humidity, HUMIDITY_TRESHOLDS
-            )
+            **Climate.format_embed("Relative Humidity", "%", air_humidity, HUMIDITY_TRESHOLDS)
         )
         embed.add_field(
             **Climate.format_embed(
@@ -397,12 +397,20 @@ class Climate(commands.Cog):
         embed = await Climate.generate_outdoor_embed()
         await ctx.send(embed=embed, view=ResendView("outdoors"))
 
+    @commands.command()
+    async def climate(self, ctx: commands.Context):
+        outdoors = await Climate.generate_outdoor_embed()
+        indoor = await Climate.generate_indoor_embed()
+
+        await ctx.send(embed=outdoors)
+        await ctx.send(embed=indoor)
+
     @requires_admin()
     @commands.command()
-    async def set_coords(
-        self, ctx: commands.Context, latitude: float, longtitude: float
-    ):
-        settings: SettingsType = settings_manager.get_plugin_settings("climate", default_settings)  # type: ignore
+    async def set_coords(self, ctx: commands.Context, latitude: float, longtitude: float):
+        settings: SettingsType = settings_manager.get_plugin_settings(
+            "climate", default_settings
+        )  # type: ignore
         settings["latitude"] = latitude
         settings["longtitude"] = longtitude
         settings_manager.set_plugin_setting("climate", settings)
