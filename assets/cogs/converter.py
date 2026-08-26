@@ -283,7 +283,7 @@ class Converter(commands.Cog):
                 r"(?:\s|^)(-?[0-9(.?|,?)]+)\s?(miles\/h|mph)(\s|$)", re.IGNORECASE
             ): Converters.from_mph,
             re.compile(
-                r"""(-?[0-9(.?|,?)]+)\s?(')(-?[0-9(.?|,?)]+)?("?)(\s|$)""",
+                r"""(?:\s|^)(-?[0-9(.?|,?)]+)\s?(ft|feet|foot|\')(\s|$)""",
                 re.IGNORECASE,
             ): Converters.from_feet,
             re.compile(
