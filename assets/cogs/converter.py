@@ -374,7 +374,9 @@ class Converter(commands.Cog):
                 continue
 
             for match in matches:
-                logger.info(f"Match groups: {match.groups()}")
+                logger.info(
+                    f"({conversion_func.__name__}) Match groups: {match.groups()}"
+                )
                 match_string: str = "".join(match.groups()).strip()
 
                 if match_string in settings.get("blacklisted_words"):
@@ -386,6 +388,7 @@ class Converter(commands.Cog):
                 value: ConvertedValue | None = None
 
                 if conversion_func == Converters.from_height:
+                    logger.info("Converting from feet as height")
                     value = conversion_func(
                         float(match.groups()[0].replace(",", "."))
                         + Converters.from_inches(
