@@ -1,3 +1,4 @@
+import difflib
 import logging
 import tracemalloc
 
@@ -213,6 +214,33 @@ async def on_ready() -> None:
 
 @bot.event
 async def on_command_error(ctx: commands.Context, error: commands.CommandError) -> None:
+    logger.info(type(error))
+    if isinstance(error, commands.errors.CommandNotFound):
+        target = (
+            ctx.message.content.removeprefix(settings["bot"]["prefix"]).split(" ")[0]
+            if not ctx.command
+            else ctx.command.qualified_name
+        )
+        proper_command = difflib.get_close_matches(
+            word=(target),
+            possibilities=[cmd.qualified_name for cmd in bot.commands],
+            n=1,
+            cutoff=0.9 if (len(target) > 8 or "_" in target) else 0.8,
+        )
+        if proper_command and proper_command[0].strip() != target.strip():
+            logger.info(f"Fixed command {target} -> {proper_command[0]}")
+            message = ctx.message
+            message.content = message.content.replace(target, proper_command[0], 1)
+            await command_handler(message)
+            return
+
+        embed = discord.Embed(color=0xFC1C03)
+        embed.title = "Command not found"
+        embed.description = f"{error}"
+
+        await send_message(ctx, embed=embed)
+        return
+
     if isinstance(error, commands.CommandInvokeError):
         original: Exception = error.original
         await handle_exception_with_context(

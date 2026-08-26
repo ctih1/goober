@@ -17,9 +17,7 @@ settings = settings_manager.settings
 
 
 class SettingsType(TypedDict):
-    timezones: Dict[
-        str, str
-    ]  # int being a discord ID and str being like "Europe/Helsinki"
+    timezones: Dict[str, str]  # int being a discord ID and str being like "Europe/Helsinki"
 
 
 DEFAULT_SETTINGS: SettingsType = {"timezones": {}}  # type: ignore
@@ -37,8 +35,11 @@ def convert_time(match: tuple[str, ...], tz: ZoneInfo) -> int | None:
 
     logger.info((hour, minutes, meridiem))
 
+    now = datetime.datetime.now()
     return round(
-        datetime.datetime(1984, 6, 8, hour=hour, minute=minutes, tzinfo=tz).timestamp()
+        datetime.datetime(
+            now.year, now.month, now.day, hour=hour, minute=minutes, tzinfo=tz
+        ).timestamp()
     )
 
 
@@ -62,9 +63,7 @@ class Timezones(commands.Cog):
 
         for i, tramp_stamp in enumerate(timestamps):
             temp_line: str = (
-                ", and "
-                if (i == len(timestamps) - 1 and i != 0)
-                else ", " if i != 0 else ""
+                ", and " if (i == len(timestamps) - 1 and i != 0) else ", " if i != 0 else ""
             )
 
             message += temp_line + f"<t:{tramp_stamp}:t>"

@@ -36,14 +36,6 @@ async def handle_exception_with_context(
     *,
     context: str | None = None,
 ):
-    if exc_type == discord.ext.commands.errors.CommandNotFound:
-        embed = discord.Embed(color=0xFC1C03)
-        embed.title = "Command not found"
-        embed.description = f"{exc_value}"
-
-        await send_message(ctx, embed=embed)
-        return
-
     if exc_type == discord.ext.commands.errors.ArgumentParsingError:
         embed = discord.Embed(color=0xFC1C03)
         embed.title = "Invalid input"
@@ -69,9 +61,7 @@ async def handle_exception_with_context(
     embed.title = "Command failed with exception"
     embed.description = (
         "```"
-        + "".join(traceback.format_exception(exc_type, exc_value, exc_traceback))[
-            -4000:
-        ]
+        + "".join(traceback.format_exception(exc_type, exc_value, exc_traceback))[-4000:]
         + "```"
     )
 
