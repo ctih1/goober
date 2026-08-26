@@ -124,6 +124,10 @@ class Converters:
         return {"metric": {"unit": Meters, "value": value * 0.3048}, "imperial": None}
 
     @staticmethod
+    def from_height(value: float) -> ConvertedValue:
+        return Converters.from_feet(value)
+
+    @staticmethod
     def from_centimeters(value: float) -> ConvertedValue:
         return {"metric": None, "imperial": {"unit": Inch, "value": value / 2.54}}
 
@@ -283,8 +287,11 @@ class Converter(commands.Cog):
                 r"(?:\s|^)(-?[0-9(.?|,?)]+)\s?(miles\/h|mph)(\s|$)", re.IGNORECASE
             ): Converters.from_mph,
             re.compile(
-                r"""(?:\s|^)(-?[0-9(.?|,?)]+)\s?(ft|feet|foot|\')(\s|$)""",
+                r"""(-?[0-9(.?|,?)]+)\s?(')(-?[0-9(.?|,?)]+)?("?)(\s|$)""",
                 re.IGNORECASE,
+            ): Converters.from_height,
+            re.compile(
+                r"(?:\s|^)(-?[0-9(.?|,?)]+)\s?(ft|feet|foot|\')(\s|$)", re.IGNORECASE
             ): Converters.from_feet,
             re.compile(
                 r"(?:\s|^)(-?[0-9(.?|,?)]+)\s?(m\/s)(\s|$)", re.IGNORECASE
@@ -378,7 +385,7 @@ class Converter(commands.Cog):
 
                 value: ConvertedValue | None = None
 
-                if conversion_func == Converters.from_feet:
+                if conversion_func == Converters.from_height:
                     value = conversion_func(
                         float(match.groups()[0].replace(",", "."))
                         + Converters.from_inches(
