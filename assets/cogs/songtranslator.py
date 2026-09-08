@@ -33,13 +33,13 @@ class WaitingObject(TypedDict):
     video_url: str
     options: List[LRCLIBResponse]
     message: discord.Message
+    attachment: discord.Attachment | None
 
 
 class SongTranslator(commands.Cog):
     def __init__(self, bot: discord.ext.commands.Bot):
         self.bot: discord.ext.commands.Bot = bot
         self.waiting_ids: Dict[int, WaitingObject] = {}
-        self.progress_message: discord.Message | None = None
 
         self.description = "♫|Finds song lyrics, translates them into English, and burns onto a music video."
 
@@ -178,12 +178,6 @@ class SongTranslator(commands.Cog):
     def get_first_lyric_time(self, lyrics: str) -> str:
         return lyrics.split("\n")[0].split("]", 1)[0].replace("[", "")
 
-    async def update_progress_message(self, content: str) -> None:
-        if not self.progress_message:
-            return
-
-        await self.progress_message.edit(content=content)
-
     def progress_callback(
         self, stream: Stream, chunk: bytes, bytes_remaining: int
     ) -> None:
@@ -193,12 +187,10 @@ class SongTranslator(commands.Cog):
         logger.debug(f"{bytes_downloaded}/{total_size}")
 
     async def download_video(
-        self, url: str, user_id: int, message: discord.Message
+        self, url: str, user_id: int, message: discord.Message, skip_download: bool
     ) -> AsyncYouTube:
         await message.edit(content="Fetching video data...")
         settings: SettingsType = settings_manager.get_plugin_settings("youtube", default_settings)  # type: ignore
-
-        self.progress_message = await message.reply("Waiting for packet...")
 
         video = AsyncYouTube(
             url,
@@ -218,8 +210,11 @@ class SongTranslator(commands.Cog):
             )
 
         await message.edit(
-            content=f"Found video '{await video.title()}', downloading.. This may take a bit..."
+            content=f"Found video '{await video.title()}', downloading{' attachment' if skip_download else ''}.. This may take a bit..."
         )
+
+        if skip_download:
+            return video
 
         stream = (await video.streams()).filter(progressive=True, file_extension="mp4")
         target_stream = (
@@ -241,16 +236,14 @@ class SongTranslator(commands.Cog):
             ),
         )
 
-        if self.progress_message is not None:
-            await self.progress_message.delete()
-            self.progress_message = None
-
         return video
 
     @commands.command()
     async def translate(self, ctx: commands.Context, *args):
         logger.info(f"Trying {' '.join(args[1:])}")
         url: str = args[0]
+
+        attachment = (ctx.message.attachments or [None])[0]
 
         if not url.startswith(("https://www.youtube.com", "https://youtu.be")):
             await send_message(
@@ -270,18 +263,22 @@ class SongTranslator(commands.Cog):
         response_string = ""
 
         for i, match in enumerate(matches, start=1):
+            if type(match) == str:
+                await message.edit(content=match)
+
             styling = "**" if match["syncedLyrics"] else ""
 
             response_string += f"""{styling} {i}. {match["artistName"]} - {match["trackName"]} {styling} ({format_timespan(match["duration"])} {f"starts @ {self.get_first_lyric_time(match['syncedLyrics'])}s" if styling else ""})\n"""
 
         await message.edit(
-            content=f"Found matches. **Bolded entries are time synced**. Reply with the number:\n\n{response_string}"
+            content=f"{'Attachment. ' if attachment else ''}Found matches. **Bolded entries are time synced**. Reply with the number:\n\n{response_string}"
         )
 
         self.waiting_ids[ctx.author.id] = {
             "options": matches,
             "video_url": url,
             "message": message,
+            "attachment": attachment,
         }
 
     @requires_admin()
@@ -329,7 +326,15 @@ class SongTranslator(commands.Cog):
                 waiting_object["video_url"],
                 message.author.id,
                 waiting_object["message"],
+                skip_download=waiting_object["attachment"] is not None,
             )
+
+            if waiting_object["attachment"]:
+                path = f"data/youtube/{video.video_id}"
+                os.makedirs(path, exist_ok=True)
+
+                with open(path + "/video.mp4", "wb") as f:
+                    await waiting_object["attachment"].save(f)
 
             await self.translate_and_combine(
                 waiting_object["message"],
