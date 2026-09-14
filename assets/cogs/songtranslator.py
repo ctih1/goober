@@ -175,8 +175,8 @@ class SongTranslator(commands.Cog):
             shutil.move(final_path, f"data/cdn/{video_id}_sub.mp4")
             await message.reply(content=f"https://cdn.ctih1.fi/vids/{video_id}_sub.mp4")
 
-        async with aiofiles.open(subtitle_path, "rb", encoding="UTF-8") as f:
-            await message.channel.send(file=discord.File(await f.read()))
+        async with aiofiles.open(subtitle_path, "rb") as f:
+            await message.reply(file=discord.File(await f.read()))
 
     def get_first_lyric_time(self, lyrics: str) -> str:
         return lyrics.split("\n")[0].split("]", 1)[0].replace("[", "")
