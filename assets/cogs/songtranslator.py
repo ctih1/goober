@@ -175,11 +175,8 @@ class SongTranslator(commands.Cog):
             shutil.move(final_path, f"data/cdn/{video_id}_sub.mp4")
             await message.reply(content=f"https://cdn.ctih1.fi/vids/{video_id}_sub.mp4")
 
-        async with aiofiles.open(subtitle_path, "rb") as f:
-            file = discord.File(await f.read())
-            file.filename = "subtitles.srt"
-
-            await message.reply(file=file)
+        shutil.copy(subtitle_path, f"data/cdn/{video_id}.en_US.srt")
+        await message.reply(content=f"https://cdn.ctih1.fi/vids/{video_id}.en_US.srt")
 
     def get_first_lyric_time(self, lyrics: str) -> str:
         return lyrics.split("\n")[0].split("]", 1)[0].replace("[", "")
