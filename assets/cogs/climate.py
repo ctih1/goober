@@ -13,7 +13,7 @@ from modules.permission import requires_admin
 from modules.sentenceprocessing import send_message
 from modules.settings import instance as settings_manager
 
-ViewType = Literal["outdoors", "indoors"]
+ViewType = Literal["outdoors", "indoors", "both"]
 
 
 class SettingsType(TypedDict):
@@ -156,11 +156,17 @@ class ResendView(discord.ui.View):
         logger.info("Refresh received")
         await interaction.response.defer()
         if self.mode == "indoors":
-            embed = await Climate.generate_indoor_embed()
+            embeds = [await Climate.generate_indoor_embed()]
+        if self.mode == "both":
+            embeds = [
+                await Climate.generate_outdoor_embed(),
+                await Climate.generate_indoor_embed(),
+            ]
         else:
-            embed = await Climate.generate_outdoor_embed()
+            embeds = [await Climate.generate_outdoor_embed()]
 
-        await interaction.followup.send(embed=embed, view=self)
+        for embed in embeds:
+            await interaction.followup.send(embed=embed, view=self)
 
 
 class Climate(commands.Cog):
@@ -261,7 +267,9 @@ class Climate(commands.Cog):
         )
 
         if result > -1.0:
-            refraction = 1.02 / math.tan(math.radians(result + 10.3 / (result + 5.11))) / 60
+            refraction = (
+                1.02 / math.tan(math.radians(result + 10.3 / (result + 5.11))) / 60
+            )
             result += refraction
 
         return result
@@ -285,7 +293,10 @@ class Climate(commands.Cog):
             ]
         )
         dew_point = tuple(
-            [(237.7 * temp_dew_point[i]) / (17.27 - temp_dew_point[i]) for i in range(2)]
+            [
+                (237.7 * temp_dew_point[i]) / (17.27 - temp_dew_point[i])
+                for i in range(2)
+            ]
         )
 
         pressure = tuple(
@@ -302,7 +313,9 @@ class Climate(commands.Cog):
             **Climate.format_embed("PM10.0", "µg/m³", data["mc10p0"], PM100_TRESHOLDS)
         )
         embed.add_field(
-            **Climate.format_embed("Temperature", "°C", data["temp"], OUTDOOR_TEMP_TRESHOLDS)
+            **Climate.format_embed(
+                "Temperature", "°C", data["temp"], OUTDOOR_TEMP_TRESHOLDS
+            )
         )
         embed.add_field(
             **Climate.format_embed("Dew Point", "°C", dew_point, DEW_POINT_TRESHOLDS)
@@ -359,7 +372,11 @@ class Climate(commands.Cog):
         )
         air_humidity = tuple(
             [
-                (data["climate_scd40_humidity"][i] + data["climate_relative_humidity"][i]) / 2
+                (
+                    data["climate_scd40_humidity"][i]
+                    + data["climate_relative_humidity"][i]
+                )
+                / 2
                 for i in range(2)
             ]
         )
@@ -373,7 +390,9 @@ class Climate(commands.Cog):
             **Climate.format_embed("Temperature", "°C", calculated_temp, TEMP_TRESHOLDS)
         )
         embed.add_field(
-            **Climate.format_embed("Relative Humidity", "%", air_humidity, HUMIDITY_TRESHOLDS)
+            **Climate.format_embed(
+                "Relative Humidity", "%", air_humidity, HUMIDITY_TRESHOLDS
+            )
         )
         embed.add_field(
             **Climate.format_embed(
@@ -403,11 +422,13 @@ class Climate(commands.Cog):
         indoor = await Climate.generate_indoor_embed()
 
         await ctx.send(embed=outdoors)
-        await ctx.send(embed=indoor)
+        await ctx.send(embed=indoor, view=ResendView("both"))
 
     @requires_admin()
     @commands.command()
-    async def set_coords(self, ctx: commands.Context, latitude: float, longtitude: float):
+    async def set_coords(
+        self, ctx: commands.Context, latitude: float, longtitude: float
+    ):
         settings: SettingsType = settings_manager.get_plugin_settings(
             "climate", default_settings
         )  # type: ignore
