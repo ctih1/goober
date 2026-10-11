@@ -144,7 +144,8 @@ class LarpDetect(commands.Cog):
                 )
                 settings_manager.save_shared_state("reminders")
                 await message.reply(data.get("response_comment"))
-
+            else:
+                logger.info("Gemini said that did not want reminder")
         if not message.reference or message.author.bot:
             return
 
