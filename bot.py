@@ -118,7 +118,7 @@ bot: commands.Bot = commands.Bot(
     command_prefix=settings["bot"]["prefix"],
     intents=intents,
     allowed_mentions=discord.AllowedMentions(
-        everyone=False, roles=False, users=False, replied_user=True
+        everyone=False, roles=False, users=True, replied_user=True
     ),
 )
 

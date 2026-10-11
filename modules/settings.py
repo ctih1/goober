@@ -3,6 +3,7 @@ import json
 import logging
 import os
 from collections.abc import Mapping
+from copy import deepcopy
 from typing import Any, Dict, List, Literal, TypedDict
 
 from modules.keys import Language
@@ -52,6 +53,7 @@ class SettingsType(TypedDict):
     disable_checks: bool
     splash_text_loc: str
     cog_settings: Dict[str, Mapping[Any, Any]]
+    shared_state: dict[str, list[dict]]
 
 
 class AdminLogEvent(TypedDict):
@@ -79,6 +81,10 @@ class Settings:
         self.original_settings: SettingsType
 
         self.reload_settings()
+
+        self.shared_state: dict[str, list[dict]] = deepcopy(
+            self.settings.get("shared_state", {})
+        )
 
         self.log_path: str = os.path.join(".", "settings", "admin_logs.json")
 
@@ -109,14 +115,16 @@ class Settings:
             }
 
         if not self.settings.get("bot", {}).get("active_model"):
-            logger.warning(
-                "active_model missing! Replacing with backwards compatible one"
-            )
+            logger.warning("active_model missing! Replacing with backwards compatible one")
             self.settings["bot"]["active_model"] = "markov_model.pkl"
 
         if not self.settings.get("bot", {}).get("user_permissions"):
             logger.warning("User permissions missing! Creating empty dict")
             self.settings["bot"]["user_permissions"] = {}
+
+        if "shared_state" not in self.settings:
+            logger.warning("Adding 'shared_state' to config")
+            self.settings["shared_state"] = {}
 
         self.commit()
 
@@ -141,13 +149,31 @@ class Settings:
     ) -> Mapping[Any, Any]:
         return self.settings["cog_settings"].get(plugin_name, default)
 
-    def set_plugin_setting(
-        self, plugin_name: str, new_settings: Mapping[Any, Any]
-    ) -> None:
+    def set_plugin_setting(self, plugin_name: str, new_settings: Mapping[Any, Any]) -> None:
         """Changes a plugin setting. Commits changes"""
+        logger.debug(f"Setting plugin settings for {plugin_name}")
         self.settings["cog_settings"][plugin_name] = new_settings
 
         self.commit()
+
+    def push_shared_state(self, section: str, obj: dict) -> int:
+        logger.debug(f"Updating shared state for {section}")
+        if section not in self.shared_state:
+            self.shared_state[section] = []
+
+        self.shared_state[section].append(obj)
+        return len(self.shared_state[section]) - 1
+
+    def save_shared_state(self, section: str) -> None:
+        logger.debug(f"Saving shared state for {section}")
+        self.settings["shared_state"][section] = self.shared_state[section]
+        self.commit()
+
+    def pop_shared_state(self, section: str, index: int) -> dict:
+        return self.shared_state[section].pop(index)
+
+    def load_shared_state(self, section: str) -> list[dict] | None:
+        return self.shared_state.get(section)
 
     def add_admin_log_event(self, event: AdminLogEvent):
         if not os.path.exists(self.log_path):
