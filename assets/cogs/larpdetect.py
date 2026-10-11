@@ -85,7 +85,7 @@ class LarpDetect(commands.Cog):
                 {"author": message.author.id, "content": message.content}
             )
 
-        if "remind" in message.content.lower() and any(
+        if "remind" in message.content.lower() and not any(
             x in message.content.lower() for x in ["reminds", "reminders"]
         ):
             logger.info("Getting Gemini to process reminder")
