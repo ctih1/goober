@@ -70,6 +70,9 @@ class LarpDetect(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
+        if message.author.id == self.bot.user.id:
+            return
+
         logger.info("Larp onmessage")
 
         channel_id = message.channel.id
@@ -82,7 +85,9 @@ class LarpDetect(commands.Cog):
                 {"author": message.author.id, "content": message.content}
             )
 
-        if "remind" in message.content.lower() and "reminds" not in message.content.lower():
+        if "remind" in message.content.lower() and any(
+            x in message.content.lower() for x in ["reminds", "reminders"]
+        ):
             logger.info("Getting Gemini to process reminder")
             response = self.ai_client.models.generate_content(
                 model="gemini-3.1-flash-lite",
@@ -100,7 +105,7 @@ class LarpDetect(commands.Cog):
                                         - "reminder_comment" should contain the string literal "@MENTION"
                                         - If you've deemed that the user wants to set a reminder:
                                             - You must contain romantic language referring to a partner, such as "babe", "honey", "sweetie", "darling", "beloved"
-                                            - You must add a cute emoticon to the end of response_comment and reminder_comment, you are not allowed to use the following emoticons: :), :D, :(, ;)
+                                            - You must add a cute emoticon to the end of response_comment and reminder_comment, you are not allowed to use the following emoticons: :), :D, :(, ;), uwu
                                         - "Tomorrow" should be the day after this one at 10am.
 
                                     Style examples:
