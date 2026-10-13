@@ -2,10 +2,10 @@ import json
 import os
 import random
 
-import requests_async
+import httpx
+from httpx import Response
 from discord.ext import commands
 from discord.ext.commands import Context
-from requests_async import Response
 
 from modules.sentenceprocessing import send_message
 
@@ -15,6 +15,7 @@ class AILarper(commands.Cog):
         self.bot = bot
         self.description = "🧠|Interact with the goober gang models (2)"
         self.temp = 0.9
+        self.client = httpx.AsyncClient()
 
         with open("assets/fonts/attachments.json", "r") as f:
             self.cache = json.load(f)
@@ -24,10 +25,11 @@ class AILarper(commands.Cog):
         content = content.strip()
 
         async with ctx.typing():
-            response: Response = await requests_async.post(
+            response: Response = await self.client.post(
                 "http://192.168.32.25:6655/generate",
                 json={"prompt": content, "temperature": self.temp},
-                headers={"X-Auth": os.environ.get("AI_KEY")},
+                headers={"X-Auth": os.environ.get("AI_KEY") or ""},
+                timeout=120,
             )
         if response.status_code != 200:
             await send_message(
@@ -51,8 +53,8 @@ class AILarper(commands.Cog):
 
     @commands.command()
     async def check_larp(self, ctx: Context):
-        response: Response = await requests_async.get(
-            "http://192.168.32.25:6655/history"
+        response: Response = await self.client.get(
+            "http://192.168.32.25:6655/history",
         )
         await send_message(
             ctx, f"```json\n{json.dumps(response.json(), indent=4)}\n```"
@@ -60,8 +62,8 @@ class AILarper(commands.Cog):
 
     @commands.command()
     async def clear_larp(self, ctx: Context):
-        _response: Response = await requests_async.post(
-            "http://192.168.32.25:6655/clear"
+        response: Response = await self.client.post(
+            "http://192.168.32.25:6655/clear",
         )
         await send_message(ctx, "Cleared larp")
 
