@@ -152,7 +152,7 @@ class LarpDetect(commands.Cog):
                     logger.info("Gemini said that did not want reminder")
             except json.decoder.JSONDecodeError as e:
                 await message.reply(
-                    f"Fucking fucked AI failed to actually generate JSON: \"{response.text or ('' if not response.model_status.message else response.model_status) }\""
+                    f"Fucking fucked AI failed to actually generate JSON: \"{response.text or ('' if not response.model_status else response.model_status.message) }\""
                 )
                 return
 
