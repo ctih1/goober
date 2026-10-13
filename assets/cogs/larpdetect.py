@@ -128,27 +128,34 @@ class LarpDetect(commands.Cog):
                                             output: {"wants_reminder": false, "reminder_iso8601": "", "response_comment": "", "reminder_comment": ""}
                                 """,
                         "thinking_config": {
-                            "thinking_level": genai.types.ThinkingLevel.LOW
+                            "thinking_level": genai.types.ThinkingLevel.MEDIUM
                         },
                     },
                     contents=f'{{"current_iso8601": "{datetime.now().isoformat()}", "message": "{message.content}"}}',
                 )
 
-            data = json.loads(response.text or "{}")
-            if data.get("wants_reminder"):
-                settings_manager.push_shared_state(
-                    "reminders",
-                    {
-                        "user": message.author.id,
-                        "channel": message.channel.id,
-                        "message": data["reminder_comment"],
-                        "date_string": data["reminder_iso8601"],
-                    },
+            try:
+                data = json.loads(response.text or "{}")
+                if data.get("wants_reminder"):
+                    settings_manager.push_shared_state(
+                        "reminders",
+                        {
+                            "user": message.author.id,
+                            "channel": message.channel.id,
+                            "message": data["reminder_comment"],
+                            "date_string": data["reminder_iso8601"],
+                        },
+                    )
+                    settings_manager.save_shared_state("reminders")
+                    await message.reply(data.get("response_comment"))
+                else:
+                    logger.info("Gemini said that did not want reminder")
+            except json.decoder.JSONDecodeError as e:
+                await message.reply(
+                    f"Fucking fucked AI failed to actually generate JSON: \"{response.text or ('' if not response.model_status.message else response.model_status) }\""
                 )
-                settings_manager.save_shared_state("reminders")
-                await message.reply(data.get("response_comment"))
-            else:
-                logger.info("Gemini said that did not want reminder")
+                return
+
         if not message.reference or message.author.bot:
             return
 
