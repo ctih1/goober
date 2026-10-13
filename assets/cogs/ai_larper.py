@@ -25,7 +25,7 @@ class AILarper(commands.Cog):
 
         async with ctx.typing():
             response: Response = await requests_async.post(
-                "http://192.168.32.2:6655/generate",
+                "http://192.168.32.25:6655/generate",
                 json={"prompt": content, "temperature": self.temp},
                 headers={"X-Auth": os.environ.get("AI_KEY")},
             )
@@ -52,7 +52,7 @@ class AILarper(commands.Cog):
     @commands.command()
     async def check_larp(self, ctx: Context):
         response: Response = await requests_async.get(
-            "http://192.168.32.2:6655/history"
+            "http://192.168.32.25:6655/history"
         )
         await send_message(
             ctx, f"```json\n{json.dumps(response.json(), indent=4)}\n```"
@@ -60,7 +60,9 @@ class AILarper(commands.Cog):
 
     @commands.command()
     async def clear_larp(self, ctx: Context):
-        _response: Response = await requests_async.post("http://192.168.32.2:6655/clear")
+        _response: Response = await requests_async.post(
+            "http://192.168.32.25:6655/clear"
+        )
         await send_message(ctx, "Cleared larp")
 
 
