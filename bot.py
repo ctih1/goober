@@ -347,6 +347,12 @@ async def command_handler(message: discord.Message) -> None:
         reloading = True
         message.content = message.content[:-2]
 
+    parts = message.content.split(" ")
+    command = parts.pop(0).lower()
+
+    reconstructed_content = " ".join([command, *parts])
+    message.content = reconstructed_content
+
     ctx = await bot.get_context(message)
 
     if ctx.command:
