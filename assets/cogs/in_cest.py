@@ -8,6 +8,8 @@ from zoneinfo._common import ZoneInfoNotFoundError
 
 import discord
 from discord.ext import commands
+from discord.message import Message, MessageReference
+from google.genai.tunings import t
 
 from modules.settings import instance as settings_manager
 from modules.sync_connector import instance as synchub
@@ -46,9 +48,7 @@ def convert_time(match: tuple[str, ...], tz: ZoneInfo) -> int | None:
 class Timezones(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.description = (
-            "⏱|Automatically convert between units (Metric/Imperial) found in chats"
-        )
+        self.description = "⏱|Automatically displays the listed time in your own timezone"
 
         self.regexes = {
             re.compile(
@@ -78,7 +78,7 @@ class Timezones(commands.Cog):
             "times", DEFAULT_SETTINGS
         )  # type: ignore
         try:
-            tz = ZoneInfo(timezone)
+            _tz = ZoneInfo(timezone)
         except ZoneInfoNotFoundError:
             await ctx.reply("Not a valid timezone digga")
             return
@@ -87,43 +87,47 @@ class Timezones(commands.Cog):
         settings_manager.set_plugin_setting("times", settings)
         await ctx.reply("Updated timezone!")
 
-    @commands.Cog.listener()
-    async def on_message(self, message: discord.Message):
-        if message.author.bot:
-            return
+    def find_matches(self, message_content: str, author: int) -> list[int]:
+        timestamps: list[int] = []
         settings: SettingsType = settings_manager.get_plugin_settings(
             "times", DEFAULT_SETTINGS
         )  # type: ignore
 
-        timestamps: List[int] = []
-
         for regex, conversion_func in self.regexes.items():
-            matches: Iterator[re.Match] | None = regex.finditer(message.content)
+            matches: Iterator[re.Match] | None = regex.finditer(message_content)
 
             if not matches:
                 logger.debug("No matches found")
                 continue
 
             for match in matches:
-                if str(message.author.id) not in settings["timezones"]:
-                    await message.reply("Please specify your time zone dude")
-                    break
+                if str(author) not in settings["timezones"]:
+                    raise ValueError("Pleaase specify timezone for the user!")
 
                 logger.info(f"Match groups: {match.groups()}")
 
                 try:
                     val = conversion_func(
                         match.groups(),
-                        ZoneInfo(
-                            settings["timezones"].get(
-                                str(message.author.id), "Europe/Helsinki"
-                            )
-                        ),
+                        ZoneInfo(settings["timezones"].get(str(author), "Europe/Helsinki")),
                     )
                     if val:
                         timestamps.append(val)
                 except Exception as e:
                     logger.warning(e)
+
+        return timestamps
+
+    @commands.Cog.listener()
+    async def on_message(self, message: discord.Message):
+        if message.author.bot:
+            return
+
+        try:
+            timestamps: list[int] = self.find_matches(message.content, message.author.id)
+        except ValueError:
+            await message.reply("Please specify your time zone dude")
+            return
 
         if not timestamps:
             return
@@ -133,6 +137,35 @@ class Timezones(commands.Cog):
             await message.reply(self.__format_response(timestamps))
         else:
             logger.info("Synchub denied")
+
+    @commands.command(aliases=["times", "timezones", "mytime", "astime", "alltimes", "mosttimes", "alltime", "mosttime", "ineveryfuckingtimezone"])
+    async def time(self, ctx: commands.Context) -> None:
+        reference: MessageReference | None = ctx.message.reference
+        if not reference or not reference.message_id:
+            await ctx.reply("Digga reply to something first")
+            return
+
+        message: Message = await ctx.fetch_message(reference.message_id)
+
+        settings: SettingsType = settings_manager.get_plugin_settings(
+            "times", DEFAULT_SETTINGS
+        )  # type: ignore
+
+        timestamps = self.find_matches(message.content, message.author.id)
+
+        if not timestamps:
+            await ctx.reply("No time found")
+
+        timezone_infos = []
+        for timestamp in timestamps:
+            for user_id, timezone in settings["timezones"].items():
+                timezone_infos.append([timezone, datetime.datetime.fromtimestamp(timestamp, ZoneInfo(timezone))])
+
+        timezone_infos.sort(key=lambda info: info[1].strftime("%j%H%M"), reverse=True)
+        formatted_output: str = ""
+        for tz, time in timezone_infos:
+            formatted_output += f"{tz}: {time.strftime('%H:%M')}\n"
+        await ctx.reply(formatted_output)
 
 
 async def setup(bot):
